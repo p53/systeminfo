@@ -3,14 +3,14 @@ import os
 import re
 import string
 import template.tabletemplate
-import view.pcitpl
 import ConfigParser
 import sys
+import proc.base
 
-class Pci:
+class Pci(proc.base.Base):
         pciids = {'vendors' : {}, 'devices' : {}, 'classes' : {}, 'subclasses' : {}, 'subdevs' : {}}
         pcidevs = []
-        pciinfo = []
+        asset_info = []
 
         def __init__(self):
             isclasssection = 0
@@ -81,7 +81,7 @@ class Pci:
                     if subdevid in self.pciids['subdevs'][vendor].keys():
                         subdevice = self.pciids['subdevs'][vendor][subvend+subdev]
 
-                self.pciinfo.append({
+                self.asset_info.append({
                             'addr': i, 
                             'vendor' : self.pciids['vendors'][vendor],
                             'device' : self.pciids['devices'][vendor][device],
@@ -89,15 +89,4 @@ class Pci:
                             'subclass' : self.pciids['subclasses'][classreg.group(1)][classreg.group(2)],
                             'subdevice' : subdevice
                         })
-                        
-        def show(self):
-            config = ConfigParser.ConfigParser()
-            config.optionxform = str
-            abspath = os.path.dirname(sys.argv[0]) + '/settings/lang-en.conf'
-            config.read([abspath])
-            headers = dict(config.items('Pci'))
-
-            self.pciinfo.insert(0, headers)
-            
-            print template.tabletemplate.TableTemplate(self.pciinfo, view.pcitpl.tpl)
 

@@ -19,7 +19,7 @@ class TableTemplate:
                                     if key not in self.tableData[cpunum]:
                                         self.tableData[cpunum][key] = 'N/A'
 
-                                    if self.tableData[cpunum][key] is None:
+                                    if self.tableData[cpunum][key] is None or self.tableData[cpunum][key] == '':
                                         self.tableData[cpunum][key] = 'N/A'
 
                                     if max(self._maxInfo[key]) < len(self.tableData[cpunum][key]):

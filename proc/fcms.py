@@ -3,14 +3,14 @@ import os
 import re
 import string
 import template.tabletemplate
-import view.fcmstpl
 import ConfigParser
 import dbus
 import proc.pci
 import sys
+import proc.base
 
-class Fcms:
-    fcmsinfo = []
+class Fcms(proc.base.Base):
+    asset_info = []
 
     def __init__(self):
         system_bus = dbus.SystemBus()
@@ -46,7 +46,7 @@ class Fcms:
                 props['porttype'] = dev.get_sysfs_attr('port_type')
                 props['speed'] = dev.get_sysfs_attr('speed')
 
-                self.fcmsinfo.append(props)
+                self.asset_info.append(props)
 
 
     def getHalDevs(self):
@@ -96,17 +96,6 @@ class Fcms:
                                     props['porttype'] = porttype[0].strip()
                                     props['speed'] = speed[0].strip()
                                 
-                    self.fcmsinfo.append(props)
+                    self.asset_info.append(props)
             except dbus.DBusException:
                 continue
-                
-    def show(self):
-        config = ConfigParser.ConfigParser()
-        config.optionxform = str
-        abspath = os.path.dirname(sys.argv[0]) + '/settings/lang-en.conf'
-        config.read([abspath])
-        headers = dict(config.items('Fcms'))
-
-        self.fcmsinfo.insert(0, headers)
-
-        print template.tabletemplate.TableTemplate(self.fcmsinfo, view.fcmstpl.tpl)

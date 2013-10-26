@@ -1,13 +1,13 @@
 import dmidecode
-import view.memtpl
 import ConfigParser
 import template.tabletemplate
 import re
 import sys
 import os
+import proc.base
 
-class Memory:
-    meminfo = []
+class Memory(proc.base.Base):
+    asset_info = []
     
     def __init__(self):
         
@@ -19,17 +19,6 @@ class Memory:
                     key = p.sub('', iteminfo[0])
                     tmpinfo[key] = iteminfo[1]
                     
-            self.meminfo.append(tmpinfo)
-        
-    def show(self):
-        config = ConfigParser.ConfigParser()
-        config.optionxform = str
-        abspath = os.path.dirname(sys.argv[0]) + '/settings/lang-en.conf'
-        config.read([abspath])
-        headers = dict(config.items('Memory'))
-
-        self.meminfo.insert(0, headers)
-
-        print template.tabletemplate.TableTemplate(self.meminfo, view.memtpl.tpl)
+            self.asset_info.append(tmpinfo)
         
 

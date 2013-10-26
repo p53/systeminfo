@@ -5,14 +5,14 @@ from string import Template
 import template.tabletemplate
 import ConfigParser
 import string
-import view.luntpl
 import glob
 import sys
+import proc.base
 
-class Lun:
+class Lun(proc.base.Base):
     lunsbypath = {}
     lundesc = {}
-    luninfo = []
+    asset_info = []
 
     def __init__(self):
         self.getLunsByPath()
@@ -31,18 +31,7 @@ class Lun:
                             'srcport': self.lundesc[disk]['srcport']
                     }
 
-            self.luninfo.append(diskinfo)
-            
-    def show(self):
-        config = ConfigParser.ConfigParser()
-        config.optionxform = str
-        abspath = os.path.dirname(sys.argv[0]) + '/settings/lang-en.conf'
-        config.read([abspath])
-        headers = dict(config.items('Lun'))
-
-        self.luninfo.insert(0, headers)
-
-        print template.tabletemplate.TableTemplate(self.luninfo, view.luntpl.tpl)
+            self.asset_info.append(diskinfo)
 
     def getLunsByPath(self):
         disk_by_path = os.listdir('/dev/disk/by-path')

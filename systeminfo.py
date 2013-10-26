@@ -4,56 +4,39 @@ import sys
 import getopt
 import re
 from string import Template
-import proc.cpu
-import proc.memory
-import proc.pci
-import proc.fcms
-import proc.lun
+from proc.cpu import Cpu
+from proc.memory import Memory
+from proc.pci import Pci
+from proc.fcms import Fcms
+from proc.lun import Lun
+
+options = {'outlength': 'short'}
+asset_types = ['cpu', 'memory', 'pci', 'fcms', 'lun']
 
 def main():
+        cmds = []
         try:
-            opts, args = getopt.getopt(sys.argv[1:], 'h', ['help', 'get='])
+            opts, args = getopt.getopt(sys.argv[1:], 'hl', ['long', 'help', 'get='])
         except getopt.GetoptError, e:
             print str(e)
             print args
         for o, a in opts:
+            if o in ('l', '--long'):
+                options['outlength'] = 'long'
+            else:
+                cmds.append((o, a))
+                
+        for o, a in cmds:
+                
             if o in ('h', '--help'):
                 print 'helping'
             elif o in ('--get'):
-                if a in ('cpu'):
-                    cpu()
-                elif a in ('memory'):
-                    memory()
-                elif a in ('pci'):
-                    pci()
-                elif a in ('fcms'):
-                    fcms()
-                elif a in ('lun'):
-                    lun()
+                if a in asset_types:
+                    asset_type = a.title()
+                    asset = globals()[asset_type]()
+                    asset.show(options)
             else:
                 print "unknow option"
                 exit(2)
 
-def cpu():
-    cpuObj = proc.cpu.Cpu()
-    cpuObj.show()
-
-def memory():
-    memObj = proc.memory.Memory()
-    memObj.show()
-        
-def pci():
-    pciObj = proc.pci.Pci()
-    pciObj.show()
-
-def fcms():
-    fcmsObj = proc.fcms.Fcms()
-    fcmsObj.show()
-    
-def lun():
-    lunObj = proc.lun.Lun()
-    lunObj.show()
-
 main()
-
-
