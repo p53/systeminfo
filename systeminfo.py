@@ -8,10 +8,10 @@ from proc.cpu import Cpu
 from proc.memory import Memory
 from proc.pci import Pci
 from proc.fcms import Fcms
-from proc.lun import Lun
+from proc.disk import Disk
 
 options = {'outlength': 'short'}
-asset_types = ['cpu', 'memory', 'pci', 'fcms', 'lun']
+asset_types = ['cpu', 'memory', 'pci', 'fcms', 'disk']
 
 def main():
         cmds = []

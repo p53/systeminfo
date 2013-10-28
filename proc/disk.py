@@ -9,26 +9,26 @@ import glob
 import sys
 import proc.base
 
-class Lun(proc.base.Base):
+class Disk(proc.base.Base):
     lunsbypath = {}
-    lundesc = {}
+    diskdesc = {}
     asset_info = []
 
     def __init__(self):
         self.getLunsByPath()
-        self.getLunDesc()
+        self.getDiskDesc()
 
-        for disk, info in self.lunsbypath.iteritems():
+        for disk, info in self.diskdesc.iteritems():
             diskinfo = {
                             'device': disk,
-                            'targetport': info['targetport'],
-                            'id': str(self.lundesc[disk]['storage.serial']),
-                            'lunid': str(info['lunid']),
-                            'model': self.lundesc[disk]['storage.model'],
-                            'vendor': self.lundesc[disk]['storage.vendor'],
-                            'size': "%.f" % (self.lundesc[disk]['storage.size']),
-                            'hwpath': self.lundesc[disk]['hwpath'],
-                            'srcport': self.lundesc[disk]['srcport']
+                            'targetport': self.lunsbypath[disk]['targetport'],
+                            'id': str(self.diskdesc[disk]['storage.serial']),
+                            'lunid': str(self.lunsbypath[disk]['lunid']),
+                            'model': self.diskdesc[disk]['storage.model'],
+                            'vendor': self.diskdesc[disk]['storage.vendor'],
+                            'size': "%.f" % (self.diskdesc[disk]['storage.size']),
+                            'hwpath': self.diskdesc[disk]['hwpath'],
+                            'srcport': self.diskdesc[disk]['srcport']
                     }
 
             self.asset_info.append(diskinfo)
@@ -52,7 +52,16 @@ class Lun(proc.base.Base):
                     self.lunsbypath[diskdev]['targetport'] = target_port
                     self.lunsbypath[diskdev]['lunid'] = lun_id
 
-    def getLunDesc(self):
+            else:
+                target = os.readlink('/dev/disk/by-path/'+disk)
+                dskmatch = dskpat.search(target)
+                if dskmatch:
+                        diskdev = dskmatch.group(1)
+                        self.lunsbypath[diskdev] = {}
+                        self.lunsbypath[diskdev]['targetport'] = ''
+                        self.lunsbypath[diskdev]['lunid'] = ''
+
+    def getDiskDesc(self):
         system_bus = dbus.SystemBus()
         try:
             hal_mgr_obj = system_bus.get_object('org.freedesktop.Hal', '/org/freedesktop/Hal/Manager')
@@ -93,7 +102,7 @@ class Lun(proc.base.Base):
                         props['srcport'] = hostmatch.group(1)
                      
                     if devname:
-                        self.lundesc[devname.group(1)] = props
+                        self.diskdesc[devname.group(1)] = props
 
                 
     def getUdevDesc(self):
@@ -117,14 +126,14 @@ class Lun(proc.base.Base):
                     hwmatch = hwregex.search(devpath)
                     hostmatch = hostregex.search(devpath)
 
-                    self.lundesc[devname] = {}
-                    self.lundesc[devname]['storage.vendor'] = dev.get_property('ID_VENDOR')
-                    self.lundesc[devname]['storage.model'] = dev.get_property('ID_MODEL')
-                    self.lundesc[devname]['storage.size'] = float(dev.get_sysfs_attr('size')) * 512 / 1000000.0
-                    self.lundesc[devname]['storage.serial'] = dev.get_property('ID_SERIAL')
+                    self.diskdesc[devname] = {}
+                    self.diskdesc[devname]['storage.vendor'] = dev.get_property('ID_VENDOR')
+                    self.diskdesc[devname]['storage.model'] = dev.get_property('ID_MODEL')
+                    self.diskdesc[devname]['storage.size'] = float(dev.get_sysfs_attr('size')) * 512 / 1000000.0
+                    self.diskdesc[devname]['storage.serial'] = dev.get_property('ID_SERIAL')
 
                     if hwmatch:
-                        self.lundesc[devname]['hwpath'] = hwmatch.group(1)
+                        self.diskdesc[devname]['hwpath'] = hwmatch.group(1)
 
                     if hostmatch:
-                        self.lundesc[devname]['srcport'] = hostmatch.group(1)
+                        self.diskdesc[devname]['srcport'] = hostmatch.group(1)
