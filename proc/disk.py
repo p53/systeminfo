@@ -7,18 +7,35 @@ import ConfigParser
 import string
 import glob
 import sys
+import io
 import proc.base
 
 class Disk(proc.base.Base):
     lunsbypath = {}
     diskdesc = {}
     asset_info = []
-
+    fields = [
+                'targetport', 
+                'storage.serial', 
+                'lunid', 
+                'storage.model', 
+                'storage.vendor', 
+                'storage.size', 
+                'hwpath', 
+                'srcport',
+                'rportstate'
+            ]
+    
     def __init__(self):
         self.getLunsByPath()
         self.getDiskDesc()
-
+        
         for disk, info in self.diskdesc.iteritems():
+        
+            for key in self.fields:
+                if key not in self.diskdesc[disk].keys():
+                    self.diskdesc[disk][key] = ''
+
             diskinfo = {
                             'device': disk,
                             'targetport': self.lunsbypath[disk]['targetport'],
@@ -28,7 +45,8 @@ class Disk(proc.base.Base):
                             'vendor': self.diskdesc[disk]['storage.vendor'],
                             'size': "%.f" % (self.diskdesc[disk]['storage.size']),
                             'hwpath': self.diskdesc[disk]['hwpath'],
-                            'srcport': self.diskdesc[disk]['srcport']
+                            'srcport': self.diskdesc[disk]['srcport'],
+                            'rportstate': self.diskdesc[disk]['rportstate']
                     }
 
             self.asset_info.append(diskinfo)
@@ -64,11 +82,12 @@ class Disk(proc.base.Base):
     def getDiskDesc(self):
         system_bus = dbus.SystemBus()
         try:
+            import gudev
+            self.getUdevDesc()
+        except ImportError:
             hal_mgr_obj = system_bus.get_object('org.freedesktop.Hal', '/org/freedesktop/Hal/Manager')
             self.getHalDesc()
-        except dbus.DBusException:
-            self.getUdevDesc()
-                
+            
     def getHalDesc(self):
         system_bus = dbus.SystemBus()
         hal_mgr_obj = system_bus.get_object('org.freedesktop.Hal', '/org/freedesktop/Hal/Manager')
@@ -83,25 +102,32 @@ class Disk(proc.base.Base):
                 category = interface.GetProperty('info.category')
                 if category == 'storage':
                     props = interface.GetAllProperties()
-                    props['storage.size'] = float(props['storage.size']) / 1000000.0
                     devpat = re.compile('/dev/(sd\w+)')
                     devname = devpat.search(props['block.device'])
                     
-                    parentdev = system_bus.get_object('org.freedesktop.Hal', props['info.parent'])
-                    parentiface =dbus.Interface(parentdev, dbus_interface='org.freedesktop.Hal.Device')
-                    hwpath = parentiface.GetProperty('linux.sysfs_path')
-                    hwregex = re.compile('.*?\/([a-zA-Z0-9:.]+)$')
-                    hostregex = re.compile('\/([a-zA-Z0-9:.]+)\/host[0-9]+')
-                    hwmatch = hwregex.search(hwpath)
-                    hostmatch = hostregex.search(hwpath)
-                     
-                    if hwmatch:
-                        props['hwpath'] = hwmatch.group(1)
-                     
-                    if hostmatch:
-                        props['srcport'] = hostmatch.group(1)
-                     
                     if devname:
+                        props['storage.size'] = float(props['storage.size']) / 1000000.0
+                        parentdev = system_bus.get_object('org.freedesktop.Hal', props['info.parent'])
+                        parentiface =dbus.Interface(parentdev, dbus_interface='org.freedesktop.Hal.Device')
+                        hwpath = parentiface.GetProperty('linux.sysfs_path')
+                        rportregex = re.compile('(.*\/rport-[0-9:-]+\/).*')
+                        hwregex = re.compile('.*?\/([a-zA-Z0-9:.]+)$')
+                        hostregex = re.compile('\/([a-zA-Z0-9:.]+)\/host[0-9]+')
+                        hwmatch = hwregex.search(hwpath)
+                        hostmatch = hostregex.search(hwpath)
+                        rportmatch = rportregex.search(hwpath)
+                        
+                        if rportmatch:
+                            rportdir = glob.glob(rportmatch.group(1) + 'fc_remote_ports*')
+                            rportstate = io.file.readFile(rportdir[0] + '/port_state')
+                            props['rportstate'] = rportstate[0].strip()
+                        
+                        if hwmatch:
+                            props['hwpath'] = hwmatch.group(1)
+                         
+                        if hostmatch:
+                            props['srcport'] = hostmatch.group(1)
+                        
                         self.diskdesc[devname.group(1)] = props
 
                 
@@ -120,20 +146,33 @@ class Disk(proc.base.Base):
                 devicematch = devpat.search(devicename)
                 if devicematch:
                     devname = devicematch.group(1)
+                    props = {}
+                    self.diskdesc[devname] = {}
 
                     hwregex = re.compile('/([0-9:]+)/')
                     hostregex = re.compile('\/([a-zA-Z0-9:.]+)\/host[0-9]+')
                     hwmatch = hwregex.search(devpath)
                     hostmatch = hostregex.search(devpath)
 
-                    self.diskdesc[devname] = {}
-                    self.diskdesc[devname]['storage.vendor'] = dev.get_property('ID_VENDOR')
-                    self.diskdesc[devname]['storage.model'] = dev.get_property('ID_MODEL')
-                    self.diskdesc[devname]['storage.size'] = float(dev.get_sysfs_attr('size')) * 512 / 1000000.0
-                    self.diskdesc[devname]['storage.serial'] = dev.get_property('ID_SERIAL')
+                    blockdev = dev.get_parent()
+                    lundev = blockdev.get_parent()
+                    rport = lundev.get_parent()
+                    rportsysfs = rport.get_sysfs_path()
+                    rportpath = glob.glob(rportsysfs + '/' + 'fc_remote_ports' + '/' + 'rport-*')
 
+                    if len(rportpath) > 0:
+                        rportstate = io.file.readFile(rportpath[0] + '/' + 'port_state')
+                        props['rportstate'] = rportstate[0].strip()
+
+                    props['storage.vendor'] = dev.get_property('ID_VENDOR')
+                    props['storage.model'] = dev.get_property('ID_MODEL')
+                    props['storage.size'] = float(dev.get_sysfs_attr('size')) * 512 / 1000000.0
+                    props['storage.serial'] = dev.get_property('ID_SERIAL')
+                    
                     if hwmatch:
-                        self.diskdesc[devname]['hwpath'] = hwmatch.group(1)
+                        props['hwpath'] = hwmatch.group(1)
 
                     if hostmatch:
-                        self.diskdesc[devname]['srcport'] = hostmatch.group(1)
+                        props['srcport'] = hostmatch.group(1)
+
+                    self.diskdesc[devname] = props

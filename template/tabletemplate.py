@@ -29,16 +29,12 @@ class TableTemplate:
             
         def __str__(self):
                 length = 0
-                output = "\n"
+                output = ""
                 for i, v in enumerate(self.tableData):
                         if len(v.keys()) > 0:
-                                output = output + self._template % self + "\n"
-                                if self._iteration == 0:
-                                        length = len(output)
-                                        output = output + '=' * length + "\n"
+                                output = output + self._template % self
                                 self._iteration = self._iteration + 1
 
-                output = '=' * length + output + '=' * length
                 self._iteration = 0
                 return output
 

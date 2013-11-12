@@ -15,10 +15,11 @@ class Fcms(proc.base.Base):
     def __init__(self):
         system_bus = dbus.SystemBus()
         try:
+            import gudev
+            self.getUdevDevs()
+        except ImportError:
             hal_mgr_obj = system_bus.get_object('org.freedesktop.Hal', '/org/freedesktop/Hal/Manager')
             self.getHalDevs()
-        except dbus.DBusException:
-            self.getUdevDevs()
 
     def getUdevDevs(self):
         import gudev

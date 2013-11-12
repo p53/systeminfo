@@ -17,7 +17,7 @@ class Memory(proc.base.Base):
                 for iteminfo in hwinfo[1]['data'].iteritems():
                     p = re.compile('\s+')
                     key = p.sub('', iteminfo[0])
-                    tmpinfo[key] = iteminfo[1]
+                    tmpinfo[key] = str(iteminfo[1])
                     
             self.asset_info.append(tmpinfo)
         
