@@ -12,7 +12,7 @@ class Pci(proc.base.Base):
         pcidevs = []
         asset_info = []
 
-        def __init__(self):
+        def getData(self):
             isclasssection = 0
             currentclass = ''
             currentvend = ''
@@ -82,6 +82,7 @@ class Pci(proc.base.Base):
                         subdevice = self.pciids['subdevs'][vendor][subvend+subdev]
 
                 self.asset_info.append({
+                            'toolindex': i,
                             'addr': i, 
                             'vendor' : self.pciids['vendors'][vendor],
                             'device' : self.pciids['devices'][vendor][device],

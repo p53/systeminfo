@@ -1,30 +1,22 @@
 import dmidecode
 import ConfigParser
 import template.propertytemplate
+import template.voidtemplate
 import re
 import sys
 import os
 import platform
 import io
+import proc.base
 
-class System:
-    asset_info = {
-                    'load': {'propname': 'load'},
-                    'machinetype': {'propname': 'machinetype'},
-                    'nodename': {'propname': 'nodename'},
-                    'osrelease': {'propname': 'osrelease'},
-                    'osname': {'propname': 'osname'},
-                    'osversion': {'propname': 'osversion'},
-                    'distname': {'propname': 'distname'},
-                    'distver': {'propname': 'distver'},
-                    'distid': {'propname': 'distid'},
-                    'OSCoreCount': {'propname': 'OSCoreCount'},
-                    'OSCoreEnabled': {'propname': 'OSCoreEnabled'},
-                    'OSThreadCount': {'propname': 'OSThreadCount'},
-                    'OSPhyscpuCount': {'propname': 'OSPhyscpuCount'}
-    }
+class System(proc.base.Base):
 
-    def __init__(self):
+    asset_info = [{}]
+    
+    template_header_type = 'VoidTemplate'
+    template_body_type = 'PropertyTemplate'
+
+    def getData(self):
 
         for hwinfo in dmidecode.system().iteritems():
             if hwinfo[1]['dmi_type'] == 1 and type(hwinfo[1]['data']) == dict:
@@ -32,9 +24,7 @@ class System:
                     tmpinfo = {}
                     p = re.compile('\s+')
                     key = p.sub('', iteminfo[0])
-                    tmpinfo['propname'] = 'System' + key
-                    tmpinfo['propval'] = str(iteminfo[1])
-                    self.asset_info['System' + key] = tmpinfo
+                    self.asset_info[0]['System' + key] = str(iteminfo[1])
 
         for hwinfo in dmidecode.chassis().iteritems():
             if hwinfo[1]['dmi_type'] == 3 and type(hwinfo[1]['data']) == dict:
@@ -42,9 +32,7 @@ class System:
                     tmpinfo = {}
                     p = re.compile('\s+')
                     key = p.sub('', iteminfo[0])
-                    tmpinfo['propname'] = 'Chassis' + key
-                    tmpinfo['propval'] = str(iteminfo[1])
-                    self.asset_info['Chassis' + key] = tmpinfo
+                    self.asset_info[0]['Chassis' + key] = str(iteminfo[1])
 
         core_count = 0
         core_enabled_count = 0
@@ -66,23 +54,28 @@ class System:
         
         self.getMemInfo()
         
-        self.asset_info['OSCoreCount']['propval'] = str(core_count)
-        self.asset_info['OSCoreEnabled']['propval'] = str(core_enabled_count)
-        self.asset_info['OSThreadCount']['propval'] = str(thread_count)
-        self.asset_info['OSPhyscpuCount']['propval'] = str(phys_cpu_count)
+        self.asset_info[0]['OSCoreCount']  = str(core_count)
+        self.asset_info[0]['OSCoreEnabled']  = str(core_enabled_count)
+        self.asset_info[0]['OSThreadCount']  = str(thread_count)
+        self.asset_info[0]['OSPhyscpuCount']  = str(phys_cpu_count)
         load = os.getloadavg()
-        self.asset_info['load']['propval'] = str(load[0]) + ' ' + str(load[1]) + ' ' + str(load[2])
-        self.asset_info['machinetype']['propval'] = platform.machine()
-        self.asset_info['nodename']['propval'] = platform.node()
-        self.asset_info['osrelease']['propval'] = platform.release()
-        self.asset_info['osname']['propval'] = platform.system()
-        self.asset_info['osversion']['propval'] = platform.version()
-        distinfo = platform.dist()
-        distinfo = platform.linux_distribution()
-        self.asset_info['distname']['propval'] = distinfo[0]
-        self.asset_info['distver']['propval'] = distinfo[1]
-        self.asset_info['distid']['propval'] = distinfo[2]
-
+        self.asset_info[0]['load']  = str(load[0]) + ' ' + str(load[1]) + ' ' + str(load[2])
+        self.asset_info[0]['machinetype']  = platform.machine()
+        self.asset_info[0]['nodename']  = platform.node()
+        self.asset_info[0]['osrelease']  = platform.release()
+        self.asset_info[0]['osname']  = platform.system()
+        self.asset_info[0]['osversion']  = platform.version()
+        
+        try:
+            distinfo = platform.dist()
+        except AttributeError:
+            distinfo = platform.linux_distribution()
+            
+        self.asset_info[0]['distname']  = distinfo[0]
+        self.asset_info[0]['distver']  = distinfo[1]
+        self.asset_info[0]['distid']  = distinfo[2]
+        self.asset_info[0]['toolindex'] = self.asset_info[0]['SystemSerialNumber']
+        
     def getMemInfo(self):
                 lines = io.file.readFile('/proc/meminfo')
                 for line in lines:
@@ -93,21 +86,4 @@ class System:
                                 value = m.group(2)
                                 p = re.compile('\s+')
                                 optim = p.sub('', key)
-                                tmpinfo['propname'] = 'Memory' + key
-                                tmpinfo['propval'] = str(value)
-                                self.asset_info['Memory' + key] = tmpinfo
-
-    def show(self, options):
-                config = ConfigParser.ConfigParser()
-                config.optionxform = str
-                abspath = os.path.dirname(sys.argv[0]) + '/settings/lang-en.conf'
-                config.read([abspath])
-                property_names = dict(config.items(self.__class__.__name__))
-
-                for key, hash in self.asset_info.iteritems():
-                        if 'propname' in hash.keys() > 0 and key in property_names.keys():
-                                self.asset_info[key]['propname'] = property_names[key]
-
-                templ_module = self.__class__.__name__.lower() + 'tpl' + options['outlength']
-                templ_vars = __import__('view.' + templ_module, globals(), locals(),['tpl'])
-                print template.propertytemplate.PropertyTemplate(self.asset_info, templ_vars.tpl)
+                                self.asset_info[0]['Memory' + key] = str(value)

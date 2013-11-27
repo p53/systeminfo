@@ -10,7 +10,8 @@ import proc.base
 
 class Cpu(proc.base.Base):
         asset_info = []
-        def __init__(self):
+        
+        def getData(self):
                 lines = io.file.readFile('/proc/cpuinfo')
                 index = 0
                 self.asset_info.append({})
@@ -23,7 +24,10 @@ class Cpu(proc.base.Base):
                                 p = re.compile('\s+')
                                 optim = p.sub('', key)
                                 self.asset_info[index][optim] = value
-
+                                
+                                if optim == 'processor':
+                                    self.asset_info[index]['toolindex'] = value
+                                    
                         if re.match('^\n$', line):
                                 self.asset_info.append({})
                                 index = index + 1

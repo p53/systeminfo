@@ -9,7 +9,7 @@ import proc.base
 class Memory(proc.base.Base):
     asset_info = []
     
-    def __init__(self):
+    def getData(self):
         
         for hwinfo in dmidecode.memory().iteritems():
             if hwinfo[1]['dmi_type'] == 17 and type(hwinfo[1]['data']) == dict:
@@ -18,7 +18,8 @@ class Memory(proc.base.Base):
                     p = re.compile('\s+')
                     key = p.sub('', iteminfo[0])
                     tmpinfo[key] = str(iteminfo[1])
-                    
-            self.asset_info.append(tmpinfo)
-        
+                
+                tmpinfo['toolindex'] = hwinfo[0]
+                
+                self.asset_info.append(tmpinfo)
 

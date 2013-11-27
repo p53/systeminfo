@@ -20,11 +20,11 @@ def main():
         action = ''
         asset_param = ''
         try:
-            opts, args = getopt.getopt(sys.argv[1:], 'hlp', ['parsable', 'long', 'help', 'get='])
+            opts, args = getopt.getopt(sys.argv[1:], 'hlp', ['parsable', 'long', 'help', 'get=', 'detail='])
         except getopt.GetoptError, e:
             print "Bad required option"
             help()
-            exit(3)
+            sys.exit(3)
 
         for o, a in opts:
             if o in ('l', '--long'):
@@ -33,14 +33,20 @@ def main():
                 options['outlength'] = 'parsable'
             elif o in ('h', '--help'):
                 help()
-                exit()
+                sys.exit()
             elif o in ('--get') and a in asset_types:
                 action = 'show'
                 asset_param = a
+            elif o in ('--detail'):
+                action = 'showCache'
+                options['template_body_type'] = 'PropertyTemplate'
+                options['template_header_type'] = 'VoidTemplate' 
+                options['outlength'] = 'detail'
+                options['instance'] = str(a)
             else:
                 print "Bad option"
                 help()
-                exit(2)
+                sys.exit(2)
 
         asset_type = asset_param.title()
         asset = globals()[asset_type]()

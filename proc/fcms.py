@@ -12,7 +12,7 @@ import proc.base
 class Fcms(proc.base.Base):
     asset_info = []
 
-    def __init__(self):
+    def getData(self):
         system_bus = dbus.SystemBus()
         try:
             import gudev
@@ -26,7 +26,8 @@ class Fcms(proc.base.Base):
         client = gudev.Client(["fc_host"])
         devs = client.query_by_subsystem("fc_host")
         pciinfo = proc.pci.Pci()
-
+        pciinfo.getData()
+        
         for dev in devs:
                 props = {}
                 parentdev = dev.get_parent()
@@ -46,16 +47,17 @@ class Fcms(proc.base.Base):
                 props['portstate'] = dev.get_sysfs_attr('port_state')
                 props['porttype'] = dev.get_sysfs_attr('port_type')
                 props['speed'] = dev.get_sysfs_attr('speed')
-
+                
+                props['toolindex'] = props['pcicard']
+                
                 self.asset_info.append(props)
-
 
     def getHalDevs(self):
         system_bus = dbus.SystemBus()
         hal_mgr_obj = system_bus.get_object('org.freedesktop.Hal', '/org/freedesktop/Hal/Manager')
         hal_mgr_iface = dbus.Interface(hal_mgr_obj, 'org.freedesktop.Hal.Manager')
         devs = hal_mgr_iface.GetAllDevices()
-
+        
         for i in devs:
             dev = system_bus.get_object('org.freedesktop.Hal', i)
             interface = dbus.Interface(dev, dbus_interface='org.freedesktop.Hal.Device')
@@ -96,7 +98,10 @@ class Fcms(proc.base.Base):
                                     props['portstate'] = portstate[0].strip()
                                     props['porttype'] = porttype[0].strip()
                                     props['speed'] = speed[0].strip()
-                                
+                    
+                    props['toolindex'] = props['pcicard']
+                    
                     self.asset_info.append(props)
+
             except dbus.DBusException:
                 continue

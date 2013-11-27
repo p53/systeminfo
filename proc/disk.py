@@ -26,7 +26,7 @@ class Disk(proc.base.Base):
                 'rportstate'
             ]
     
-    def __init__(self):
+    def getData(self):
         self.getLunsByPath()
         self.getDiskDesc()
         
@@ -36,7 +36,8 @@ class Disk(proc.base.Base):
                 if key not in self.diskdesc[disk].keys():
                     self.diskdesc[disk][key] = ''
 
-            diskinfo = {
+            diskinfo = {    
+                            'toolindex': self.diskdesc[disk]['hwpath'],
                             'device': disk,
                             'targetport': self.lunsbypath[disk]['targetport'],
                             'id': str(self.diskdesc[disk]['storage.serial']),
@@ -50,7 +51,7 @@ class Disk(proc.base.Base):
                     }
 
             self.asset_info.append(diskinfo)
-
+            
     def getLunsByPath(self):
         disk_by_path = os.listdir('/dev/disk/by-path')
         fcpat = re.compile('.*-fc-(0x[0-9a-z]+)[:-]((lun-)?(0x)?[0-9a-z]+)$')
