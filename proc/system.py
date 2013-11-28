@@ -12,11 +12,8 @@ import proc.base
 class System(proc.base.Base):
 
     asset_info = [{}]
-    
-    template_header_type = 'VoidTemplate'
-    template_body_type = 'PropertyTemplate'
 
-    def getData(self):
+    def getData(self, options):
 
         for hwinfo in dmidecode.system().iteritems():
             if hwinfo[1]['dmi_type'] == 1 and type(hwinfo[1]['data']) == dict:

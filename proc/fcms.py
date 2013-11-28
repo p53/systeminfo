@@ -12,21 +12,21 @@ import proc.base
 class Fcms(proc.base.Base):
     asset_info = []
 
-    def getData(self):
+    def getData(self, options):
         system_bus = dbus.SystemBus()
         try:
             import gudev
-            self.getUdevDevs()
+            self.getUdevDevs(options)
         except ImportError:
             hal_mgr_obj = system_bus.get_object('org.freedesktop.Hal', '/org/freedesktop/Hal/Manager')
-            self.getHalDevs()
+            self.getHalDevs(options)
 
-    def getUdevDevs(self):
+    def getUdevDevs(self, options):
         import gudev
         client = gudev.Client(["fc_host"])
         devs = client.query_by_subsystem("fc_host")
         pciinfo = proc.pci.Pci()
-        pciinfo.getData()
+        pciinfo.getData(options)
         
         for dev in devs:
                 props = {}
@@ -52,7 +52,7 @@ class Fcms(proc.base.Base):
                 
                 self.asset_info.append(props)
 
-    def getHalDevs(self):
+    def getHalDevs(self, options):
         system_bus = dbus.SystemBus()
         hal_mgr_obj = system_bus.get_object('org.freedesktop.Hal', '/org/freedesktop/Hal/Manager')
         hal_mgr_iface = dbus.Interface(hal_mgr_obj, 'org.freedesktop.Hal.Manager')

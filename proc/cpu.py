@@ -11,7 +11,7 @@ import proc.base
 class Cpu(proc.base.Base):
         asset_info = []
         
-        def getData(self):
+        def getData(self, options):
                 lines = io.file.readFile('/proc/cpuinfo')
                 index = 0
                 self.asset_info.append({})

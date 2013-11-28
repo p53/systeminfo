@@ -12,7 +12,7 @@ class Pci(proc.base.Base):
         pcidevs = []
         asset_info = []
 
-        def getData(self):
+        def getData(self, options):
             isclasssection = 0
             currentclass = ''
             currentvend = ''

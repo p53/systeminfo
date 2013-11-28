@@ -10,38 +10,42 @@ import string
 import os
 import sys
 import copy
-import pickle
+import cPickle as pickle
 
 class Base:
-
-        template_header_type = 'HeaderTableTemplate'
-        template_body_type = 'TableTemplate'
         
-        def getData():
+        def getData(self, options):
             pass
             
-        def show(self, options):
-                self.getData()
-                self.createCache()
-                self.view(options)
+        def getCache(self, options):
+            cache_file = os.path.dirname(sys.argv[0]) + '/cache/' + self.__class__.__name__.lower() + '.cache'
+            
+            if os.path.exists(cache_file):
+                if os.access(cache_file, os.R_OK) and os.path.getsize(cache_file) > 0:
+                    cache_file_obj = open(cache_file, 'r')
+                    
+                    self.asset_info = pickle.load(cache_file_obj)
+                    
+                    cache_file_obj.close()
+                else:
+                    self.getData(options)
+            else:
+                self.getData(options)
+                
+        def summary(self, options):
+            getattr(self, options['get_data_action'])(options)
+            self.createCache()
+            self.view(options)
         
-        def showCache(self, options):
-                instance = options['instance']
-                self.template_header_type = options['template_header_type']
-                self.template_body_type = options['template_body_type']
-                
-                cache_file = os.path.dirname(sys.argv[0]) + '/cache/' + self.__class__.__name__.lower() + '.cache'
-                cache_file_obj = open(cache_file, 'r')
-                
-                cached_info = pickle.load(cache_file_obj)
-                
-                cache_file_obj.close()
-                
-                for info in cached_info:
-                    if info['toolindex'] == instance:
-                        self.asset_info = [info]
-                        self.view(options)
-                        break
+        def detail(self, options):
+            getattr(self, options['get_data_action'])(options)
+            instance = options['instance']
+            
+            for info in self.asset_info:
+                if info['toolindex'] == instance:
+                    self.asset_info = [info]
+                    self.view(options)
+                    break
                 
         def view(self, options):
                 config = ConfigParser.ConfigParser()
@@ -56,8 +60,8 @@ class Base:
                 templ_module = self.__class__.__name__.lower() + 'tpl' + options['outlength']
                 templ_vars = __import__('view.' + templ_module, globals(), locals(),['tpl'])
                 
-                templ_header = globals()[self.template_header_type](origheader, names, templ_vars.tplh)
-                templ_body = globals()[self.template_body_type](origbody, names, templ_vars.tpl)
+                templ_header = globals()[options['template_header_type']](origheader, names, templ_vars.tplh)
+                templ_body = globals()[options['template_body_type']](origbody, names, templ_vars.tpl)
                 
                 if len(templ_vars.tplh) > 0:
                     print templ_header

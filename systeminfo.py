@@ -12,42 +12,90 @@ from proc.fcms import Fcms
 from proc.disk import Disk
 from proc.system import System
 
-options = {'outlength': 'short'}
+options = {'outlength': 'short', 'get_data_action': 'getData'}
 asset_types = ['cpu', 'memory', 'pci', 'fcms', 'disk', 'system']
 
 def main():
         cmds = []
         action = ''
         asset_param = ''
+        processed_options = {}
+        opt_curr = []
+        opt_possibilities = [
+                                '--parsable', 
+                                '--long', 
+                                '--help',
+                                '--get',
+                                '--detail',
+                                '--cached',
+                                '--h',
+                                '--l',
+                                '--c'
+                            ]
+        
         try:
-            opts, args = getopt.getopt(sys.argv[1:], 'hlp', ['parsable', 'long', 'help', 'get=', 'detail='])
+            opts, args = getopt.getopt(sys.argv[1:], 'hlpc', ['parsable', 'long', 'help', 'get=', 'detail=', 'cached'])
         except getopt.GetoptError, e:
             print "Bad required option"
             help()
             sys.exit(3)
 
         for o, a in opts:
-            if o in ('l', '--long'):
-                options['outlength'] = 'long'
-            elif o in ('p', '--parsable'):
-                options['outlength'] = 'parsable'
-            elif o in ('h', '--help'):
-                help()
-                sys.exit()
-            elif o in ('--get') and a in asset_types:
-                action = 'show'
-                asset_param = a
-            elif o in ('--detail'):
-                action = 'showCache'
-                options['template_body_type'] = 'PropertyTemplate'
-                options['template_header_type'] = 'VoidTemplate' 
-                options['outlength'] = 'detail'
-                options['instance'] = str(a)
-            else:
+            if o not in opt_possibilities:
                 print "Bad option"
                 help()
                 sys.exit(2)
+                
+            processed_options[o] = a
+            
+        opt_curr = processed_options.keys()
+        
+        if ('l' in opt_curr or '--long' in opt_curr) and '--get' not in opt_curr:
+            print "Bad option"
+            help()
+            sys.exit(2)
+        elif 'l' in opt_curr or '--long' in opt_curr:
+            options['outlength'] = 'long'
 
+        if ('p' in opt_curr or '--parsable' in opt_curr) and '--get' not in opt_curr:
+            print "Bad option"
+            help()
+            sys.exit(2)
+        elif 'p' in opt_curr or '--parsable' in opt_curr:
+            options['outlength'] = 'parsable'
+        
+        if ('c' in opt_curr or '--cached' in opt_curr) and '--get' not in opt_curr:
+            print "Bad option"
+            help()
+            sys.exit(2)
+        elif 'c' in opt_curr or '--cached' in opt_curr:
+            options['get_data_action'] = 'getCache'
+                        
+        if 'h' in opt_curr or '--help' in opt_curr:
+            help()
+            sys.exit()
+        
+        if '--get' in opt_curr and processed_options['--get'] in asset_types:
+            action = 'summary'
+            asset_param = processed_options['--get']
+            options['template_body_type'] = 'TableTemplate'
+            options['template_header_type'] = 'HeaderTableTemplate'
+            
+            if processed_options['--get'] == 'system':
+                options['template_body_type'] = 'PropertyTemplate'
+                options['template_header_type'] = 'VoidTemplate'
+                
+            if '--detail' in opt_curr:
+                action = 'detail'
+                options['template_body_type'] = 'PropertyTemplate'
+                options['template_header_type'] = 'VoidTemplate' 
+                options['outlength'] = 'detail'
+                options['instance'] = str(processed_options['--detail'])
+        else:
+            print "Bad option"
+            help()
+            sys.exit(2)
+            
         asset_type = asset_param.title()
         asset = globals()[asset_type]()
         getattr(asset, action)(options)
