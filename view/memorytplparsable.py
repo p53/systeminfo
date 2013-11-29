@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
 tplh = ""
-tpl = """%(Size)s#%(Type)s#%(Speed)s#%(TotalWidth)s#%(Manufacturer)s#%(FormFactor)s
+tpl = """%(handle)s#%(Size)s#%(Type)s#%(Speed)s#%(TotalWidth)s#%(Manufacturer)s#%(FormFactor)s
 """
 

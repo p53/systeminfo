@@ -1,6 +1,9 @@
 #!/usr/bin/python
 
-tpl = """%(SystemManufacturer|ljust)s
+tplh = ""
+tpl = """
+%(toolindex|center)s
+%(SystemManufacturer|ljust)s
 %(SystemSerialNumber|ljust)s
 %(SystemProductName|ljust)s
 %(SystemUUID|ljust)s

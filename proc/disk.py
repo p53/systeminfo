@@ -26,7 +26,7 @@ class Disk(proc.base.Base):
                 'rportstate'
             ]
     
-    def __init__(self):
+    def getData(self, options):
         self.getLunsByPath()
         self.getDiskDesc()
         
@@ -36,7 +36,8 @@ class Disk(proc.base.Base):
                 if key not in self.diskdesc[disk].keys():
                     self.diskdesc[disk][key] = ''
 
-            diskinfo = {
+            diskinfo = {    
+                            'toolindex': self.diskdesc[disk]['hwpath'],
                             'device': disk,
                             'targetport': self.lunsbypath[disk]['targetport'],
                             'id': str(self.diskdesc[disk]['storage.serial']),
@@ -46,11 +47,21 @@ class Disk(proc.base.Base):
                             'size': "%.f" % (self.diskdesc[disk]['storage.size']),
                             'hwpath': self.diskdesc[disk]['hwpath'],
                             'srcport': self.diskdesc[disk]['srcport'],
-                            'rportstate': self.diskdesc[disk]['rportstate']
+                            'rportstate': self.diskdesc[disk]['rportstate'],
+                            'major': str(self.diskdesc[disk]['block.major']),
+                            'minor': str(self.diskdesc[disk]['block.minor']),
+                            'firmware': str(self.diskdesc[disk]['storage.firmware_version']),
+                            'iodone_count': str(self.diskdesc[disk]['iodone_count']),
+                            'ioerror_count': str(self.diskdesc[disk]['ioerror_count']),
+                            'iorequest_count': str(self.diskdesc[disk]['iorequest_count']),
+                            'queue_depth': str(self.diskdesc[disk]['queue_depth']),
+                            'scsi_level': str(self.diskdesc[disk]['scsi_level']),
+                            'state': self.diskdesc[disk]['state'],
+                            'timeout': str(self.diskdesc[disk]['timeout']),
                     }
 
             self.asset_info.append(diskinfo)
-
+            
     def getLunsByPath(self):
         disk_by_path = os.listdir('/dev/disk/by-path')
         fcpat = re.compile('.*-fc-(0x[0-9a-z]+)[:-]((lun-)?(0x)?[0-9a-z]+)$')
@@ -107,6 +118,7 @@ class Disk(proc.base.Base):
                     
                     if devname:
                         props['storage.size'] = float(props['storage.size']) / 1000000.0
+                        block_dev_path = props['linux.sysfs_path'] + '/device'
                         parentdev = system_bus.get_object('org.freedesktop.Hal', props['info.parent'])
                         parentiface =dbus.Interface(parentdev, dbus_interface='org.freedesktop.Hal.Device')
                         hwpath = parentiface.GetProperty('linux.sysfs_path')
@@ -116,6 +128,22 @@ class Disk(proc.base.Base):
                         hwmatch = hwregex.search(hwpath)
                         hostmatch = hostregex.search(hwpath)
                         rportmatch = rportregex.search(hwpath)
+                        
+                        iodone_count = io.file.readFile(block_dev_path + '/iodone_cnt')
+                        ioerror_count = io.file.readFile(block_dev_path + '/ioerr_cnt')
+                        iorequest_count = io.file.readFile(block_dev_path + '/iorequest_cnt')
+                        queue_depth = io.file.readFile(block_dev_path + '/queue_depth')
+                        scsi_level = io.file.readFile(block_dev_path + '/scsi_level')
+                        state = io.file.readFile(block_dev_path + '/state')
+                        timeout = io.file.readFile(block_dev_path + '/timeout')
+                        
+                        props['iodone_count'] = int(iodone_count[0].strip(), 16)
+                        props['ioerror_count'] = int(ioerror_count[0].strip(), 16)
+                        props['iorequest_count'] = int(iorequest_count[0].strip(), 16)
+                        props['queue_depth'] = queue_depth[0].strip()
+                        props['scsi_level'] = scsi_level[0].strip()
+                        props['state'] = state[0].strip()
+                        props['timeout'] = timeout[0].strip()
                         
                         if rportmatch:
                             rportdir = glob.glob(rportmatch.group(1) + 'fc_remote_ports*')
@@ -168,6 +196,16 @@ class Disk(proc.base.Base):
                     props['storage.model'] = dev.get_property('ID_MODEL')
                     props['storage.size'] = float(dev.get_sysfs_attr('size')) * 512 / 1000000.0
                     props['storage.serial'] = dev.get_property('ID_SERIAL')
+                    props['block.major'] = dev.get_property('MAJOR')
+                    props['block.minor'] = dev.get_property('MINOR')
+                    props['storage.firmware_version'] = blockdev.get_sysfs_attr('rev')
+                    props['state'] = blockdev.get_sysfs_attr('state')
+                    props['timeout'] = blockdev.get_sysfs_attr('timeout')
+                    props['scsi_level'] = blockdev.get_sysfs_attr('scsi_level')
+                    props['queue_depth'] = blockdev.get_sysfs_attr('queue_depth')
+                    props['iorequest_count'] = int(blockdev.get_sysfs_attr('iorequest_cnt'), 16)
+                    props['iodone_count'] = int(blockdev.get_sysfs_attr('iodone_cnt'), 16)
+                    props['ioerror_count'] = int(blockdev.get_sysfs_attr('ioerr_cnt'), 16)
                     
                     if hwmatch:
                         props['hwpath'] = hwmatch.group(1)

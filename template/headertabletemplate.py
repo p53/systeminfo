@@ -1,6 +1,6 @@
 import string
 
-class TableTemplate:
+class HeaderTableTemplate:
         _template = ''
         _iteration = 0
         _maxInfo = {}
@@ -28,7 +28,7 @@ class TableTemplate:
 
                                     self._maxInfo[key].append(len(str(self.tableData[cpunum][key])))
                                     
-                self.tableData.pop(0)
+                self.tableData = [names]
             
         def __str__(self):
                 length = 0
