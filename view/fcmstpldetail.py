@@ -8,4 +8,16 @@ tpl = """%(pci.vendor|ljust)s
 %(portstate|ljust)s
 %(porttype|ljust)s
 %(speed|ljust)s
-%(pcicard|ljust)s"""
+%(fabricname|ljust)s
+%(portid|ljust)s
+%(symbolicname|ljust)s
+%(supportedclasses|ljust)s
+%(supportedspeeds|ljust)s
+%(pcicard|ljust)s
+%(driver|ljust)s
+%(maxnpivvports|ljust)s
+%(npivvportsinuse|ljust)s
+%(localcpus|ljust)s
+%(localcpulist|ljust)s
+%(numanode|ljust)s
+%(irq|ljust)s"""

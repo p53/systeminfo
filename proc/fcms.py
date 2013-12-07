@@ -47,7 +47,19 @@ class Fcms(proc.base.Base):
                 props['portstate'] = dev.get_sysfs_attr('port_state')
                 props['porttype'] = dev.get_sysfs_attr('port_type')
                 props['speed'] = dev.get_sysfs_attr('speed')
-                
+                props['driver'] = grandparent.get_property('DRIVER')
+                props['irq'] = grandparent.get_sysfs_attr('irq')
+                props['numanode'] = grandparent.get_sysfs_attr('numa_node')
+                props['localcpulist'] = grandparent.get_sysfs_attr('local_cpulist')
+                props['localcpus'] = grandparent.get_sysfs_attr('local_cpus')
+                props['fabricname'] = dev.get_sysfs_attr('fabric_name')
+                props['supportedclasses'] = dev.get_sysfs_attr('supported_classes')
+                props['supportedspeeds'] = dev.get_sysfs_attr('supported_speeds')
+                props['maxnpivvports'] = dev.get_sysfs_attr('max_npiv_vports')
+                props['npivvportsinuse'] = dev.get_sysfs_attr('npiv_vports_inuse')
+                props['portid'] = dev.get_sysfs_attr('port_id')
+                props['symbolicname'] = dev.get_sysfs_attr('symbolic_name')
+
                 props['toolindex'] = props['pcicard']
                 
                 self.asset_info.append(props)
@@ -78,8 +90,10 @@ class Fcms(proc.base.Base):
                             hostpath = os.listdir(hostdir)
                             
                             for hostp in hostpath:
-                                pattern = re.compile('fc_host.*')    
+                                pattern = re.compile('fc_host.*')
+                                scsipattern = re.compile('scsi_host.*')
                                 hostpp = pattern.search(hostp)
+                                scsihostpp = scsipattern.search(hostp)
                                 
                                 if hostpp:
                                     hostregex = re.compile('\/([a-zA-Z0-9:.]+)$')
@@ -87,18 +101,44 @@ class Fcms(proc.base.Base):
                                     
                                     if hostmatch:
                                         props['pcicard'] = hostmatch.group(1)
-                                        
+                                    
+                                    irq = io.file.readFile(props['linux.sysfs_path'] + '/irq')
+                                    local_cpus = io.file.readFile(props['linux.sysfs_path'] + '/local_cpus')                                    
+                                    
                                     nodename = io.file.readFile(hostdir + '/' + hostpp.group(0) + '/' + 'node_name')
                                     portname = io.file.readFile(hostdir + '/' + hostpp.group(0) + '/' + 'port_name')
                                     portstate = io.file.readFile(hostdir + '/' + hostpp.group(0) + '/' + 'port_state')
                                     porttype = io.file.readFile(hostdir + '/' + hostpp.group(0) + '/' + 'port_type')
                                     speed = io.file.readFile(hostdir + '/' + hostpp.group(0) + '/' + 'speed')
+                                    fabricname = io.file.readFile(hostdir + '/' + hostpp.group(0) + '/' + 'fabric_name')
+                                    supported_classes = io.file.readFile(hostdir + '/' + hostpp.group(0) + '/' + 'supported_classes')
+                                    supported_speeds = io.file.readFile(hostdir + '/' + hostpp.group(0) + '/' + 'supported_speeds')
+                                    port_id = io.file.readFile(hostdir + '/' + hostpp.group(0) + '/' + 'port_id')
+                                    symbolic_name = io.file.readFile(hostdir + '/' + hostpp.group(0) + '/' + 'symbolic_name')
+                                    
                                     props['nodename'] = nodename[0].strip()
                                     props['portname'] = portname[0].strip()
                                     props['portstate'] = portstate[0].strip()
                                     props['porttype'] = porttype[0].strip()
                                     props['speed'] = speed[0].strip()
-                    
+                                    props['localcpus'] = local_cpus[0].strip()
+                                    props['irq'] = irq[0].strip()
+                                    props['numanode'] = ''
+                                    props['localcpulist'] = ''
+                                    props['driver'] = props['info.linux.driver']
+                                    props['fabricname'] = fabricname[0].strip()
+                                    props['supportedclasses'] = supported_classes[0].strip()
+                                    props['supportedspeeds'] = supported_speeds[0].strip()
+                                    props['portid'] = port_id[0].strip()
+                                    props['symbolicname'] = symbolic_name[0].strip()
+                                
+                                if scsihostpp:
+                                    max_npiv_vports = io.file.readFile(hostdir + '/' + scsihostpp.group(0) + '/' + 'max_npiv_vports')
+                                    npiv_vports_inuse = io.file.readFile(hostdir + '/' + scsihostpp.group(0) + '/' + 'npiv_vports_inuse')
+                                    
+                                    props['maxnpivvports'] = max_npiv_vports[0].strip()
+                                    props['npivvportsinuse'] = npiv_vports_inuse[0].strip()
+                                    
                     props['toolindex'] = props['pcicard']
                     
                     self.asset_info.append(props)
