@@ -48,7 +48,7 @@ class PropertyTemplate:
                         keyformated = current_key
                         return keyformated + ':' + valformated
                 else:
-                        valformated = getattr(string, el[1])(self.tableData[el[0]], self._maxInfo['propval'])
+                        valformated = self.tableData[el[0]]
                         keyformated = getattr(string, el[1])(current_key, self._maxInfo['propname'])
                         return keyformated + ':' + valformated
 
