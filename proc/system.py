@@ -1,3 +1,18 @@
+
+__docformat__ = "javadoc"
+
+"""
+Module: system.py
+
+Class: System
+
+Copyright 2013 Pavol Ipoth <pavol.ipoth@gmail.com>
+
+This class is class for system asset type
+
+@author: Pavol Ipoth
+"""
+
 import dmidecode
 import ConfigParser
 import template.propertytemplate
@@ -11,10 +26,24 @@ import proc.base
 
 class System(proc.base.Base):
 
+    """
+        Variable that holds info about system asset type
+        
+        @var asset_info list
+    """
     asset_info = [{}]
 
+    """
+        Method getData
+        
+        Gets all information for system asset type
+        
+        @param options
+        @return void
+    """
     def getData(self, options):
 
+        # getting data from dmidecode and parsing (chassis, system)
         for hwinfo in dmidecode.system().iteritems():
             if hwinfo[1]['dmi_type'] == 1 and type(hwinfo[1]['data']) == dict:
                 for iteminfo in hwinfo[1]['data'].iteritems():
@@ -35,7 +64,8 @@ class System(proc.base.Base):
         core_enabled_count = 0
         thread_count = 0
         phys_cpu_count = 0
-                
+        
+        # counting totals for cpus, cores
         for hwinfo in dmidecode.processor().iteritems():
             if hwinfo[1]['dmi_type'] == 4 and type(hwinfo[1]['data']) == dict:
                 phys_cpu_count += 1
@@ -49,6 +79,7 @@ class System(proc.base.Base):
                     elif key == 'ThreadCount':
                         thread_count += iteminfo[1]
         
+        # getting memory info
         self.getMemInfo()
         
         self.asset_info[0]['OSCoreCount']  = str(core_count)
@@ -63,6 +94,7 @@ class System(proc.base.Base):
         self.asset_info[0]['osname']  = platform.system()
         self.asset_info[0]['osversion']  = platform.version()
         
+        # getting info about distribution, first one is deprecated in newer versions of python
         try:
             distinfo = platform.dist()
         except AttributeError:
@@ -73,6 +105,13 @@ class System(proc.base.Base):
         self.asset_info[0]['distid']  = distinfo[2]
         self.asset_info[0]['toolindex'] = self.asset_info[0]['SystemSerialNumber']
         
+    """
+        Method: getMemInfo
+        
+        Method gets information about memory from /proc/meminfo
+        
+        @return void
+    """
     def getMemInfo(self):
                 lines = io.file.readFile('/proc/meminfo')
                 for line in lines:

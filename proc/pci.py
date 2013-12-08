@@ -1,3 +1,18 @@
+
+__docformat__ = "javadoc"
+
+"""
+Module: pci.py
+
+Class: Pci
+
+Copyright 2013 Pavol Ipoth <pavol.ipoth@gmail.com>
+
+This class is class for pci asset type
+
+@author: Pavol Ipoth
+"""
+
 import io.file
 import os
 import re
@@ -11,16 +26,54 @@ import csv
 import dbus
 
 class Pci(proc.base.Base):
+    
+        """
+            Variable holds mapping between hex values and vendors, classes, subclassess etc...
+            
+            @var pciids dict
+        """
         pciids = {'vendors' : {}, 'devices' : {}, 'classes' : {}, 'subclasses' : {}, 'subdevs' : {}}
-        pcidevs = []
+        
+        """
+            Variable holds info about all pci devices
+            
+            @var asset_info list
+        """
         asset_info = []
         
+        """
+            Method: getData
+            
+            Method gets all info about pci items, parses /usr/share/hwdata/pci.ids file
+            for information about pci devices, this file has fixed format
+            
+            @code
+                pciids = {
+                            'vendors': { '1002': 'AMD', '9092': 'HP'},
+                            'classes': {'02': 'Network Controller', '03': 'Display Controller'},
+                            'subclasses': {'03': { '00': 'VGA controller'}, '02': {'00': 'Ethernet Controller}},
+                            'devices': {'1002': {'4147': 'R300 GL', '4136': 'RS100', '4150': 'RV350'}}
+                            'subdevs': {'1002': {'10020002': 'R9600 Pro primary (Asus OEM for HP)'}}
+                        }
+                        
+                pciids = {
+                            'vendors': {'vendorhex': 'Vendor', ...},
+                            'classes': {'classhex': 'Class name', ...},
+                            'subclasses: {'classhex': { 'subclasshex': 'Subclass name', ...}, ...},
+                            'devices: {'vendorhex': {'devicehex': 'Device name', ...}, ...},
+                            'subdevs: {'vendorhex': {'subdevhex': 'Subdev name', ...}, ...}
+                        }
+                        
+            @param options dict
+            @return void
+        """
         def getData(self, options):
             isclasssection = 0
             currentclass = ''
             currentvend = ''
                 
             f = open('/usr/share/hwdata/pci.ids', 'r')
+
             for line in f:
                 vend = re.search('^(\w+)\s*(.*)', line)
                 dev = re.search('^\t(\w+)\s*(.*)$', line)
@@ -56,8 +109,6 @@ class Pci(proc.base.Base):
 
             f.close()
 
-            self.pcidevs = os.listdir('/sys/bus/pci/devices')
-
             system_bus = dbus.SystemBus()
             
             try:
@@ -67,7 +118,16 @@ class Pci(proc.base.Base):
                 hal_mgr_obj = system_bus.get_object('org.freedesktop.Hal', '/org/freedesktop/Hal/Manager')
                 self.getHalDevs(options)
                                    
+        """
+            Method: getUdevDevs
+            
+            Getting information for systems with Udev
+            
+            @param options dict
+            @return void
+        """
         def getUdevDevs(self, options):
+            # getting info about pci devices, matching against pci ids parsed earlier
             import gudev
             client = gudev.Client(["pci"])
             devs = client.query_by_subsystem("pci")
@@ -113,6 +173,14 @@ class Pci(proc.base.Base):
                 
                 self.asset_info.append(props)
                     
+        """
+            Method: getHalDevs
+            
+            Getting about pci devices on systems with HAL
+            
+            @param options dict
+            @return void
+        """
         def getHalDevs(self, options):
             system_bus = dbus.SystemBus()
             hal_mgr_obj = system_bus.get_object('org.freedesktop.Hal', '/org/freedesktop/Hal/Manager')
@@ -138,6 +206,8 @@ class Pci(proc.base.Base):
                         if addr_match:
                             addr = addr_match.group(1)
                         
+                        # HAL has these numbers in decimal we need to get it in hex
+                        # to be able to match against pci ids
                         vendorhex = props['pci.vendor_id']
                         classhex = hex(props['pci.device_class'])
                         subclasshex = hex(props['pci.device_subclass'])
@@ -145,6 +215,8 @@ class Pci(proc.base.Base):
                         subdevhex = hex(props['pci.subsys_product_id'])
                         
                         vendorhex = string.replace(str(vendorhex), '0x', '')
+                        # in pci ids are hex numbers with 2 zeros fill, so we
+                        # need to convert our numbers from HAL to same format
                         classhex = "%02x" % int(classhex[2:], 16)
                         subclasshex = "%02x" % int(subclasshex[2:], 16)
                         subvendhex = "%02x" % int(subvendhex[2:], 16)

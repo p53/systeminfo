@@ -1,10 +1,49 @@
+
+__docformat__ = "javadoc"
+
+"""
+Module: tabletemplate.py
+
+Class: TableTemplate
+
+Copyright 2013 Pavol Ipoth <pavol.ipoth@gmail.com>
+
+This class processes template string
+It is used for generating body of table output
+
+@author: Pavol Ipoth
+"""
+
 import string
 
 class TableTemplate:
+        
         _template = ''
+        
+        """
+            Variable holds index for iterating over items
+            
+            @var _iteration int
+        """
         _iteration = 0
+        
+        """
+            Variable holds maximum length for each column
+            
+            @var _maxInfo dict
+        """
         _maxInfo = {}
 
+        """
+            Method: __init__
+            
+            Initializies object, finds maximum width for each table columns
+            
+            @param tableRows list this is list of asset items
+            @param names list this is list of column names
+            @param tplstring str this is template string
+            @return void
+        """
         def __init__(self, tableRows, names, tplstring):
                 self.header = names
                 tableRows.insert(0, names)
@@ -27,9 +66,18 @@ class TableTemplate:
                                         self._maxInfo[key+'Max'] = len(self.tableData[cpunum][key])
 
                                     self._maxInfo[key].append(len(str(self.tableData[cpunum][key])))
-                                    
+                
+                # we are popping out header fields, we need just data for body
                 self.tableData.pop(0)
+        
+        """
+            Method: __str__
             
+            This method is key method in generating output string, just for header items,
+            for each items is calling __getitem__ method
+            
+            @return output str
+        """
         def __str__(self):
                 length = 0
                 output = ""
@@ -41,6 +89,14 @@ class TableTemplate:
                 self._iteration = 0
                 return output
 
+        """
+            Method: __getitem__
+            
+            Method formats and generates string for item
+            
+            @param key string
+            @return string
+        """
         def __getitem__(self, key):
                 el = key.split("|")
                 if len(el) == 1:
