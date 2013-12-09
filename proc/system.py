@@ -1,16 +1,15 @@
-
-__docformat__ = "javadoc"
-
 """
 Module: system.py
 
 Class: System
 
-Copyright 2013 Pavol Ipoth <pavol.ipoth@gmail.com>
-
 This class is class for system asset type
 
 @author: Pavol Ipoth
+@license: GPL
+@copyright: Copyright 2013 Pavol Ipoth
+@contact: pavol.ipoth@gmail.com
+
 """
 
 import dmidecode
@@ -26,23 +25,22 @@ import proc.base
 
 class System(proc.base.Base):
 
-    """
-        Variable that holds info about system asset type
-        
-        @var asset_info list
-    """
     asset_info = [{}]
-
     """
+    @type: list
+    @ivar: holds info about system asset type
+    """
+    
+    def getData(self, options):
+        """
         Method getData
         
         Gets all information for system asset type
         
-        @param options
-        @return void
-    """
-    def getData(self, options):
-
+        @type options: dict
+        @param options: passed options
+        @rtype: void
+        """
         # getting data from dmidecode and parsing (chassis, system)
         for hwinfo in dmidecode.system().iteritems():
             if hwinfo[1]['dmi_type'] == 1 and type(hwinfo[1]['data']) == dict:
@@ -105,21 +103,22 @@ class System(proc.base.Base):
         self.asset_info[0]['distid']  = distinfo[2]
         self.asset_info[0]['toolindex'] = self.asset_info[0]['SystemSerialNumber']
         
-    """
+    def getMemInfo(self):
+        """
         Method: getMemInfo
         
         Method gets information about memory from /proc/meminfo
         
-        @return void
-    """
-    def getMemInfo(self):
-                lines = io.file.readFile('/proc/meminfo')
-                for line in lines:
-                        m = re.search('(.*?)\s*:\s*(.*)', line)
-                        if m:
-                                tmpinfo = {}
-                                key = m.group(1)
-                                value = m.group(2)
-                                p = re.compile('\s+')
-                                optim = p.sub('', key)
-                                self.asset_info[0]['Memory' + key] = str(value)
+        @rtype: void
+        """
+        
+        lines = io.file.readFile('/proc/meminfo')
+        for line in lines:
+                m = re.search('(.*?)\s*:\s*(.*)', line)
+                if m:
+                        tmpinfo = {}
+                        key = m.group(1)
+                        value = m.group(2)
+                        p = re.compile('\s+')
+                        optim = p.sub('', key)
+                        self.asset_info[0]['Memory' + key] = str(value)

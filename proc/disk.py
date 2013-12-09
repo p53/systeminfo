@@ -1,16 +1,15 @@
-
-__docformat__ = "javadoc"
-
 """
 Module: disk.py
 
 Class: Disk
 
-Copyright 2013 Pavol Ipoth <pavol.ipoth@gmail.com>
-
 This class gets info for disks
 
 @author: Pavol Ipoth
+@license: GPL
+@copyright: Copyright 2013 Pavol Ipoth
+@contact: pavol.ipoth@gmail.com
+
 """
 
 import re
@@ -27,32 +26,24 @@ import proc.base
 
 class Disk(proc.base.Base):
     
-    """
-        Variable holds target identificator and lun number from by-path listing
-        
-        @var lunsbypath dict
-    """
     lunsbypath = {}
+    """
+    @type: dict
+    @ivar: holds target identificator and lun number from by-path listing
+    """
     
-    """
-        Variable holds all info we get except target and lun number
-        
-        @var diskdesc dict
-    """
     diskdesc = {}
-    
     """
-        Variable holds data about all disks
-        
-        @var list
+    @type: dict
+    @ivar: holds all info we get except target and lun number
     """
+
     asset_info = []
-    
     """
-        Variable holds keys which should be always present in diskdesc for each item
+    @type: list
+    @ivar: holds data about all disks
+    """
         
-        @var fields list
-    """
     fields = [
                 'targetport', 
                 'storage.serial', 
@@ -74,16 +65,22 @@ class Disk(proc.base.Base):
                 'state',
                 'timeout'
             ]
-    
     """
+    @type: list
+    @ivar: holds keys which should be always present in diskdesc for each item
+    """
+    
+    def getData(self, options):
+        """
         Method: getData
         
         Method gathering all info about disks
         
-        @param options dict
-        @return void
-    """
-    def getData(self, options):
+        @type options: dict
+        @param options: passed options
+        @rtype: void
+        """
+    
         # getting information
         self.getLunsByPath()
         self.getDiskDesc()
@@ -122,15 +119,16 @@ class Disk(proc.base.Base):
 
             self.asset_info.append(diskinfo)
     
-    """
+    def getLunsByPath(self):
+        """
         Method: getLunsByPath
         
         This method gets target port and lun number for each disk block device
         if available in by-path dir
         
-        @return void
-    """
-    def getLunsByPath(self):
+        @rtype: void
+        """
+        
         disk_by_path = os.listdir('/dev/disk/by-path')
         fcpat = re.compile('.*-fc-(0x[0-9a-z]+)[:-]((lun-)?(0x)?[0-9a-z]+)$')
         dskpat = re.compile('(sd[a-z]+)')
@@ -158,15 +156,16 @@ class Disk(proc.base.Base):
                         self.lunsbypath[diskdev]['targetport'] = ''
                         self.lunsbypath[diskdev]['lunid'] = ''
 
-    """
-        Method getDiskDesc
-        
-        This method is getting data for items by routing to appropriate methods,
-        depending on system used for managing devices, HAL or Udev
-        
-        @return void
-    """
     def getDiskDesc(self):
+        """
+        Method: getLunsByPath
+        
+        This method gets target port and lun number for each disk block device
+        if available in by-path dir
+        
+        @rtype: void
+        """
+        
         system_bus = dbus.SystemBus()
         try:
             import gudev
@@ -175,14 +174,15 @@ class Disk(proc.base.Base):
             hal_mgr_obj = system_bus.get_object('org.freedesktop.Hal', '/org/freedesktop/Hal/Manager')
             self.getHalDesc()
             
-    """
+    def getHalDesc(self):
+        """
         Method: getHalDesc
         
         This method gets info about disks in case there is HAL on system
         
-        @return void
-    """
-    def getHalDesc(self):
+        @rtype: void
+        """
+        
         # getting DBUS object, instantiating HAL Manager
         # getting all devices, because HAL has some bugs in older versions and throws
         # exceptions when looking for specific device, this is slow, but reliable
@@ -250,15 +250,15 @@ class Disk(proc.base.Base):
                         
                         self.diskdesc[devname.group(1)] = props
 
-                
-    """
+    def getUdevDesc(self):
+        """
         Method: getUdevDesc
         
         Method gets info about disks if Udev is used on the system
         
-        @return void
-    """
-    def getUdevDesc(self):
+        @rtype: void
+        """
+        
         # getting block devices, filtering out just disks
         import gudev
         client = gudev.Client(["block"])

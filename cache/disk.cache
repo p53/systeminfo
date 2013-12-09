@@ -2,7 +2,7 @@
 (dp2
 S'iorequest_count'
 p3
-S'83629'
+S'132011'
 p4
 sS'major'
 p5
@@ -31,7 +31,7 @@ p15
 S'6'
 sS'ioerror_count'
 p16
-S'12'
+S'52'
 p17
 sS'queue_depth'
 p18
@@ -39,7 +39,7 @@ S'31'
 p19
 sS'iodone_count'
 p20
-S'82582'
+S'129567'
 p21
 sS'toolindex'
 p22
@@ -77,7 +77,7 @@ S'1000205'
 p36
 sa(dp37
 g3
-S'744'
+S'8021'
 p38
 sg5
 S'8'
@@ -97,12 +97,12 @@ p41
 sg15
 S'3'
 sg16
-S'743'
+S'8020'
 p42
 sg18
 S'1'
 sg20
-S'744'
+S'8021'
 p43
 sg22
 g41

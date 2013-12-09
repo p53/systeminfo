@@ -1,16 +1,15 @@
-
-__docformat__ = "javadoc"
-
 """
 Module: pci.py
 
 Class: Pci
 
-Copyright 2013 Pavol Ipoth <pavol.ipoth@gmail.com>
-
 This class is class for pci asset type
 
 @author: Pavol Ipoth
+@license: GPL
+@copyright: Copyright 2013 Pavol Ipoth
+@contact: pavol.ipoth@gmail.com
+
 """
 
 import io.file
@@ -27,27 +26,27 @@ import dbus
 
 class Pci(proc.base.Base):
     
-        """
-            Variable holds mapping between hex values and vendors, classes, subclassess etc...
-            
-            @var pciids dict
-        """
         pciids = {'vendors' : {}, 'devices' : {}, 'classes' : {}, 'subclasses' : {}, 'subdevs' : {}}
+        """
+        @type: dict
+        @ivar: holds mapping between hex values and vendors, classes, subclassess etc...
+        """
         
-        """
-            Variable holds info about all pci devices
-            
-            @var asset_info list
-        """
         asset_info = []
-        
         """
+        @type: list
+        @ivar: holds info about all pci devices
+        """
+        
+        def getData(self, options):
+            """
             Method: getData
             
             Method gets all info about pci items, parses /usr/share/hwdata/pci.ids file
             for information about pci devices, this file has fixed format
             
-            @code
+            we are creating this structure from parsing: ::
+            
                 pciids = {
                             'vendors': { '1002': 'AMD', '9092': 'HP'},
                             'classes': {'02': 'Network Controller', '03': 'Display Controller'},
@@ -63,11 +62,12 @@ class Pci(proc.base.Base):
                             'devices: {'vendorhex': {'devicehex': 'Device name', ...}, ...},
                             'subdevs: {'vendorhex': {'subdevhex': 'Subdev name', ...}, ...}
                         }
-                        
-            @param options dict
-            @return void
-        """
-        def getData(self, options):
+            
+            @type options: dict
+            @param options: passed options
+            @rtype: void
+            """
+            
             isclasssection = 0
             currentclass = ''
             currentvend = ''
@@ -118,15 +118,16 @@ class Pci(proc.base.Base):
                 hal_mgr_obj = system_bus.get_object('org.freedesktop.Hal', '/org/freedesktop/Hal/Manager')
                 self.getHalDevs(options)
                                    
-        """
+        def getUdevDevs(self, options):
+            """
             Method: getUdevDevs
             
             Getting information for systems with Udev
             
-            @param options dict
-            @return void
-        """
-        def getUdevDevs(self, options):
+            @type options: dict
+            @param options: passed parameters
+            @rtype: void
+            """
             # getting info about pci devices, matching against pci ids parsed earlier
             import gudev
             client = gudev.Client(["pci"])
@@ -173,15 +174,16 @@ class Pci(proc.base.Base):
                 
                 self.asset_info.append(props)
                     
-        """
+        def getHalDevs(self, options):
+            """
             Method: getHalDevs
             
             Getting about pci devices on systems with HAL
             
-            @param options dict
-            @return void
-        """
-        def getHalDevs(self, options):
+            @type options: dict
+            @param options: passed parameters
+            @rtype: void
+            """
             system_bus = dbus.SystemBus()
             hal_mgr_obj = system_bus.get_object('org.freedesktop.Hal', '/org/freedesktop/Hal/Manager')
             hal_mgr_iface = dbus.Interface(hal_mgr_obj, 'org.freedesktop.Hal.Manager')

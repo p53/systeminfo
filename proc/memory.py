@@ -1,16 +1,15 @@
-
-__docformat__ = "javadoc"
-
 """
 Module: memory.py
 
 Class: Memory
 
-Copyright 2013 Pavol Ipoth <pavol.ipoth@gmail.com>
-
 This class is class for memory asset type
 
 @author: Pavol Ipoth
+@license: GPL
+@copyright: Copyright 2013 Pavol Ipoth
+@contact: pavol.ipoth@gmail.com
+
 """
 
 import dmidecode
@@ -23,23 +22,23 @@ import proc.base
 
 class Memory(proc.base.Base):
     
-    """
-        This variable holds info about all memories
-        
-        @var asset_info list
-    """
     asset_info = []
-    
     """
+    @type: list
+    @ivar: holds info about all memories
+    """
+    
+    def getData(self, options):
+        """
         Method: getData
         
         Gets all information about all memory items
         
-        @param options dir
-        @return void
+        @type options: dict
+        @param options: passed options
+        @rtype void
         @see dmidecode
-    """
-    def getData(self, options):
+        """
         
         # we are getting info from dmidecode module (some info which i see in dmidecode
         # are not present in dict...), and filter out results for memory type (17)

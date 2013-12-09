@@ -1,16 +1,15 @@
-
-__docformat__ = "javadoc"
-
 """
 Module: base.py
 
 Class: Base
 
-Copyright 2013 Pavol Ipoth <pavol.ipoth@gmail.com>
-
 This class is base class for all types of assets
 
 @author: Pavol Ipoth
+@license: GPL
+@copyright: Copyright 2013 Pavol Ipoth
+@contact: pavol.ipoth@gmail.com
+
 """
 
 import io.file
@@ -29,26 +28,29 @@ import cPickle as pickle
 
 class Base:
         
-        """
+        def getData(self, options):
+            """
             Method: getData
             
             This method gets all info about asset
             
-            @param options dict
-            @return void
-        """
-        def getData(self, options):
+            @type options: dict
+            @param options: passed options
+            @rtype: void
+            """
             pass
             
-        """
+        def getCache(self, options):
+            """
             Method: getCache
             
             This method checks if there is cache file, if not creates it, if yes get data from it
             
-            @param options dict
-            @return void
-        """
-        def getCache(self, options):
+            @type options: dict
+            @param options: passed options
+            @rtype: void
+            """
+            
             cache_file = os.path.dirname(sys.argv[0]) + '/cache/' + self.__class__.__name__.lower() + '.cache'
             
             if os.path.exists(cache_file):
@@ -63,30 +65,34 @@ class Base:
             else:
                 self.getData(options)
          
-        """
+        def summary(self, options):
+            """
             Method: summary
             
             This method gets and outputs data about asset type in the list form, always writes cache file
             
-            @param options dict
-            @return void
-        """
-        def summary(self, options):
+            @type options: dict
+            @param options: passed options
+            @rtype: void
+            """
+            
             # get data from cache or fresh one, then create cache, then output
             getattr(self, options['get_data_action'])(options)
             self.createCache()
             self.view(options)
         
-        """
+        def detail(self, options):
+            """
             Method: detail
             
             This method gets and outputs data about specified asset type and instance in the detail form
             , it doesn't write cache file!!
             
-            @param options dict
-            @return void
-        """
-        def detail(self, options):
+            @type options: dict
+            @param options: passed options
+            @rtype: void
+            """
+            
             # get data from cache or fresh one, filter out specified instance, output (doesn't create cache file)
             getattr(self, options['get_data_action'])(options)
             instance = options['instance']
@@ -97,55 +103,58 @@ class Base:
                     self.view(options)
                     break
         
-        """
+        def view(self, options):
+            """
             Method: view
             
             This method is the one which is used for formatting output for data and printing
             
-            @param options dict
-            @return void
-        """
-        def view(self, options):
-                # getting configuration, names of fields
-                config = ConfigParser.ConfigParser()
-                config.optionxform = str
-                abspath = os.path.dirname(sys.argv[0]) + '/settings/lang-en.conf'
-                config.read([abspath])
-                names = dict(config.items(self.__class__.__name__))
-                
-                origheader = copy.copy(self.asset_info)
-                origbody = copy.copy(self.asset_info)
-                
-                # creating name of view which will be used, then importing variables with
-                # template from view
-                templ_module = self.__class__.__name__.lower() + 'tpl' + options['outlength']
-                templ_vars = __import__('view.' + templ_module, globals(), locals(),['tpl'])
-                
-                # this will need to be reworked
-                # creating template objects for header, body, processing assigned variables
-                templ_header = globals()[options['template_header_type']](origheader, names, templ_vars.tplh)
-                templ_body = globals()[options['template_body_type']](origbody, names, templ_vars.tpl)
-                
-                # printing processed templates
-                if len(templ_vars.tplh) > 0:
-                    print templ_header
-                
-                if len(templ_vars.tpl) > 0:
-                    print templ_body
+            @type options: dict
+            @param options: passed options
+            @rtype: void
+            """
+            
+            # getting configuration, names of fields
+            config = ConfigParser.ConfigParser()
+            config.optionxform = str
+            abspath = os.path.dirname(sys.argv[0]) + '/settings/lang-en.conf'
+            config.read([abspath])
+            names = dict(config.items(self.__class__.__name__))
+            
+            origheader = copy.copy(self.asset_info)
+            origbody = copy.copy(self.asset_info)
+            
+            # creating name of view which will be used, then importing variables with
+            # template from view
+            templ_module = self.__class__.__name__.lower() + 'tpl' + options['outlength']
+            templ_vars = __import__('view.' + templ_module, globals(), locals(),['tpl'])
+            
+            # this will need to be reworked
+            # creating template objects for header, body, processing assigned variables
+            templ_header = globals()[options['template_header_type']](origheader, names, templ_vars.tplh)
+            templ_body = globals()[options['template_body_type']](origbody, names, templ_vars.tpl)
+            
+            # printing processed templates
+            if len(templ_vars.tplh) > 0:
+                print templ_header
+            
+            if len(templ_vars.tpl) > 0:
+                print templ_body
                     
-        """
+        def createCache(self):
+            """
             Method createCache
             
             This method creates cache file, pickles data and writes to file
             
-            @return void
-        """
-        def createCache(self):
-                cache_file = os.path.dirname(sys.argv[0]) + '/cache/' + self.__class__.__name__.lower() + '.cache'
-                cache_file_obj = open(cache_file, 'w')
-                
-                # pickling asset data
-                pickle.dump(self.asset_info, cache_file_obj)
-                
-                cache_file_obj.close()
+            @rtype: void
+            """
+            
+            cache_file = os.path.dirname(sys.argv[0]) + '/cache/' + self.__class__.__name__.lower() + '.cache'
+            cache_file_obj = open(cache_file, 'w')
+            
+            # pickling asset data
+            pickle.dump(self.asset_info, cache_file_obj)
+            
+            cache_file_obj.close()
                 

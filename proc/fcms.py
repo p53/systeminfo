@@ -1,16 +1,15 @@
-
-__docformat__ = "javadoc"
-
 """
 Module: fcms.py
 
 Class: Fcms
 
-Copyright 2013 Pavol Ipoth <pavol.ipoth@gmail.com>
-
 This class is class for fcms asset type
 
 @author: Pavol Ipoth
+@license: GPL
+@copyright: Copyright 2013 Pavol Ipoth
+@contact: pavol.ipoth@gmail.com
+
 """
 
 import io.file
@@ -26,23 +25,23 @@ import proc.base
 
 class Fcms(proc.base.Base):
     
-    """
-        Variable holds info about all fcms devices
-        
-        @var asset_info list
-    """
     asset_info = []
-
     """
+    @type: list
+    @ivar: holds info about all fcms devices
+    """
+    
+    def getData(self, options):
+        """
         Method: getData
         
         Method gets info about fcms devices, routes to appropriate method, depending if
         HAL or Udev is used
         
-        @param options dict
-        @return void
-    """
-    def getData(self, options):
+        @type options: dict
+        @param options: passed options
+        @rtype: void
+        """
         system_bus = dbus.SystemBus()
         try:
             import gudev
@@ -52,6 +51,16 @@ class Fcms(proc.base.Base):
             self.getHalDevs(options)
 
     def getUdevDevs(self, options):
+        """
+        Method: getUdevDevs
+        
+        Method gets info about FC HBA's for systems with Udev
+        
+        @type options: dict
+        @param options: passed options
+        @rtype: void
+        """
+        
         # getting fc_host devices, these are HBA ports
         import gudev
         client = gudev.Client(["fc_host"])
@@ -99,6 +108,16 @@ class Fcms(proc.base.Base):
                 self.asset_info.append(props)
 
     def getHalDevs(self, options):
+        """
+        Method: getHalDevs
+        
+        Method gets info about FC HBA's for systems with HAL
+        
+        @type options: dict
+        @param options: passed options
+        @rtype: void
+        """
+        
         # againg we get all devices, to have compatibility with older HAL
         system_bus = dbus.SystemBus()
         hal_mgr_obj = system_bus.get_object('org.freedesktop.Hal', '/org/freedesktop/Hal/Manager')
