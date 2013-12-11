@@ -1,3 +1,17 @@
+"""
+Module: disk.py
+
+Class: Disk
+
+This class gets info for disks
+
+@author: Pavol Ipoth
+@license: GPL
+@copyright: Copyright 2013 Pavol Ipoth
+@contact: pavol.ipoth@gmail.com
+
+"""
+
 import re
 import os
 import dbus
@@ -11,9 +25,25 @@ import io
 import proc.base
 
 class Disk(proc.base.Base):
+    
     lunsbypath = {}
+    """
+    @type: dict
+    @ivar: holds target identificator and lun number from by-path listing
+    """
+    
     diskdesc = {}
+    """
+    @type: dict
+    @ivar: holds all info we get except target and lun number
+    """
+
     asset_info = []
+    """
+    @type: list
+    @ivar: holds data about all disks
+    """
+        
     fields = [
                 'targetport', 
                 'storage.serial', 
@@ -23,13 +53,40 @@ class Disk(proc.base.Base):
                 'storage.size', 
                 'hwpath', 
                 'srcport',
-                'rportstate'
+                'rportstate',
+                'major',
+                'minor',
+                'firmware',
+                'iodone_count',
+                'ioerror_count',
+                'iorequest_count',
+                'queue_depth',
+                'scsi_level',
+                'state',
+                'timeout'
             ]
+    """
+    @type: list
+    @ivar: holds keys which should be always present in diskdesc for each item
+    """
     
     def getData(self, options):
+        """
+        Method: getData
+        
+        Method gathering all info about disks
+        
+        @type options: dict
+        @param options: passed options
+        @rtype: void
+        """
+    
+        # getting information
         self.getLunsByPath()
         self.getDiskDesc()
         
+        # checking if each item has keys present in fields list, to avoid exceptions
+        # and assigning values to asset_info
         for disk, info in self.diskdesc.iteritems():
         
             for key in self.fields:
@@ -61,8 +118,17 @@ class Disk(proc.base.Base):
                     }
 
             self.asset_info.append(diskinfo)
-            
+    
     def getLunsByPath(self):
+        """
+        Method: getLunsByPath
+        
+        This method gets target port and lun number for each disk block device
+        if available in by-path dir
+        
+        @rtype: void
+        """
+        
         disk_by_path = os.listdir('/dev/disk/by-path')
         fcpat = re.compile('.*-fc-(0x[0-9a-z]+)[:-]((lun-)?(0x)?[0-9a-z]+)$')
         dskpat = re.compile('(sd[a-z]+)')
@@ -91,6 +157,15 @@ class Disk(proc.base.Base):
                         self.lunsbypath[diskdev]['lunid'] = ''
 
     def getDiskDesc(self):
+        """
+        Method: getLunsByPath
+        
+        This method gets target port and lun number for each disk block device
+        if available in by-path dir
+        
+        @rtype: void
+        """
+        
         system_bus = dbus.SystemBus()
         try:
             import gudev
@@ -100,15 +175,28 @@ class Disk(proc.base.Base):
             self.getHalDesc()
             
     def getHalDesc(self):
+        """
+        Method: getHalDesc
+        
+        This method gets info about disks in case there is HAL on system
+        
+        @rtype: void
+        """
+        
+        # getting DBUS object, instantiating HAL Manager
+        # getting all devices, because HAL has some bugs in older versions and throws
+        # exceptions when looking for specific device, this is slow, but reliable
         system_bus = dbus.SystemBus()
         hal_mgr_obj = system_bus.get_object('org.freedesktop.Hal', '/org/freedesktop/Hal/Manager')
         hal_mgr_iface = dbus.Interface(hal_mgr_obj, 'org.freedesktop.Hal.Manager')
         devs = hal_mgr_iface.GetAllDevices()
 
         for i in devs:
+            # iterating over devices, getting interface for Device
             dev = system_bus.get_object('org.freedesktop.Hal', i)
             interface = dbus.Interface(dev, dbus_interface='org.freedesktop.Hal.Device')
 
+            # filtering storage devices and devices with info.category
             if interface.PropertyExists('info.category'):
                 category = interface.GetProperty('info.category')
                 if category == 'storage':
@@ -117,6 +205,10 @@ class Disk(proc.base.Base):
                     devname = devpat.search(props['block.device'])
                     
                     if devname:
+                        # some properties are block properties, some on lun level in HAL
+                        # thus we are getting also parent device, for getting address of
+                        # HBA we are matching regex, remote ports are gathered from sysfs
+                        # path of lun
                         props['storage.size'] = float(props['storage.size']) / 1000000.0
                         block_dev_path = props['linux.sysfs_path'] + '/device'
                         parentdev = system_bus.get_object('org.freedesktop.Hal', props['info.parent'])
@@ -158,8 +250,16 @@ class Disk(proc.base.Base):
                         
                         self.diskdesc[devname.group(1)] = props
 
-                
     def getUdevDesc(self):
+        """
+        Method: getUdevDesc
+        
+        Method gets info about disks if Udev is used on the system
+        
+        @rtype: void
+        """
+        
+        # getting block devices, filtering out just disks
         import gudev
         client = gudev.Client(["block"])
         devs = client.query_by_subsystem("block")
@@ -177,6 +277,7 @@ class Disk(proc.base.Base):
                     props = {}
                     self.diskdesc[devname] = {}
 
+                    # getting info about src port from sysfs of device
                     hwregex = re.compile('/([0-9:]+)/')
                     hostregex = re.compile('\/([a-zA-Z0-9:.]+)\/host[0-9]+')
                     hwmatch = hwregex.search(devpath)

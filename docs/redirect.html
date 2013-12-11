@@ -1,0 +1,38 @@
+<html><head><title>Epydoc Redirect Page</title>
+<meta http-equiv="cache-control" content="no-cache" />
+<meta http-equiv="expires" content="0" />
+<meta http-equiv="pragma" content="no-cache" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+<body>
+<script type="text/javascript">
+<!--
+var pages = ["template.headertabletemplate.HeaderTableTemplate-c", "template.propertytemplate.PropertyTemplate-c", "template.tabletemplate.TableTemplate-c", "template.voidtemplate.VoidTemplate-c", "template.headertabletemplate-m", "template.propertytemplate-m", "template.tabletemplate-m", "view.memorytplparsable-m", "view.systemtplparsable-m", "template.voidtemplate-m", "view.disktplparsable-m", "view.fcmstplparsable-m", "view.memorytpldetail-m", "view.systemtpldetail-m", "view.cputplparsable-m", "view.memorytplshort-m", "view.pcitplparsable-m", "view.systemtplshort-m", "view.disktpldetail-m", "view.fcmstpldetail-m", "view.memorytpllong-m", "view.systemtpllong-m", "proc.memory.Memory-c", "proc.system.System-c", "view.cputpldetail-m", "view.disktplshort-m", "view.fcmstplshort-m", "view.pcitpldetail-m", "script-README_md-m", "view.cputplshort-m", "view.disktpllong-m", "view.fcmstpllong-m", "view.pcitplshort-m", "view.cputpllong-m", "view.pcitpllong-m", "proc.base.Base-c", "proc.disk.Disk-c", "proc.fcms.Fcms-c", "proc.cpu.Cpu-c", "proc.pci.Pci-c", "proc.memory-m", "proc.system-m", "misc.regex-m", "systeminfo-m", "proc.base-m", "proc.disk-m", "proc.fcms-m", "proc.cpu-m", "proc.pci-m", "template-m", "io.file-m", "misc-m", "proc-m", "view-m", "io-m"];
+var dottedName = get_anchor();
+if (dottedName) {
+    var target = redirect_url(dottedName);
+    if (target) window.location.replace(target);
+}
+// -->
+</script>
+
+<h3>Epydoc Auto-redirect page</h3>
+
+<p>When javascript is enabled, this page will redirect URLs of
+the form <tt>redirect.html#<i>dotted.name</i></tt> to the
+documentation for the object with the given fully-qualified
+dotted name.</p>
+<p><a id="message"> &nbsp; </a></p>
+
+<script type="text/javascript">
+<!--
+if (dottedName) {
+    var msg = document.getElementById("message");
+    msg.innerHTML = "No documentation found for <tt>"+
+                    dottedName+"</tt>";
+}
+// -->
+</script>
+
+</body>
+</html>

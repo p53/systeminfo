@@ -1,3 +1,17 @@
+"""
+Module: fcms.py
+
+Class: Fcms
+
+This class is class for fcms asset type
+
+@author: Pavol Ipoth
+@license: GPL
+@copyright: Copyright 2013 Pavol Ipoth
+@contact: pavol.ipoth@gmail.com
+
+"""
+
 import io.file
 import os
 import re
@@ -10,9 +24,24 @@ import sys
 import proc.base
 
 class Fcms(proc.base.Base):
+    
     asset_info = []
-
+    """
+    @type: list
+    @ivar: holds info about all fcms devices
+    """
+    
     def getData(self, options):
+        """
+        Method: getData
+        
+        Method gets info about fcms devices, routes to appropriate method, depending if
+        HAL or Udev is used
+        
+        @type options: dict
+        @param options: passed options
+        @rtype: void
+        """
         system_bus = dbus.SystemBus()
         try:
             import gudev
@@ -22,9 +51,21 @@ class Fcms(proc.base.Base):
             self.getHalDevs(options)
 
     def getUdevDevs(self, options):
+        """
+        Method: getUdevDevs
+        
+        Method gets info about FC HBA's for systems with Udev
+        
+        @type options: dict
+        @param options: passed options
+        @rtype: void
+        """
+        
+        # getting fc_host devices, these are HBA ports
         import gudev
         client = gudev.Client(["fc_host"])
         devs = client.query_by_subsystem("fc_host")
+        # getting information all pci cards, and from those we will select our HBAs
         pciinfo = proc.pci.Pci()
         pciinfo.getData(options)
         
@@ -32,8 +73,10 @@ class Fcms(proc.base.Base):
                 props = {}
                 parentdev = dev.get_parent()
                 grandparent = parentdev.get_parent()
+                # getting vendor hex number, we will match it with info from Pci
                 vendorhex = grandparent.get_sysfs_attr('vendor')
                 vendorhex = string.replace(vendorhex, '0x', '')
+                # getting address
                 hostregex = re.compile('\/([a-zA-Z0-9:.]+)\/host[0-9]+')
                 hostmatch = hostregex.search(dev.get_sysfs_path())
                                     
@@ -65,6 +108,17 @@ class Fcms(proc.base.Base):
                 self.asset_info.append(props)
 
     def getHalDevs(self, options):
+        """
+        Method: getHalDevs
+        
+        Method gets info about FC HBA's for systems with HAL
+        
+        @type options: dict
+        @param options: passed options
+        @rtype: void
+        """
+        
+        # againg we get all devices, to have compatibility with older HAL
         system_bus = dbus.SystemBus()
         hal_mgr_obj = system_bus.get_object('org.freedesktop.Hal', '/org/freedesktop/Hal/Manager')
         hal_mgr_iface = dbus.Interface(hal_mgr_obj, 'org.freedesktop.Hal.Manager')
@@ -73,6 +127,8 @@ class Fcms(proc.base.Base):
         for i in devs:
             dev = system_bus.get_object('org.freedesktop.Hal', i)
             interface = dbus.Interface(dev, dbus_interface='org.freedesktop.Hal.Device')
+            
+            # filtering out HBAs and Fiber channel, those have specific numbers in pci.ids file
             try:
                 classNum = interface.GetProperty('pci.device_class')
                 subclassNum = interface.GetProperty('pci.device_subclass')
@@ -81,6 +137,7 @@ class Fcms(proc.base.Base):
                     props = interface.GetAllProperties()
                     pcipath = os.listdir(props['linux.sysfs_path'])
                     
+                    # for each fc_host get information on fc, scsi level
                     for path in pcipath:
                         pattern = re.compile('host[0-9]+')
                         mpath = pattern.search(path)
