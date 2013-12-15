@@ -197,8 +197,10 @@ class Fcms(proc.base.Base):
                                     props['npivvportsinuse'] = npiv_vports_inuse[0].strip()
                                     
                     props['toolindex'] = props['pcicard']
+
+		    props_unicode = dict([(unicode(x), unicode(y)) for x, y in props.iteritems()])
                     
-                    self.asset_info.append(props)
+                    self.asset_info.append(props_unicode)
 
             except dbus.DBusException:
                 continue
