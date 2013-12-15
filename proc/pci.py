@@ -198,7 +198,7 @@ class Pci(proc.base.Base):
                     
                     if subsystem == 'pci':
                         props = interface.GetAllProperties()
-                        addr_match = re.search('.*?\/([a-zA-Z:0-9\.]+)$', props['linux.sysfs_path'])
+			addr_match = re.search('.*?\/([a-zA-Z:0-9\.]+)$', props['linux.sysfs_path'])
                         addr = ''
                         subdevice = ''
                         
@@ -245,8 +245,10 @@ class Pci(proc.base.Base):
                             props['driver'] = props['info.linux.driver']
                             
                         props['toolindex'] = props['addr']
+
+			props_unicode = dict([(unicode(x),unicode(y)) for x, y in props.iteritems()])
                         
-                        self.asset_info.append(props)
+                        self.asset_info.append(props_unicode)
 
                 except dbus.DBusException:
                     continue
