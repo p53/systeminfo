@@ -82,7 +82,6 @@ class Disk(proc.base.Base):
         """
     
         # getting information
-        self.getLunsByPath()
         self.getDiskDesc()
         
         # checking if each item has keys present in fields list, to avoid exceptions
@@ -96,9 +95,8 @@ class Disk(proc.base.Base):
             diskinfo = {    
                             'toolindex': self.diskdesc[disk]['hwpath'],
                             'device': disk,
-                            'targetport': self.lunsbypath[disk]['targetport'],
+                            'targetport': self.diskdesc[disk]['targetport'],
                             'id': str(self.diskdesc[disk]['storage.serial']),
-                            'lunid': str(self.lunsbypath[disk]['lunid']),
                             'model': unicode(self.diskdesc[disk]['storage.model']),
                             'vendor': unicode(self.diskdesc[disk]['storage.vendor']),
                             'size': "%.f" % (self.diskdesc[disk]['storage.size']),
@@ -118,50 +116,12 @@ class Disk(proc.base.Base):
                     }
 
             self.asset_info.append(diskinfo)
-    
-    def getLunsByPath(self):
-        """
-        Method: getLunsByPath
-        
-        This method gets target port and lun number for each disk block device
-        if available in by-path dir
-        
-        @rtype: void
-        """
-        
-        disk_by_path = os.listdir('/dev/disk/by-path')
-        fcpat = re.compile('.*-fc-(0x[0-9a-z]+)[:-]((lun-)?(0x)?[0-9a-z]+)$')
-        dskpat = re.compile('(sd[a-z]+)')
-
-        for disk in disk_by_path:
-            match = fcpat.search(disk)
-            if match:
-                target_port = match.group(1)
-                lun_id = match.group(2)
-                target = os.readlink('/dev/disk/by-path' + '/' + match.group(0))
-                dskmatch = dskpat.search(target)
-                
-                if dskmatch:
-                    diskdev = dskmatch.group(1)
-                    self.lunsbypath[diskdev] = {}
-                    self.lunsbypath[diskdev]['targetport'] = target_port
-                    self.lunsbypath[diskdev]['lunid'] = lun_id
-
-            else:
-                target = os.readlink('/dev/disk/by-path/'+disk)
-                dskmatch = dskpat.search(target)
-                if dskmatch:
-                        diskdev = dskmatch.group(1)
-                        self.lunsbypath[diskdev] = {}
-                        self.lunsbypath[diskdev]['targetport'] = ''
-                        self.lunsbypath[diskdev]['lunid'] = ''
 
     def getDiskDesc(self):
         """
         Method: getLunsByPath
         
         This method gets target port and lun number for each disk block device
-        if available in by-path dir
         
         @rtype: void
         """
@@ -240,7 +200,9 @@ class Disk(proc.base.Base):
                         if rportmatch:
                             rportdir = glob.glob(rportmatch.group(1) + 'fc_remote_ports*')
                             rportstate = io.file.readFile(rportdir[0] + '/port_state')
+                            rportname = io.file.readFile(rportdir[0] + '/port_name')
                             props['rportstate'] = rportstate[0].strip()
+                            props['targetport'] = rportname[0].strip()
                         
                         if hwmatch:
                             props['hwpath'] = hwmatch.group(1)
@@ -291,7 +253,9 @@ class Disk(proc.base.Base):
 
                     if len(rportpath) > 0:
                         rportstate = io.file.readFile(rportpath[0] + '/' + 'port_state')
+                        rportname = io.file.readFile(rportpath[0] + '/' + 'port_name')
                         props['rportstate'] = rportstate[0].strip()
+                        props['targetport'] = rportname[0].strip()
 
                     props['storage.vendor'] = dev.get_property('ID_VENDOR')
                     props['storage.model'] = dev.get_property('ID_MODEL')

@@ -6,7 +6,6 @@ tpl = """%(device|ljust)s
 %(major|ljust)s
 %(minor|ljust)s
 %(hwpath|ljust)s
-%(size|ljust)s
 %(vendor|ljust)s
 %(model|ljust)s
 %(srcport|ljust)s

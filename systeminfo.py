@@ -27,6 +27,7 @@ from proc.pci import Pci
 from proc.fcms import Fcms
 from proc.disk import Disk
 from proc.system import System
+from proc.tape import Tape
 
 options = {'outlength': 'short', 'get_data_action': 'getData'}
 """
@@ -34,7 +35,7 @@ options = {'outlength': 'short', 'get_data_action': 'getData'}
 @var: this is variable with default values passed to action method
 """
 
-asset_types = ['cpu', 'memory', 'pci', 'fcms', 'disk', 'system']
+asset_types = ['cpu', 'memory', 'pci', 'fcms', 'disk', 'system', 'tape']
 """
 @type: list
 @var: list of asset types currently supported by tool
