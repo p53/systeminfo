@@ -12,13 +12,13 @@ This class is base class for all types of assets
 
 """
 
-import io.file
+import systeminfo.io.file
 import re
 from string import Template
-from template.tabletemplate import TableTemplate
-from template.propertytemplate import PropertyTemplate
-from template.voidtemplate import VoidTemplate
-from template.headertabletemplate import HeaderTableTemplate
+from systeminfo.template.tabletemplate import TableTemplate
+from systeminfo.template.propertytemplate import PropertyTemplate
+from systeminfo.template.voidtemplate import VoidTemplate
+from systeminfo.template.headertabletemplate import HeaderTableTemplate
 import ConfigParser
 import string
 import os
@@ -27,6 +27,18 @@ import copy
 import cPickle as pickle
 
 class Base:
+        
+        cacheDir = ""
+        """
+        @type: string
+        @ivar: Holds cache files directory
+        """
+        
+        confDir = ""
+        """
+        @type: string
+        @ivar: Holds configuration files directory
+        """
         
         def getData(self, options):
             """
@@ -51,7 +63,7 @@ class Base:
             @rtype: void
             """
             
-            cache_file = os.path.dirname(sys.argv[0]) + '/cache/' + self.__class__.__name__.lower() + '.cache'
+            cache_file = self.cacheDir + self.__class__.__name__.lower() + '.cache'
             
             if os.path.exists(cache_file):
                 if os.access(cache_file, os.R_OK) and os.path.getsize(cache_file) > 0:
@@ -117,7 +129,7 @@ class Base:
             # getting configuration, names of fields
             config = ConfigParser.ConfigParser()
             config.optionxform = str
-            abspath = os.path.dirname(sys.argv[0]) + '/settings/lang-en.conf'
+            abspath = self.confDir + 'lang-en.conf'
             config.read([abspath])
             names = dict(config.items(self.__class__.__name__))
             
@@ -127,7 +139,7 @@ class Base:
             # creating name of view which will be used, then importing variables with
             # template from view
             templ_module = self.__class__.__name__.lower() + 'tpl' + options['outlength']
-            templ_vars = __import__('view.' + templ_module, globals(), locals(),['tpl'])
+            templ_vars = __import__('systeminfo.view.' + templ_module, globals(), locals(),['tpl'])
             
             # this will need to be reworked
             # creating template objects for header, body, processing assigned variables
@@ -150,11 +162,36 @@ class Base:
             @rtype: void
             """
             
-            cache_file = os.path.dirname(sys.argv[0]) + '/cache/' + self.__class__.__name__.lower() + '.cache'
+            cache_file = self.cacheDir + self.__class__.__name__.lower() + '.cache'
             cache_file_obj = open(cache_file, 'w')
             
             # pickling asset data
             pickle.dump(self.asset_info, cache_file_obj)
             
             cache_file_obj.close()
-                
+            
+        def setCacheDir(self, dir_location):
+            """
+            Method setCacheDir
+            
+            This method sets the dir for saving cache files
+            
+            @type dir_location: string
+            @param dir_location: location of cache files directory
+            @rtype: void
+            """
+            
+            self.cacheDir = dir_location
+            
+        def setConfDir(self, dir_location):
+            """
+            Method setConfDir
+            
+            This methos sets the dir for configuration files
+            
+            @type dir_location: string
+            @param dir_location: location of configuration directory
+            @rtype: void
+            """
+            
+            self.confDir = dir_location

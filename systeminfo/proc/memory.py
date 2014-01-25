@@ -14,13 +14,12 @@ This class is class for memory asset type
 
 import dmidecode
 import ConfigParser
-import template.tabletemplate
 import re
 import sys
 import os
-import proc.base
+import systeminfo.proc.base
 
-class Memory(proc.base.Base):
+class Memory(systeminfo.proc.base.Base):
     
     asset_info = []
     """

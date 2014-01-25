@@ -15,16 +15,14 @@ This class gets info for tapes
 import re
 import os
 import dbus
-from string import Template
-import template.tabletemplate
 import ConfigParser
 import string
 import glob
 import sys
-import io
-import proc.base
+import systeminfo.io
+import systeminfo.proc.base
 
-class Tape(proc.base.Base):
+class Tape(systeminfo.proc.base.Base):
     
     lunsbypath = {}
     """
@@ -179,15 +177,15 @@ class Tape(proc.base.Base):
                         hostmatch = hostregex.search(block_dev_path)
                         rportmatch = rportregex.search(block_dev_path)
                         
-                        iodone_count = io.file.readFile(block_dev_path + '/iodone_cnt')
-                        ioerror_count = io.file.readFile(block_dev_path + '/ioerr_cnt')
-                        iorequest_count = io.file.readFile(block_dev_path + '/iorequest_cnt')
-                        queue_depth = io.file.readFile(block_dev_path + '/queue_depth')
-                        scsi_level = io.file.readFile(block_dev_path + '/scsi_level')
-                        state = io.file.readFile(block_dev_path + '/state')
-                        timeout = io.file.readFile(block_dev_path + '/timeout')
-                        firmware = io.file.readFile(block_dev_path + '/rev')
-                        majorminor = io.file.readFile(tapedevnamelink + '/dev')
+                        iodone_count = systeminfo.io.file.readFile(block_dev_path + '/iodone_cnt')
+                        ioerror_count = systeminfo.io.file.readFile(block_dev_path + '/ioerr_cnt')
+                        iorequest_count = systeminfo.io.file.readFile(block_dev_path + '/iorequest_cnt')
+                        queue_depth = systeminfo.io.file.readFile(block_dev_path + '/queue_depth')
+                        scsi_level = systeminfo.io.file.readFile(block_dev_path + '/scsi_level')
+                        state = systeminfo.io.file.readFile(block_dev_path + '/state')
+                        timeout = systeminfo.io.file.readFile(block_dev_path + '/timeout')
+                        firmware = systeminfo.io.file.readFile(block_dev_path + '/rev')
+                        majorminor = systeminfo.io.file.readFile(tapedevnamelink + '/dev')
                         majorminor_list = majorminor[0].split(':');
                         
                         props['iodone_count'] = int(iodone_count[0].strip(), 16)
@@ -205,8 +203,8 @@ class Tape(proc.base.Base):
                         
                         if rportmatch:
                             rportdir = glob.glob(rportmatch.group(1) + 'fc_remote_ports*')
-                            rportstate = io.file.readFile(rportdir[0] + '/port_state')
-                            rportname = io.file.readFile(rportdir[0] + '/port_name')
+                            rportstate = systeminfo.io.file.readFile(rportdir[0] + '/port_state')
+                            rportname = systeminfo.io.file.readFile(rportdir[0] + '/port_name')
                             props['rportstate'] = rportstate[0].strip()
                             props['targetport'] = rportname[0].strip()
                             
@@ -256,8 +254,8 @@ class Tape(proc.base.Base):
                 rportpath = glob.glob(rportsysfs + '/' + 'fc_remote_ports' + '/' + 'rport-*')
 
                 if len(rportpath) > 0:
-                    rportstate = io.file.readFile(rportpath[0] + '/' + 'port_state')
-                    rportname = io.file.readFile(rportpath[0] + '/' + 'port_name')
+                    rportstate = systeminfo.io.file.readFile(rportpath[0] + '/' + 'port_state')
+                    rportname = systeminfo.io.file.readFile(rportpath[0] + '/' + 'port_name')
                     props['rportstate'] = rportstate[0].strip()
                     props['targetport'] = rportname[0].strip()
 

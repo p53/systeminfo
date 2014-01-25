@@ -20,14 +20,15 @@ import sys
 import getopt
 import re
 import os
+import systeminfo.misc.config
 from string import Template
-from proc.cpu import Cpu
-from proc.memory import Memory
-from proc.pci import Pci
-from proc.fcms import Fcms
-from proc.disk import Disk
-from proc.system import System
-from proc.tape import Tape
+from systeminfo.proc.cpu import Cpu
+from systeminfo.proc.memory import Memory
+from systeminfo.proc.pci import Pci
+from systeminfo.proc.fcms import Fcms
+from systeminfo.proc.disk import Disk
+from systeminfo.proc.system import System
+from systeminfo.proc.tape import Tape
 
 options = {'outlength': 'short', 'get_data_action': 'getData'}
 """
@@ -151,6 +152,8 @@ def main():
     # , also passing parameters assigned in previous option checking
     asset_type = asset_param.title()
     asset = globals()[asset_type]()
+    getattr(asset, 'setConfDir')(systeminfo.misc.config.confDir)
+    getattr(asset, 'setCacheDir')(systeminfo.misc.config.cacheDir)
     getattr(asset, action)(options)
 
 def help():

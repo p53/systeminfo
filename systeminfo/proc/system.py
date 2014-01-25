@@ -14,16 +14,14 @@ This class is class for system asset type
 
 import dmidecode
 import ConfigParser
-import template.propertytemplate
-import template.voidtemplate
 import re
 import sys
 import os
 import platform
-import io
-import proc.base
+import systeminfo.io
+import systeminfo.proc.base
 
-class System(proc.base.Base):
+class System(systeminfo.proc.base.Base):
 
     asset_info = [{}]
     """
@@ -112,7 +110,7 @@ class System(proc.base.Base):
         @rtype: void
         """
         
-        lines = io.file.readFile('/proc/meminfo')
+        lines = systeminfo.io.file.readFile('/proc/meminfo')
         for line in lines:
                 m = re.search('(.*?)\s*:\s*(.*)', line)
                 if m:

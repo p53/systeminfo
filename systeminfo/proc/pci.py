@@ -12,19 +12,18 @@ This class is class for pci asset type
 
 """
 
-import io.file
+import systeminfo.io.file
 import os
 import re
 import string
-import template.tabletemplate
 import ConfigParser
 import sys
-import proc.base
+import systeminfo.proc.base
 import platform
 import csv
 import dbus
 
-class Pci(proc.base.Base):
+class Pci(systeminfo.proc.base.Base):
     
         pciids = {'vendors' : {}, 'devices' : {}, 'classes' : {}, 'subclasses' : {}, 'subdevs' : {}}
         """
@@ -202,8 +201,8 @@ class Pci(proc.base.Base):
                         addr = ''
                         subdevice = ''
                         
-                        irq = io.file.readFile(props['linux.sysfs_path'] + '/irq')
-                        local_cpus = io.file.readFile(props['linux.sysfs_path'] + '/local_cpus')
+                        irq = systeminfo.io.file.readFile(props['linux.sysfs_path'] + '/irq')
+                        local_cpus = systeminfo.io.file.readFile(props['linux.sysfs_path'] + '/local_cpus')
                         
                         if addr_match:
                             addr = addr_match.group(1)

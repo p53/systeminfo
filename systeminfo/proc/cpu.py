@@ -12,17 +12,15 @@ Class for getting data for cpus
 
 """
 
-import io.file
+import systeminfo.io.file
 import re
-from string import Template
-import template.tabletemplate
 import ConfigParser
 import string
 import os
 import sys
-import proc.base
+import systeminfo.proc.base
 
-class Cpu(proc.base.Base):
+class Cpu(systeminfo.proc.base.Base):
     
         asset_info = []
         """
@@ -41,7 +39,7 @@ class Cpu(proc.base.Base):
             @rtype: void
             """
             
-            lines = io.file.readFile('/proc/cpuinfo')
+            lines = systeminfo.io.file.readFile('/proc/cpuinfo')
             index = 0
             self.asset_info.append({})
             

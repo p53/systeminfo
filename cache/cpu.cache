@@ -10,7 +10,7 @@ S'13'
 p6
 sS'bogomips'
 p7
-S'4988.58'
+S'4988.99'
 p8
 sS'apicid'
 p9
@@ -42,7 +42,7 @@ p20
 S'4'
 sS'cpuMHz'
 p21
-S'2501.000'
+S'1200.000'
 p22
 sS'addresssizes'
 p23
@@ -104,7 +104,7 @@ S'13'
 p48
 sS'bogomips'
 p49
-S'4988.58'
+S'4988.99'
 p50
 sS'apicid'
 p51
@@ -136,7 +136,7 @@ p62
 S'4'
 sS'cpuMHz'
 p63
-S'1200.000'
+S'2501.000'
 p64
 sS'addresssizes'
 p65
@@ -197,7 +197,7 @@ S'13'
 p89
 sS'bogomips'
 p90
-S'4988.58'
+S'4988.99'
 p91
 sS'apicid'
 p92
@@ -229,7 +229,7 @@ p103
 S'4'
 sS'cpuMHz'
 p104
-S'2501.000'
+S'1200.000'
 p105
 sS'addresssizes'
 p106
@@ -290,7 +290,7 @@ S'13'
 p130
 sS'bogomips'
 p131
-S'4988.58'
+S'4988.99'
 p132
 sS'apicid'
 p133
