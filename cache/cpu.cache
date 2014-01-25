@@ -136,7 +136,7 @@ p62
 S'4'
 sS'cpuMHz'
 p63
-S'2501.000'
+S'1200.000'
 p64
 sS'addresssizes'
 p65
@@ -322,7 +322,7 @@ p144
 S'4'
 sS'cpuMHz'
 p145
-S'1200.000'
+S'2501.000'
 p146
 sS'addresssizes'
 p147

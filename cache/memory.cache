@@ -20,17 +20,17 @@ sS'AssetTag'
 p11
 S'9876543210'
 p12
-sS'ErrorInformationHandle'
-p13
-S'No Error'
-p14
-sS'SerialNumber'
-p15
-S'6269255A'
-p16
 sS'Speed'
-p17
+p13
 S'1600 MHz (0.6ns)'
+p14
+sS'ErrorInformationHandle'
+p15
+S'No Error'
+p16
+sS'SerialNumber'
+p17
+S'6269255A'
 p18
 sS'Locator'
 p19
@@ -51,21 +51,21 @@ sS'TotalWidth'
 p26
 S'64 bit'
 p27
-sS'PartNumber'
-p28
-S'M471B5273DH0-CK0'
-p29
 sS'Manufacturer'
-p30
+p28
 S'Samsung'
+p29
+sS'PartNumber'
+p30
+S'M471B5273DH0-CK0'
 p31
-sS'Type'
-p32
-S''
 sS'BankLocator'
-p33
+p32
 S'BANK 2'
+p33
+sS'Type'
 p34
+S''
 sS'Size'
 p35
 S'4096 MB'
@@ -88,16 +88,16 @@ p43
 sg11
 S'9876543210'
 p44
-sS'ErrorInformationHandle'
-p45
-S'No Error'
-p46
-sS'SerialNumber'
-p47
-S'62692509'
-p48
-sg17
+sg13
 S'1600 MHz (0.6ns)'
+p45
+sS'ErrorInformationHandle'
+p46
+S'No Error'
+p47
+sS'SerialNumber'
+p48
+S'62692509'
 p49
 sg19
 S'ChannelA-DIMM0'
@@ -116,19 +116,19 @@ sS'TotalWidth'
 p55
 S'64 bit'
 p56
-sS'PartNumber'
-p57
-S'M471B5273DH0-CK0'
-p58
-sg30
+sg28
 S'Samsung'
+p57
+sS'PartNumber'
+p58
+S'M471B5273DH0-CK0'
 p59
-sg32
-S''
 sS'BankLocator'
 p60
 S'BANK 0'
 p61
+sg34
+S''
 sg35
 S'4096 MB'
 p62

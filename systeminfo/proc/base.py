@@ -181,6 +181,12 @@ class Base:
             @rtype: void
             """
             
+            if not dir_location:
+                raise Exception("Cannot set empty cache directory location!")
+            
+            if not os.path.isdir(dir_location):
+                raise Exception("Supplied cache directory: " + dir_location + " doesn't exist!")
+                
             self.cacheDir = dir_location
             
         def setConfDir(self, dir_location):
@@ -194,4 +200,11 @@ class Base:
             @rtype: void
             """
             
+            if not dir_location:
+                raise Exception("Cannot set empty config directory location!")
+            
+            if not os.path.isdir(dir_location):
+                raise Exception("Supplied config directory: " + dir_location + " doesn't exist!")
+                
+                
             self.confDir = dir_location
