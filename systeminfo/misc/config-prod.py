@@ -17,4 +17,4 @@ import os
 import sys
 
 cacheDir = '/var/cache/systeminfo/'
-confDir = '/etc/settings/'
+confDir = '/etc/systeminfo/settings/'
