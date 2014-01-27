@@ -66,14 +66,15 @@ class System(systeminfo.proc.base.Base):
             if hwinfo[1]['dmi_type'] == 4 and type(hwinfo[1]['data']) == dict:
                 phys_cpu_count += 1
                 for iteminfo in hwinfo[1]['data'].iteritems():
-                    p = re.compile('\s+')
-                    key = p.sub('', iteminfo[0])
-                    if key == 'CoreCount':
-                        core_count += iteminfo[1]
-                    elif key == 'CoreEnabled':
-                        core_enabled_count += iteminfo[1]
-                    elif key == 'ThreadCount':
-                        thread_count += iteminfo[1]
+                    if iteminfo[1] is None or iteminfo[1] == '':
+						p = re.compile('\s+')
+						key = p.sub('', iteminfo[0])
+						if key == 'CoreCount':
+							core_count += iteminfo[1]
+						elif key == 'CoreEnabled':
+							core_enabled_count += iteminfo[1]
+						elif key == 'ThreadCount':
+							thread_count += iteminfo[1]
         
         # getting memory info
         self.getMemInfo()
