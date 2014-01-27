@@ -66,7 +66,7 @@ class System(systeminfo.proc.base.Base):
             if hwinfo[1]['dmi_type'] == 4 and type(hwinfo[1]['data']) == dict:
                 phys_cpu_count += 1
                 for iteminfo in hwinfo[1]['data'].iteritems():
-                    if iteminfo[1] is None or iteminfo[1] == '':
+                    if iteminfo[1] is not None and iteminfo[1] != '':
 						p = re.compile('\s+')
 						key = p.sub('', iteminfo[0])
 						if key == 'CoreCount':
