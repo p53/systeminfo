@@ -2,7 +2,7 @@
 (dp2
 S'load'
 p3
-S'0.1 0.11 0.13'
+S'0.12 0.2 0.17'
 p4
 sS'MemoryHugePages_Rsvd'
 p5
@@ -13,7 +13,7 @@ S'69632 kB'
 p7
 sS'MemoryActive'
 p8
-S'2373296 kB'
+S'2383060 kB'
 p9
 sS'MemoryDirectMap2M'
 p10
@@ -21,7 +21,7 @@ S'8226816 kB'
 p11
 sS'MemoryShmem'
 p12
-S'423076 kB'
+S'478056 kB'
 p13
 sS'MemorySwapCached'
 p14
@@ -33,7 +33,7 @@ S'Asset Tag'
 p17
 sS'OSThreadCount'
 p18
-S'0'
+S'4'
 sS'ChassisVersion'
 p19
 S'0.1'
@@ -43,7 +43,7 @@ p21
 S'0'
 sS'MemoryInactive'
 p22
-S'1243324 kB'
+S'1302928 kB'
 p23
 sS'SystemFamily'
 p24
@@ -55,7 +55,7 @@ S'Lenovo Z580'
 p27
 sS'MemoryAnonPages'
 p28
-S'1066596 kB'
+S'1071396 kB'
 p29
 sS'MemoryVmallocChunk'
 p30
@@ -71,7 +71,7 @@ S'Not Present'
 p35
 sS'MemoryPageTables'
 p36
-S'36588 kB'
+S'38292 kB'
 p37
 sS'SystemManufacturer'
 p38
@@ -119,7 +119,7 @@ S'0 kB'
 p59
 sS'MemoryMemFree'
 p60
-S'2889184 kB'
+S'2052424 kB'
 p61
 sS'ChassisSerialNumber'
 p62
@@ -135,10 +135,10 @@ S'Safe'
 p67
 sS'OSCoreEnabled'
 p68
-S'0'
+S'2'
 sS'MemorySUnreclaim'
 p69
-S'42224 kB'
+S'48556 kB'
 p70
 sS'ChassisThermalState'
 p71
@@ -190,7 +190,7 @@ S'Linux'
 p94
 sS'MemoryCached'
 p95
-S'2260888 kB'
+S'2322824 kB'
 p96
 sS'SystemProductName'
 p97
@@ -205,7 +205,7 @@ p101
 g57
 sS'MemoryActive(anon)'
 p102
-S'1068896 kB'
+S'1073240 kB'
 p103
 sS'MemoryUnevictable'
 p104
@@ -220,10 +220,10 @@ p108
 S'0'
 sS'OSCoreCount'
 p109
-S'0'
+S'2'
 sS'MemoryActive(file)'
 p110
-S'1304400 kB'
+S'1309820 kB'
 p111
 sS'MemoryKernelStack'
 p112
@@ -242,11 +242,11 @@ p118
 S'0'
 sS'MemoryDirty'
 p119
-S'344 kB'
+S'36 kB'
 p120
 sS'MemoryBuffers'
 p121
-S'289036 kB'
+S'292156 kB'
 p122
 sS'distname'
 p123
@@ -254,22 +254,22 @@ S'Ubuntu'
 p124
 sS'MemorySlab'
 p125
-S'196184 kB'
+S'203832 kB'
 p126
 sS'MemoryInactive(file)'
 p127
-S'822480 kB'
+S'827136 kB'
 p128
 sS'MemoryInactive(anon)'
 p129
-S'420844 kB'
+S'475792 kB'
 p130
 sS'OSPhyscpuCount'
 p131
 S'1'
 sS'MemoryCommitted_AS'
 p132
-S'5069256 kB'
+S'5924192 kB'
 p133
 sS'MemoryHugepagesize'
 p134
@@ -277,11 +277,11 @@ S'2048 kB'
 p135
 sS'MemorySReclaimable'
 p136
-S'153960 kB'
+S'155276 kB'
 p137
 sS'MemoryMapped'
 p138
-S'1398460 kB'
+S'2159796 kB'
 p139
 sS'MemorySwapTotal'
 p140

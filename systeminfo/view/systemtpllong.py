@@ -1,8 +1,7 @@
 #!/usr/bin/python
 
 tplh = ""
-tpl = """
-%(toolindex|center)s
+tpl = """%(toolindex|center)s
 %(SystemManufacturer|ljust)s
 %(SystemSerialNumber|ljust)s
 %(SystemProductName|ljust)s
