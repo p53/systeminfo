@@ -1,4 +1,3 @@
-#!/usr/bin/python
 
 tplh = ""
 tpl = """%(processor|ljust)s

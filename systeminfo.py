@@ -12,14 +12,23 @@ tool where you can have good and quick overview of properties of different hardw
 @license: GPL
 @copyright: Copyright 2013 Pavol Ipoth
 @contact: pavol.ipoth@gmail.com
-@version: 1.1
+@version: 1.2
 
 """
 
+import os
 import sys
+
+# we are checking if effective user runnig script is root
+# because of using sysfs we can get results just with root permissions
+effective_uid = os.geteuid()
+
+if effective_uid > 0:
+    print "To run this utility you need root priveleges!"
+    sys.exit(4)
+        
 import getopt
 import re
-import os
 import systeminfo.misc.config
 from string import Template
 from systeminfo.proc.cpu import Cpu
@@ -76,7 +85,7 @@ def main():
                             '--l',
                             '--c'
                         ]
-    
+        
     # we are using getopt module although there are more advanced modules
     # because of compatibility with older versions of python
     try:
@@ -162,6 +171,9 @@ def help():
 
     %(program)s action asset_type [output_type] [caching]
 
+    %(program)s is utility for viewing hardware information
+    NOTICE: requires root priveleges
+    
     action - this is what we want to do with asset_type
              --get - gets info about specified asset_type
 

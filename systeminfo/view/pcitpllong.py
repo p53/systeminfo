@@ -1,4 +1,3 @@
-#!/usr/bin/python
 
 tplh = """
 %(addr|center)s %(vendor|center)s %(device|center)s %(subclass|center)s"""

@@ -1,4 +1,3 @@
-#!/usr/bin/python
 
 tplh = ""
 tpl = """%(addr|ljust)s

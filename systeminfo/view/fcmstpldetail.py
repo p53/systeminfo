@@ -1,4 +1,4 @@
-#!/usr/bin/python
+
 
 tplh = ""
 tpl = """%(pci.vendor|ljust)s
