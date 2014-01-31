@@ -1,0 +1,97 @@
+=head1 NAME
+
+systeminfo - utility for displaying hardware information
+
+=head1 SYNOPSIS
+
+systeminfo --get asset_type [--p|--l|--d identifier] [--c]
+
+=head1 DESCRIPTION
+
+systeminfo is utility for getting hardware information
+it aims to be simple and provide output in well formatted
+output
+
+=head1 OPTIONS
+
+=over 8
+
+=item B<asset_type>
+
+can be one of these types: system, cpu, memory, disk, pci, fcms, tape
+
+=item B<--l, --long>
+
+specifies to display long output
+
+=item B<--p, --parsable>
+
+specifies to display parsable output
+
+=item B<--d, --detail I<identifier> >
+
+specifies to display detail, requires identifier
+
+identifier
+
+column which you should use as identifier is marked 
+in column header with asterisk
+
+=item B<--c, --cached>
+
+use cache to get data, should be faster, but doesn't generate fresh data
+
+=back
+
+=head1 EXAMPLES
+
+This gets information about system in short format:
+
+    systeminfo --get system
+
+This gets information about disks in long format:
+
+    systeminfo --get disk --l
+    or
+    systeminfo --get disk --long
+
+This gets information about fcms HBA's in parsable format:
+
+    systeminfo --get fcms --p
+
+This get detail about disk device:
+
+    systeminfo --get disk --detail 24:0:2:0
+
+This refreshes cache info about disks:
+
+    systeminfo --get disk
+    systeminfo --get disk --l
+    systeminfo --get disk --p
+
+This doesn't refresh cache:
+
+    (gets fresh data but doesn't update cache)
+    systeminfo --get disk --detail 24:0:2:0
+    or (these two examples get data from cache)
+    systeminfo --get disk --detail 24:0:2:0 --c
+    or
+    systeminfo --get disk --c
+    or
+    systeminfo --get disk --l --c
+
+=head1 NOTES
+
+This utility should be run with root priveleges
+    
+=head1 AUTHOR
+
+Pavol Ipoth
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright 2013, 2014 Pavol Ipoth
+
+GPLv3
+
+=cut

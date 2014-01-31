@@ -167,74 +167,81 @@ def main():
 
 def help():
     """
-    Usage:
+NAME
+       %(program)s - utility for displaying hardware information
 
-    %(program)s action asset_type [output_type] [caching]
+SYNOPSIS
+       %(program)s --get asset_type [--p|--l|--d identifier] [--c]
 
-    %(program)s is utility for viewing hardware information
-    NOTICE: requires root priveleges
-    
-    action - this is what we want to do with asset_type
-             --get - gets info about specified asset_type
+DESCRIPTION
+       %(program)s is utility for getting hardware information it aims to be simple and provide output in well formated output
 
-    asset_type - this is asset_type on which we want to perform action
-                 currently you can choose from this asset types:
-                 cpu, memory, pci, fcms, disk, system, tape
+OPTIONS
+       asset_type
+               can be one of these types: system, cpu, memory, disk, pci, fcms, tape
 
-    output_type - this specifies format and length of output
-                  currently these are available:
+       --l, --long
+               specifies to display long output
 
-                  default is short output, there is no option for that
-                  --l or --long - specifies long output
-                  --p or --parsable - is long and parsable output
-                  --detail - specifies detail - requires instance identifier,
-                  instance identifier is always marked with *
+       --p, --parsable
+               specifies to display parsable output
 
-    caching - this options specifies if we want to get info from
-              cache, this should be faster (currently speed up
-              isn't so big, but will be improved in future version).
-              If you want to refresh data use no options or --l or --p
-              options.
-                
-    Examples:
+       --d, --detail identifier
+               specifies to display detail, requires identifier
 
-            This gets information about system in short format:
+               identifier
 
-                systeminfo --get system
+               column which you should use as identifier is marked in column header with asterisk
 
-            This gets information about disks in long format:
+       --c, --cached
+               use cache to get data, should be faster, but doesn't generate fresh data
 
-                systeminfo --get disk --l
-                or
-                systeminfo --get disk --long
+EXAMPLES
+       This gets information about system in short format:
 
-            This gets information about fcms HBA's in parsable format:
+           %(program)s --get system
 
-                systeminfo --get fcms --p
+       This gets information about disks in long format:
 
-            This get detail about disk device:
+           %(program)s --get disk --l
+           or
+           %(program)s --get disk --long
 
-                systeminfo --get disk --detail 24:0:2:0
+       This gets information about fcms HBA's in parsable format:
 
-            This refreshes cache info about disks:
+           %(program)s --get fcms --p
 
-                systeminfo --get disk
-                systeminfo --get disk --l
-                systeminfo --get disk --p
+       This get detail about disk device:
 
-            This doesn't refresh cache:
-            
-                (gets fresh data but doesn't update cache)
-                systeminfo --get disk --detail 24:0:2:0
-                or (these two examples get data from cache)
-                systeminfo --get disk --detail 24:0:2:0 --c
-                or
-                systeminfo --get disk --c
-                or
-                systeminfo --get disk --l --c
-                        
-        Author: Pavol Ipoth
-        License: GPLv3
+           %(program)s --get disk --detail 24:0:2:0
+
+       This refreshes cache info about disks:
+
+           %(program)s --get disk
+           %(program)s --get disk --l
+           %(program)s --get disk --p
+
+       This doesn't refresh cache:
+
+           (gets fresh data but doesn't update cache)
+           %(program)s --get disk --detail 24:0:2:0
+           or (these two examples get data from cache)
+           %(program)s --get disk --detail 24:0:2:0 --c
+           or
+           %(program)s --get disk --c
+           or
+           %(program)s --get disk --l --c
+           
+NOTES
+       This utility should be run with root priveleges
+
+AUTHOR
+       Pavol Ipoth
+
+COPYRIGHT AND LICENSE
+       Copyright 2013, 2014 Pavol Ipoth
+
+       GPLv3
 """
 
     print help.__doc__ % {'program': os.path.split(sys.argv[0])[1]}
