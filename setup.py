@@ -15,4 +15,3 @@ setup(name='systeminfo',
 		'systeminfo.view'
 		],
      )
-
