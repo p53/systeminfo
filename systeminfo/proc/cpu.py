@@ -63,3 +63,5 @@ class Cpu(systeminfo.proc.base.Base):
                     if re.match('^\n$', line):
                             self.asset_info.append({})
                             index = index + 1
+                            
+            self.asset_info.pop()

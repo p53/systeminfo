@@ -19,6 +19,7 @@ import sys
 import os
 import platform
 import systeminfo.io
+import systeminfo.proc.cpu
 import systeminfo.proc.base
 
 class System(systeminfo.proc.base.Base):
@@ -76,6 +77,28 @@ class System(systeminfo.proc.base.Base):
                         elif key == 'ThreadCount':
                             thread_count += iteminfo[1]
         
+        # we need this part in case dmidecode doesn't provide information
+        # for cores and threads
+        if thread_count == 0 or core_count == 0:
+            cpuObj = systeminfo.proc.cpu.Cpu()
+            cpuObj.getData({})
+            logic_count = len(cpuObj.asset_info)
+            phys_to_cores = {}
+            
+            for logic_cpu in cpuObj.asset_info:
+                if logic_cpu.get('physicalid'):
+                    phys_cpu = logic_cpu.get('physicalid')
+                    cores = int(logic_cpu.get('cpucores'), 0)
+                
+                    if not phys_to_cores.get('physcpu' + phys_cpu):
+                        phys_to_cores['physcpu' + phys_cpu] = cores
+                        core_count += cores
+                
+            if logic_count == core_count:
+                thread_count = 0
+            elif logic_count > core_count:
+                thread_count = logic_count
+
         # getting memory info
         self.getMemInfo()
         
