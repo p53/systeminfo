@@ -94,11 +94,9 @@ class System(systeminfo.proc.base.Base):
                         phys_to_cores['physcpu' + phys_cpu] = cores
                         core_count += cores
                 
-            if logic_count == core_count:
-                thread_count = 0
-            elif logic_count > core_count:
+            if logic_count > core_count and phys_cpu_count != 0:
                 thread_count = logic_count
-
+                
         # getting memory info
         self.getMemInfo()
         
