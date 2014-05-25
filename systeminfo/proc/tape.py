@@ -1,3 +1,21 @@
+# Systeminfo - Simple utility for gathering hardware summary information
+# Copyright (C) 2013, 2014  Pavol Ipoth  <pavol.ipoth@gmail.com>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program. If not, see <http://www.gnu.org/licenses/>.
+#
+# -*- coding: utf-8 -*-
+
 """
 Module: tape.py
 
@@ -6,7 +24,7 @@ Class: Tape
 This class gets info for tapes
 
 @author: Pavol Ipoth
-@license: GPL
+@license: GPLv3+
 @copyright: Copyright 2013 Pavol Ipoth
 @contact: pavol.ipoth@gmail.com
 
@@ -23,13 +41,13 @@ import systeminfo.io
 import systeminfo.proc.base
 
 class Tape(systeminfo.proc.base.Base):
-    
+
     lunsbypath = {}
     """
     @type: dict
     @ivar: holds target identificator and lun number from by-path listing
     """
-    
+
     tapedesc = {}
     """
     @type: dict
@@ -41,13 +59,13 @@ class Tape(systeminfo.proc.base.Base):
     @type: list
     @ivar: holds data about all tapes
     """
-        
+
     fields = [
-                'targetport', 
-                'storage.serial', 
-                'storage.model', 
-                'storage.vendor', 
-                'hwpath', 
+                'targetport',
+                'storage.serial',
+                'storage.model',
+                'storage.vendor',
+                'hwpath',
                 'srcport',
                 'rportstate',
                 'major',
@@ -65,30 +83,30 @@ class Tape(systeminfo.proc.base.Base):
     @type: list
     @ivar: holds keys which should be always present in tapedesc for each item
     """
-    
+
     def getData(self, options):
         """
         Method: getData
-        
+
         Method gathering all info about tapes
-        
+
         @type options: dict
         @param options: passed options
         @rtype: void
         """
-    
+
         # getting information
         self.getTapeDesc()
-        
+
         # checking if each item has keys present in fields list, to avoid exceptions
         # and assigning values to asset_info
         for tape, info in self.tapedesc.iteritems():
-        
+
             for key in self.fields:
                 if key not in self.tapedesc[tape].keys():
                     self.tapedesc[tape][key] = ''
 
-            tapeinfo = {    
+            tapeinfo = {
                             'toolindex': self.tapedesc[tape]['hwpath'],
                             'device': tape,
                             'targetport': self.tapedesc[tape]['targetport'],
@@ -115,12 +133,12 @@ class Tape(systeminfo.proc.base.Base):
     def getTapeDesc(self):
         """
         Method: getLunsByPath
-        
+
         This method gets target port and lun number for each tape block device
-        
+
         @rtype: void
         """
-        
+
         system_bus = dbus.SystemBus()
         try:
             import gudev
@@ -128,16 +146,16 @@ class Tape(systeminfo.proc.base.Base):
         except ImportError:
             hal_mgr_obj = system_bus.get_object('org.freedesktop.Hal', '/org/freedesktop/Hal/Manager')
             self.getHalDesc()
-            
+
     def getHalDesc(self):
         """
         Method: getHalDesc
-        
+
         This method gets info about tapes in case there is HAL on system
-        
+
         @rtype: void
         """
-        
+
         # getting DBUS object, instantiating HAL Manager
         # getting all devices, because HAL has some bugs in older versions and throws
         # exceptions when looking for specific device, this is slow, but reliable
@@ -159,8 +177,8 @@ class Tape(systeminfo.proc.base.Base):
                     devpat = re.compile('(st\w+)$')
                     tapedevnamelink = props['linux.sysfs_path'] + '/tape'
                     tapedevlink = os.readlink(tapedevnamelink);
-                    devname = devpat.search(tapedevlink)   
-                    
+                    devname = devpat.search(tapedevlink)
+
                     if devname:
                         # some properties are block properties, some on lun level in HAL
                         # thus we are getting also parent device, for getting address of
@@ -176,7 +194,7 @@ class Tape(systeminfo.proc.base.Base):
                         hwmatch = hwregex.search(block_dev_path)
                         hostmatch = hostregex.search(block_dev_path)
                         rportmatch = rportregex.search(block_dev_path)
-                        
+
                         iodone_count = systeminfo.io.file.readFile(block_dev_path + '/iodone_cnt')
                         ioerror_count = systeminfo.io.file.readFile(block_dev_path + '/ioerr_cnt')
                         iorequest_count = systeminfo.io.file.readFile(block_dev_path + '/iorequest_cnt')
@@ -187,7 +205,7 @@ class Tape(systeminfo.proc.base.Base):
                         firmware = systeminfo.io.file.readFile(block_dev_path + '/rev')
                         majorminor = systeminfo.io.file.readFile(tapedevnamelink + '/dev')
                         majorminor_list = majorminor[0].split(':');
-                        
+
                         props['iodone_count'] = int(iodone_count[0].strip(), 16)
                         props['ioerror_count'] = int(ioerror_count[0].strip(), 16)
                         props['iorequest_count'] = int(iorequest_count[0].strip(), 16)
@@ -200,31 +218,31 @@ class Tape(systeminfo.proc.base.Base):
                         props['storage.firmware_version'] = firmware[0].strip()
                         props['storage.vendor'] = props['scsi.vendor']
                         props['storage.model'] = props['scsi.model']
-                        
+
                         if rportmatch:
                             rportdir = glob.glob(rportmatch.group(1) + 'fc_remote_ports*')
                             rportstate = systeminfo.io.file.readFile(rportdir[0] + '/port_state')
                             rportname = systeminfo.io.file.readFile(rportdir[0] + '/port_name')
                             props['rportstate'] = rportstate[0].strip()
                             props['targetport'] = rportname[0].strip()
-                            
+
                         if hwmatch:
                             props['hwpath'] = hwmatch.group(1)
-                         
+
                         if hostmatch:
                             props['srcport'] = hostmatch.group(1)
-                        
+
                         self.tapedesc[devname.group(1)] = props
 
     def getUdevDesc(self):
         """
         Method: getUdevDesc
-        
+
         Method gets info about tapes if Udev is used on the system
-        
+
         @rtype: void
         """
-        
+
         # getting block devices, filtering out just tapes
         import gudev
         client = gudev.Client(["scsi_tape"])
@@ -236,7 +254,7 @@ class Tape(systeminfo.proc.base.Base):
             devname = dev.get_name();
             devtype = dev.get_property('ID_TYPE')
             devnameregex = re.compile('^st[0-9a-z]+$')
-            
+
             if devtype == 'tape' and devnameregex.search(devname):
                 props = {}
                 self.tapedesc[devname] = {}
@@ -272,7 +290,7 @@ class Tape(systeminfo.proc.base.Base):
                 props['iorequest_count'] = int(blockdev.get_sysfs_attr('iorequest_cnt'), 16)
                 props['iodone_count'] = int(blockdev.get_sysfs_attr('iodone_cnt'), 16)
                 props['ioerror_count'] = int(blockdev.get_sysfs_attr('ioerr_cnt'), 16)
-                
+
                 if hwmatch:
                     props['hwpath'] = hwmatch.group(1)
 

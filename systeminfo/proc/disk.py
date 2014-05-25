@@ -1,3 +1,21 @@
+# Systeminfo - Simple utility for gathering hardware summary information
+# Copyright (C) 2013, 2014  Pavol Ipoth  <pavol.ipoth@gmail.com>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program. If not, see <http://www.gnu.org/licenses/>.
+#
+# -*- coding: utf-8 -*-
+
 """
 Module: disk.py
 
@@ -6,7 +24,7 @@ Class: Disk
 This class gets info for disks
 
 @author: Pavol Ipoth
-@license: GPL
+@license: GPLv3+
 @copyright: Copyright 2013 Pavol Ipoth
 @contact: pavol.ipoth@gmail.com
 
@@ -23,13 +41,13 @@ import systeminfo.io
 import systeminfo.proc.base
 
 class Disk(systeminfo.proc.base.Base):
-    
+
     lunsbypath = {}
     """
     @type: dict
     @ivar: holds target identificator and lun number from by-path listing
     """
-    
+
     diskdesc = {}
     """
     @type: dict
@@ -41,15 +59,15 @@ class Disk(systeminfo.proc.base.Base):
     @type: list
     @ivar: holds data about all disks
     """
-        
+
     fields = [
-                'targetport', 
-                'storage.serial', 
-                'lunid', 
-                'storage.model', 
-                'storage.vendor', 
-                'storage.size', 
-                'hwpath', 
+                'targetport',
+                'storage.serial',
+                'lunid',
+                'storage.model',
+                'storage.vendor',
+                'storage.size',
+                'hwpath',
                 'srcport',
                 'rportstate',
                 'major',
@@ -67,30 +85,30 @@ class Disk(systeminfo.proc.base.Base):
     @type: list
     @ivar: holds keys which should be always present in diskdesc for each item
     """
-    
+
     def getData(self, options):
         """
         Method: getData
-        
+
         Method gathering all info about disks
-        
+
         @type options: dict
         @param options: passed options
         @rtype: void
         """
-    
+
         # getting information
         self.getDiskDesc()
-        
+
         # checking if each item has keys present in fields list, to avoid exceptions
         # and assigning values to asset_info
         for disk, info in self.diskdesc.iteritems():
-        
+
             for key in self.fields:
                 if key not in self.diskdesc[disk].keys():
                     self.diskdesc[disk][key] = ''
 
-            diskinfo = {    
+            diskinfo = {
                             'toolindex': self.diskdesc[disk]['hwpath'],
                             'device': disk,
                             'targetport': self.diskdesc[disk]['targetport'],
@@ -118,12 +136,12 @@ class Disk(systeminfo.proc.base.Base):
     def getDiskDesc(self):
         """
         Method: getLunsByPath
-        
+
         This method gets target port and lun number for each disk block device
-        
+
         @rtype: void
         """
-        
+
         system_bus = dbus.SystemBus()
         try:
             import gudev
@@ -131,16 +149,16 @@ class Disk(systeminfo.proc.base.Base):
         except ImportError:
             hal_mgr_obj = system_bus.get_object('org.freedesktop.Hal', '/org/freedesktop/Hal/Manager')
             self.getHalDesc()
-            
+
     def getHalDesc(self):
         """
         Method: getHalDesc
-        
+
         This method gets info about disks in case there is HAL on system
-        
+
         @rtype: void
         """
-        
+
         # getting DBUS object, instantiating HAL Manager
         # getting all devices, because HAL has some bugs in older versions and throws
         # exceptions when looking for specific device, this is slow, but reliable
@@ -161,7 +179,7 @@ class Disk(systeminfo.proc.base.Base):
                     props = interface.GetAllProperties()
                     devpat = re.compile('/dev/(sd\w+)')
                     devname = devpat.search(props['block.device'])
-                    
+
                     if devname:
                         # some properties are block properties, some on lun level in HAL
                         # thus we are getting also parent device, for getting address of
@@ -178,7 +196,7 @@ class Disk(systeminfo.proc.base.Base):
                         hwmatch = hwregex.search(hwpath)
                         hostmatch = hostregex.search(hwpath)
                         rportmatch = rportregex.search(hwpath)
-                        
+
                         iodone_count = systeminfo.io.file.readFile(block_dev_path + '/iodone_cnt')
                         ioerror_count = systeminfo.io.file.readFile(block_dev_path + '/ioerr_cnt')
                         iorequest_count = systeminfo.io.file.readFile(block_dev_path + '/iorequest_cnt')
@@ -186,7 +204,7 @@ class Disk(systeminfo.proc.base.Base):
                         scsi_level = systeminfo.io.file.readFile(block_dev_path + '/scsi_level')
                         state = systeminfo.io.file.readFile(block_dev_path + '/state')
                         timeout = systeminfo.io.file.readFile(block_dev_path + '/timeout')
-                        
+
                         props['iodone_count'] = int(iodone_count[0].strip(), 16)
                         props['ioerror_count'] = int(ioerror_count[0].strip(), 16)
                         props['iorequest_count'] = int(iorequest_count[0].strip(), 16)
@@ -194,31 +212,31 @@ class Disk(systeminfo.proc.base.Base):
                         props['scsi_level'] = scsi_level[0].strip()
                         props['state'] = state[0].strip()
                         props['timeout'] = timeout[0].strip()
-                        
+
                         if rportmatch:
                             rportdir = glob.glob(rportmatch.group(1) + 'fc_remote_ports*')
                             rportstate = systeminfo.io.file.readFile(rportdir[0] + '/port_state')
                             rportname = systeminfo.io.file.readFile(rportdir[0] + '/port_name')
                             props['rportstate'] = rportstate[0].strip()
                             props['targetport'] = rportname[0].strip()
-                        
+
                         if hwmatch:
                             props['hwpath'] = hwmatch.group(1)
-                         
+
                         if hostmatch:
                             props['srcport'] = hostmatch.group(1)
-                        
+
                         self.diskdesc[devname.group(1)] = props
 
     def getUdevDesc(self):
         """
         Method: getUdevDesc
-        
+
         Method gets info about disks if Udev is used on the system
-        
+
         @rtype: void
         """
-        
+
         # getting block devices, filtering out just disks
         import gudev
         client = gudev.Client(["block"])
@@ -269,7 +287,7 @@ class Disk(systeminfo.proc.base.Base):
                     props['iorequest_count'] = int(blockdev.get_sysfs_attr('iorequest_cnt'), 16)
                     props['iodone_count'] = int(blockdev.get_sysfs_attr('iodone_cnt'), 16)
                     props['ioerror_count'] = int(blockdev.get_sysfs_attr('ioerr_cnt'), 16)
-                    
+
                     if hwmatch:
                         props['hwpath'] = hwmatch.group(1)
 

@@ -7,11 +7,11 @@ setup(name='systeminfo',
       description='Python Utilities for getting HW info on Linux',
       author='Pavol Ipoth',
       author_email='pavol.ipoth@gmail.com',
-      packages=['systeminfo', 
-		'systeminfo.io', 
-		'systeminfo.misc',
-		'systeminfo.proc',
-		'systeminfo.template',
-		'systeminfo.view'
-		],
+      packages=['systeminfo',
+'systeminfo.io',
+'systeminfo.misc',
+'systeminfo.proc',
+'systeminfo.template',
+'systeminfo.view'
+],
      )

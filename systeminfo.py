@@ -1,4 +1,22 @@
 #!/usr/bin/python
+#
+# Systeminfo - Simple utility for gathering hardware summary information
+# Copyright (C) 2013, 2014  Pavol Ipoth  <pavol.ipoth@gmail.com>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program. If not, see <http://www.gnu.org/licenses/>.
+#
+# -*- coding: utf-8 -*-
 
 """
 SystemInfo
@@ -9,10 +27,10 @@ This python script was written for system administration purposes, to have comma
 tool where you can have good and quick overview of properties of different hardware types.
 
 @author: Pavol Ipoth
-@license: GPL
+@license: GPLv3+
 @copyright: Copyright 2013 Pavol Ipoth
 @contact: pavol.ipoth@gmail.com
-@version: 1.2
+@version: 1.2.1
 
 """
 
@@ -26,7 +44,7 @@ effective_uid = os.geteuid()
 if effective_uid > 0:
     print "To run this utility you need root priveleges!"
     sys.exit(4)
-        
+
 import getopt
 import re
 import systeminfo.misc.config
@@ -60,23 +78,23 @@ def main():
 
     @rtype: void
     """
-    
+
     # Action which we want to perform on asset_types
     action = ''
-    
+
     # Asset type on which we want to perform aciont
     asset_param = ''
-    
+
     # Dict for storing list of passed options and their values
     processed_options = {}
-    
+
     # List of passed options
     opt_curr = []
-    
+
     # List of allowed options
     opt_possibilities = [
-                            '--parsable', 
-                            '--long', 
+                            '--parsable',
+                            '--long',
                             '--help',
                             '--get',
                             '--detail',
@@ -85,7 +103,7 @@ def main():
                             '--l',
                             '--c'
                         ]
-        
+
     # we are using getopt module although there are more advanced modules
     # because of compatibility with older versions of python
     try:
@@ -102,13 +120,13 @@ def main():
             print "Bad option"
             help()
             sys.exit(2)
-            
+
         processed_options[o] = a
-    
+
     # extracting passed options to list
     opt_curr = processed_options.keys()
-    
-    # checking if several conditions are met and assigning values to parameters 
+
+    # checking if several conditions are met and assigning values to parameters
     # passed later to invoked action method
     if ('l' in opt_curr or '--long' in opt_curr) and '--get' not in opt_curr:
         print "Bad option"
@@ -123,39 +141,39 @@ def main():
         sys.exit(2)
     elif 'p' in opt_curr or '--parsable' in opt_curr:
         options['outlength'] = 'parsable'
-    
+
     if ('c' in opt_curr or '--cached' in opt_curr) and '--get' not in opt_curr:
         print "Bad option"
         help()
         sys.exit(2)
     elif 'c' in opt_curr or '--cached' in opt_curr:
         options['get_data_action'] = 'getCache'
-                    
+
     if 'h' in opt_curr or '--help' in opt_curr:
         help()
         sys.exit()
-    
+
     if '--get' in opt_curr and processed_options['--get'] in asset_types:
         action = 'summary'
         asset_param = processed_options['--get']
         options['template_body_type'] = 'TableTemplate'
         options['template_header_type'] = 'HeaderTableTemplate'
-        
+
         if processed_options['--get'] == 'system':
             options['template_body_type'] = 'PropertyTemplate'
             options['template_header_type'] = 'VoidTemplate'
-            
+
         if '--detail' in opt_curr:
             action = 'detail'
             options['template_body_type'] = 'PropertyTemplate'
-            options['template_header_type'] = 'VoidTemplate' 
+            options['template_header_type'] = 'VoidTemplate'
             options['outlength'] = 'detail'
             options['instance'] = str(processed_options['--detail'])
     else:
         print "Bad option"
         help()
         sys.exit(2)
-    
+
     # instantiating object, his class is asset type
     # and then invoking action on it, depending on passed options
     # , also passing parameters assigned in previous option checking
@@ -231,7 +249,7 @@ EXAMPLES
            %(program)s --get disk --c
            or
            %(program)s --get disk --l --c
-           
+
 NOTES
        This utility should be run with root priveleges
 
