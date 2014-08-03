@@ -17,5 +17,5 @@
 # -*- coding: utf-8 -*-
 
 tplh = ""
-tpl = """%(pci.vendor)s#%(pcicard)s#%(portname)s#%(porttype)s#%(portstate)s#%(speed)s#%(linux.sysfs_path)s#%(nodename)s#%(fabricname)s#%(portid)s#%(symbolicname)s#%(supportedclasses)s#%(supportedspeeds)s#%(driver)s#%(maxnpivvports)s#%(npivvportsinuse)s#%(localcpus)s#%(localcpulist)s#%(numanode)s#%(irq)s
+tpl = """%(vendor)s#%(addr)s#%(portname)s#%(porttype)s#%(portstate)s#%(speed)s#%(sysfspath)s#%(nodename)s#%(fabricname)s#%(portid)s#%(symbolicname)s#%(supportedclasses)s#%(supportedspeeds)s#%(driver)s#%(maxnpivvports)s#%(npivvportsinuse)s#%(localcpus)s#%(localcpulist)s#%(numanode)s#%(irq)s
 """

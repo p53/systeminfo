@@ -87,7 +87,6 @@ class Eth(systeminfo.proc.base.Base):
         
         # getting information all pci cards, and from those we will select our HBAs
         pciinfo = systeminfo.proc.pci.Pci()
-        pciinfo.getData(options)
         
         for dev in devs:
             props = {}
@@ -105,33 +104,12 @@ class Eth(systeminfo.proc.base.Base):
                     parentSubClassId = classreg.group(2)
                     
                     if parentClassId == '02' and parentSubClassId == '00':
-                        
-                        vendorhex = parentdev.get_sysfs_attr('vendor')
-                        devhex = parentdev.get_sysfs_attr('device')
-                        subvendhex = parentdev.get_sysfs_attr('subsystem_vendor')
-                        subdevhex = parentdev.get_sysfs_attr('subsystem_device')
-            
-                        vendorhex = string.replace(vendorhex, '0x', '')
-                        devhex = string.replace(devhex, '0x', '')
-                        subvendhex = string.replace(subvendhex, '0x', '')
-                        subdevhex = string.replace(subdevhex, '0x', '')
-            
                         devsysfspath = dev.get_sysfs_path()
                         
                         duplex = systeminfo.io.file.readFile(devsysfspath + '/' + 'duplex')
                         speed = systeminfo.io.file.readFile(devsysfspath + '/' + 'speed')
                                         
-                        props['addr'] = parentdev.get_property('PCI_SLOT_NAME')
-                        props['vendor'] = pciinfo.pciids['vendors'][vendorhex]
-                        props['device'] = pciinfo.pciids['devices'][vendorhex][devhex]
-                        props['class'] = pciinfo.pciids['classes'][parentClassId]
-                        props['subclass'] = pciinfo.pciids['subclasses'][parentClassId][parentSubClassId]
-                        props['driver'] = parentdev.get_property('DRIVER')
-                        props['sysfspath'] = parentdev.get_sysfs_path()
-                        props['localcpus'] = parentdev.get_sysfs_attr('local_cpus')
-                        props['irq'] = parentdev.get_sysfs_attr('irq')
-                        props['numanode'] = parentdev.get_sysfs_attr('numa_node')
-                        props['localcpulist'] = parentdev.get_sysfs_attr('local_cpulist')
+                        props = pciinfo.getUdevPciDevInfo(parentdev)
                         
                         props['mac'] = dev.get_sysfs_attr('address')
                         props['operstate'] = dev.get_sysfs_attr('operstate')
@@ -139,8 +117,6 @@ class Eth(systeminfo.proc.base.Base):
                         props['intf'] = dev.get_property('INTERFACE')
                         props['duplex'] = duplex[0].strip()
                         props['speed'] = speed[0].strip()
-                                                
-                        props['toolindex'] = props['addr']
             
                         self.asset_info.append(props)
                 
@@ -160,6 +136,7 @@ class Eth(systeminfo.proc.base.Base):
         hal_mgr_obj = system_bus.get_object('org.freedesktop.Hal', '/org/freedesktop/Hal/Manager')
         hal_mgr_iface = dbus.Interface(hal_mgr_obj, 'org.freedesktop.Hal.Manager')
         devs = hal_mgr_iface.GetAllDevices()
+        pciinfo = systeminfo.proc.pci.Pci()
         
         for i in devs:
             dev = system_bus.get_object('org.freedesktop.Hal', i)
@@ -171,58 +148,30 @@ class Eth(systeminfo.proc.base.Base):
                 subsystem = interface.GetProperty('linux.subsystem')
 
                 if subsystem == 'net':
-
                     parentudi = interface.GetProperty('info.parent')
                     parentdev = system_bus.get_object('org.freedesktop.Hal', parentudi)
                     parentintf = dbus.Interface(parentdev, dbus_interface='org.freedesktop.Hal.Device')
                     parentclass = parentintf.GetProperty('pci.device_class')
                     parentsubclass = parentintf.GetProperty('pci.device_subclass')            
                     
-                    if parentclass == 2 and parentsubclass == 0:
-
-                        props = interface.GetAllProperties()
-                        
-                        parentsysfspath = parentintf.GetProperty('linux.sysfs_path')
-                        addr_match = re.search('.*?\/([a-zA-Z:0-9\.]+)$', parentsysfspath)
-                        addr = ''
-                        
-                        if addr_match:
-                            addr = addr_match.group(1)
-                                                
+                    if parentclass == 2 and parentsubclass == 0:   
+                        props = pciinfo.getHalPciDevInfo(parentintf)
+                                             
                         devsysfspath = interface.GetProperty('linux.sysfs_path')
                         mac_addr = interface.GetProperty('net.address')
                         intf_name = interface.GetProperty('net.interface')
-                        vendor = parentintf.GetProperty('info.vendor')
-                        product = parentintf.GetProperty('info.product')
-                        driver = parentintf.GetProperty('info.linux.driver')
-                        parentsysfspath = parentintf.GetProperty('pci.linux.sysfs_path')
                         
                         duplex = systeminfo.io.file.readFile(devsysfspath + '/' + 'duplex')
                         mtu = systeminfo.io.file.readFile(devsysfspath + '/' + 'mtu')
                         operstate = systeminfo.io.file.readFile(devsysfspath + '/' + 'operstate')
                         speed = systeminfo.io.file.readFile(devsysfspath + '/' + 'speed')
-
-                        irq = systeminfo.io.file.readFile(parentsysfspath + '/irq')
-                        local_cpus = systeminfo.io.file.readFile(parentsysfspath + '/local_cpus')
-                                                
-                        props['addr'] = addr
-                        props['numanode'] = ''
-                        props['local_cpulist'] = ''
-                        props['localcpus'] = local_cpus[0].strip()
-                        props['irq'] = irq[0].strip()        
-                                    
+                          
                         props['duplex'] = duplex[0].strip()
                         props['mtu'] = mtu[0].strip()
                         props['operstate'] = operstate[0].strip()
                         props['speed'] = speed[0].strip()
                         props['mac'] = mac_addr
                         props['intf'] = intf_name
-                        props['vendor'] = vendor
-                        props['product'] = product
-                        props['sysfspath'] = parentsysfspath
-                        props['driver'] = driver
-                        
-                        props['toolindex'] = props['addr']
 
                         props_unicode = dict([(unicode(x), unicode(y)) for x, y in props.iteritems()])
     

@@ -17,6 +17,6 @@
 # -*- coding: utf-8 -*-
 
 tplh = """
-%(pcicard|center)s %(portname|center)s %(porttype|center)s %(portstate|center)s"""
-tpl = """%(pcicard|center)s %(portname|center)s %(porttype|center)s %(portstate|center)s
+%(addr|center)s %(portname|center)s %(porttype|center)s %(portstate|center)s"""
+tpl = """%(addr|center)s %(portname|center)s %(porttype|center)s %(portstate|center)s
 """

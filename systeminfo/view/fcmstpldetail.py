@@ -17,8 +17,8 @@
 # -*- coding: utf-8 -*-
 
 tplh = ""
-tpl = """%(pci.vendor|ljust)s
-%(linux.sysfs_path|ljust)s
+tpl = """%(vendor|ljust)s
+%(sysfspath|ljust)s
 %(nodename|ljust)s
 %(portname|ljust)s
 %(portstate|ljust)s
@@ -29,7 +29,7 @@ tpl = """%(pci.vendor|ljust)s
 %(symbolicname|ljust)s
 %(supportedclasses|ljust)s
 %(supportedspeeds|ljust)s
-%(pcicard|ljust)s
+%(addr|ljust)s
 %(driver|ljust)s
 %(maxnpivvports|ljust)s
 %(npivvportsinuse|ljust)s

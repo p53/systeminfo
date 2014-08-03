@@ -84,34 +84,19 @@ class Fcms(systeminfo.proc.base.Base):
         devs = client.query_by_subsystem("fc_host")
         # getting information all pci cards, and from those we will select our HBAs
         pciinfo = systeminfo.proc.pci.Pci()
-        pciinfo.getData(options)
-
+        
         for dev in devs:
                 props = {}
                 parentdev = dev.get_parent()
                 grandparent = parentdev.get_parent()
-                # getting vendor hex number, we will match it with info from Pci
-                vendorhex = grandparent.get_sysfs_attr('vendor')
-                vendorhex = string.replace(vendorhex, '0x', '')
-                # getting address
-                hostregex = re.compile('\/([a-zA-Z0-9:.]+)\/host[0-9]+')
-                hostmatch = hostregex.search(dev.get_sysfs_path())
+ 
+                props = pciinfo.getUdevPciDevInfo(grandparent)
 
-                if hostmatch:
-                    props['pcicard'] = hostmatch.group(1)
-
-                props['pci.vendor'] = pciinfo.pciids['vendors'][vendorhex]
-                props['linux.sysfs_path'] = dev.get_sysfs_path()
                 props['nodename'] = dev.get_sysfs_attr('node_name')
                 props['portname'] = dev.get_sysfs_attr('port_name')
                 props['portstate'] = dev.get_sysfs_attr('port_state')
                 props['porttype'] = dev.get_sysfs_attr('port_type')
                 props['speed'] = dev.get_sysfs_attr('speed')
-                props['driver'] = grandparent.get_property('DRIVER')
-                props['irq'] = grandparent.get_sysfs_attr('irq')
-                props['numanode'] = grandparent.get_sysfs_attr('numa_node')
-                props['localcpulist'] = grandparent.get_sysfs_attr('local_cpulist')
-                props['localcpus'] = grandparent.get_sysfs_attr('local_cpus')
                 props['fabricname'] = dev.get_sysfs_attr('fabric_name')
                 props['supportedclasses'] = dev.get_sysfs_attr('supported_classes')
                 props['supportedspeeds'] = dev.get_sysfs_attr('supported_speeds')
@@ -119,8 +104,6 @@ class Fcms(systeminfo.proc.base.Base):
                 props['npivvportsinuse'] = dev.get_sysfs_attr('npiv_vports_inuse')
                 props['portid'] = dev.get_sysfs_attr('port_id')
                 props['symbolicname'] = dev.get_sysfs_attr('symbolic_name')
-
-                props['toolindex'] = props['pcicard']
 
                 self.asset_info.append(props)
 
@@ -140,7 +123,8 @@ class Fcms(systeminfo.proc.base.Base):
         hal_mgr_obj = system_bus.get_object('org.freedesktop.Hal', '/org/freedesktop/Hal/Manager')
         hal_mgr_iface = dbus.Interface(hal_mgr_obj, 'org.freedesktop.Hal.Manager')
         devs = hal_mgr_iface.GetAllDevices()
-
+        pciinfo = systeminfo.proc.pci.Pci()
+        
         for i in devs:
             dev = system_bus.get_object('org.freedesktop.Hal', i)
             interface = dbus.Interface(dev, dbus_interface='org.freedesktop.Hal.Device')
@@ -170,14 +154,7 @@ class Fcms(systeminfo.proc.base.Base):
                                 scsihostpp = scsipattern.search(hostp)
 
                                 if hostpp:
-                                    hostregex = re.compile('\/([a-zA-Z0-9:.]+)$')
-                                    hostmatch = hostregex.search(props['linux.sysfs_path'])
-
-                                    if hostmatch:
-                                        props['pcicard'] = hostmatch.group(1)
-
-                                    irq = systeminfo.io.file.readFile(props['linux.sysfs_path'] + '/irq')
-                                    local_cpus = systeminfo.io.file.readFile(props['linux.sysfs_path'] + '/local_cpus')
+                                    props = pciinfo.getHalPciDevInfo(interface)
 
                                     nodename = systeminfo.io.file.readFile(hostdir + '/' + hostpp.group(0) + '/' + 'node_name')
                                     portname = systeminfo.io.file.readFile(hostdir + '/' + hostpp.group(0) + '/' + 'port_name')
@@ -195,11 +172,6 @@ class Fcms(systeminfo.proc.base.Base):
                                     props['portstate'] = portstate[0].strip()
                                     props['porttype'] = porttype[0].strip()
                                     props['speed'] = speed[0].strip()
-                                    props['localcpus'] = local_cpus[0].strip()
-                                    props['irq'] = irq[0].strip()
-                                    props['numanode'] = ''
-                                    props['localcpulist'] = ''
-                                    props['driver'] = props['info.linux.driver']
                                     props['fabricname'] = fabricname[0].strip()
                                     props['supportedclasses'] = supported_classes[0].strip()
                                     props['supportedspeeds'] = supported_speeds[0].strip()
@@ -212,8 +184,6 @@ class Fcms(systeminfo.proc.base.Base):
 
                                     props['maxnpivvports'] = max_npiv_vports[0].strip()
                                     props['npivvportsinuse'] = npiv_vports_inuse[0].strip()
-
-                    props['toolindex'] = props['pcicard']
 
                     props_unicode = dict([(unicode(x), unicode(y)) for x, y in props.iteritems()])
 

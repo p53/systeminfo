@@ -55,14 +55,23 @@ class Pci(systeminfo.proc.base.Base):
         @ivar: holds info about all pci devices
         """
 
-        def getData(self, options):
+        pciidsFile = '/usr/share/hwdata/pci.ids'
+        """
+        @type: str
+        @ivar: holds location of file with pci ids
+        """
+        
+        def __init__(self):
+            self.getPciIds()
+            
+        def getPciIds(self):
             """
-            Method: getData
+            Method: getPciIds
 
             Method gets all info about pci items, parses /usr/share/hwdata/pci.ids file
             for information about pci devices, this file has fixed format
 
-            we are creating this structure from parsing: ::
+            we are creating this structure from parsing:
 
                 pciids = {
                             'vendors': { '1002': 'AMD', '9092': 'HP'},
@@ -80,16 +89,14 @@ class Pci(systeminfo.proc.base.Base):
                             'subdevs: {'vendorhex': {'subdevhex': 'Subdev name', ...}, ...}
                         }
 
-            @type options: dict
-            @param options: passed options
             @rtype: void
             """
-
+            
             isclasssection = 0
             currentclass = ''
             currentvend = ''
 
-            f = open('/usr/share/hwdata/pci.ids', 'r')
+            f = open(self.pciidsFile, 'r')
 
             for line in f:
                 vend = re.search('^(\w+)\s*(.*)', line)
@@ -116,15 +123,26 @@ class Pci(systeminfo.proc.base.Base):
                 elif dev:
                     if currentvend not in self.pciids['devices'].keys():
                         self.pciids['devices'][currentvend] = {}
-
+                
                     self.pciids['devices'][currentvend][dev.group(1)] = dev.group(2)
                 elif subdev:
                     if currentvend not in self.pciids['subdevs'].keys():
                         self.pciids['subdevs'][currentvend] = {}
-
+                
                     self.pciids['subdevs'][currentvend][subdev.group(1) + subdev.group(2)] = subdev.group(3)
-
+                
             f.close()
+                        
+        def getData(self, options):
+            """
+            Method: getData
+
+            Method gets info about PCI devices on the host
+            
+            @type options: dict
+            @param options: passed options
+            @rtype: void
+            """
 
             system_bus = dbus.SystemBus()
 
@@ -152,43 +170,7 @@ class Pci(systeminfo.proc.base.Base):
             devs = client.query_by_subsystem("pci")
 
             for dev in devs:
-                props = {}
-
-                vendorhex = dev.get_sysfs_attr('vendor')
-                devhex = dev.get_sysfs_attr('device')
-                classhex = dev.get_sysfs_attr('class')
-                subvendhex = dev.get_sysfs_attr('subsystem_vendor')
-                subdevhex = dev.get_sysfs_attr('subsystem_device')
-
-                vendorhex = string.replace(vendorhex, '0x', '')
-                devhex = string.replace(devhex, '0x', '')
-                classhex = string.replace(classhex, '0x', '')
-                subvendhex = string.replace(subvendhex, '0x', '')
-                subdevhex = string.replace(subdevhex, '0x', '')
-                subdevid = subvendhex + subdevhex
-
-                subdevice = ''
-
-                classreg = re.search('^(\w{2})(\w{2})(\w{2})', classhex)
-
-                if vendorhex in self.pciids['subdevs'].keys():
-                    if subdevid in self.pciids['subdevs'][vendorhex].keys():
-                        subdevice = self.pciids['subdevs'][vendorhex][subdevid]
-
-                props['addr'] = dev.get_property('PCI_SLOT_NAME')
-                props['vendor'] = self.pciids['vendors'][vendorhex]
-                props['device'] = self.pciids['devices'][vendorhex][devhex]
-                props['class'] = self.pciids['classes'][classreg.group(1)]
-                props['subclass'] = self.pciids['subclasses'][classreg.group(1)][classreg.group(2)]
-                props['subdevice'] = subdevice
-                props['driver'] = dev.get_property('DRIVER')
-                props['sysfspath'] = dev.get_sysfs_path()
-                props['localcpus'] = dev.get_sysfs_attr('local_cpus')
-                props['irq'] = dev.get_sysfs_attr('irq')
-                props['numanode'] = dev.get_sysfs_attr('numa_node')
-                props['localcpulist'] = dev.get_sysfs_attr('local_cpulist')
-
-                props['toolindex'] = props['addr']
+                props = self.getUdevPciDevInfo(dev)
 
                 self.asset_info.append(props)
 
@@ -215,58 +197,105 @@ class Pci(systeminfo.proc.base.Base):
                     subsystem = interface.GetProperty('linux.subsystem')
 
                     if subsystem == 'pci':
-                        props = interface.GetAllProperties()
-                        addr_match = re.search('.*?\/([a-zA-Z:0-9\.]+)$', props['linux.sysfs_path'])
-                        addr = ''
-                        subdevice = ''
-
-                        irq = systeminfo.io.file.readFile(props['linux.sysfs_path'] + '/irq')
-                        local_cpus = systeminfo.io.file.readFile(props['linux.sysfs_path'] + '/local_cpus')
-
-                        if addr_match:
-                            addr = addr_match.group(1)
-
-                        # HAL has these numbers in decimal we need to get it in hex
-                        # to be able to match against pci ids
-                        vendorhex = props['pci.vendor_id']
-                        classhex = hex(props['pci.device_class'])
-                        subclasshex = hex(props['pci.device_subclass'])
-                        subvendhex = hex(props['pci.subsys_vendor_id'])
-                        subdevhex = hex(props['pci.subsys_product_id'])
-
-                        vendorhex = string.replace(str(vendorhex), '0x', '')
-                        # in pci ids are hex numbers with 2 zeros fill, so we
-                        # need to convert our numbers from HAL to same format
-                        classhex = "%02x" % int(classhex[2:], 16)
-                        subclasshex = "%02x" % int(subclasshex[2:], 16)
-                        subvendhex = "%02x" % int(subvendhex[2:], 16)
-                        subdevhex = "%02x" % int(subdevhex[2:], 16)
-                        subdevid = subvendhex + subdevhex
-
-                        if vendorhex in self.pciids['subdevs'].keys():
-                            if subdevid in self.pciids['subdevs'][vendorhex].keys():
-                                subdevice = self.pciids['subdevs'][vendorhex][subdevid]
-
-                        props['addr'] = addr
-                        props['vendor'] = props['pci.vendor']
-                        props['device'] = props['pci.product']
-                        props['class'] = self.pciids['classes'][classhex]
-                        props['subclass'] = self.pciids['subclasses'][classhex][subclasshex]
-                        props['subdevice'] = subdevice
-                        props['sysfspath'] = props['linux.sysfs_path']
-                        props['localcpus'] = local_cpus[0].strip()
-                        props['irq'] = irq[0].strip()
-                        props['numanode'] = ''
-                        props['local_cpulist'] = ''
-
-                        if 'info.linux.driver' in props.keys():
-                            props['driver'] = props['info.linux.driver']
-
-                        props['toolindex'] = props['addr']
-
-                        props_unicode = dict([(unicode(x),unicode(y)) for x, y in props.iteritems()])
-
-                        self.asset_info.append(props_unicode)
+                        props = self.getHalPciDevInfo(interface)
+                        self.asset_info.append(props)
 
                 except dbus.DBusException:
                     continue
+                
+         
+        def getUdevPciDevInfo(self, device):
+             props = {}
+
+             vendorhex = device.get_sysfs_attr('vendor')
+             devhex = device.get_sysfs_attr('device')
+             classhex = device.get_sysfs_attr('class')
+             subvendhex = device.get_sysfs_attr('subsystem_vendor')
+             subdevhex = device.get_sysfs_attr('subsystem_device')
+ 
+             vendorhex = string.replace(vendorhex, '0x', '')
+             devhex = string.replace(devhex, '0x', '')
+             classhex = string.replace(classhex, '0x', '')
+             subvendhex = string.replace(subvendhex, '0x', '')
+             subdevhex = string.replace(subdevhex, '0x', '')
+             subdevid = subvendhex + subdevhex
+ 
+             subdevice = ''
+ 
+             classreg = re.search('^(\w{2})(\w{2})(\w{2})', classhex)
+ 
+             if vendorhex in self.pciids['subdevs'].keys():
+                 if subdevid in self.pciids['subdevs'][vendorhex].keys():
+                     subdevice = self.pciids['subdevs'][vendorhex][subdevid]
+ 
+             props['addr'] = device.get_property('PCI_SLOT_NAME')
+             props['vendor'] = self.pciids['vendors'][vendorhex]
+             props['device'] = self.pciids['devices'][vendorhex][devhex]
+             props['class'] = self.pciids['classes'][classreg.group(1)]
+             props['subclass'] = self.pciids['subclasses'][classreg.group(1)][classreg.group(2)]
+             props['subdevice'] = subdevice
+             props['driver'] = device.get_property('DRIVER')
+             props['sysfspath'] = device.get_sysfs_path()
+             props['localcpus'] = device.get_sysfs_attr('local_cpus')
+             props['irq'] = device.get_sysfs_attr('irq')
+             props['numanode'] = device.get_sysfs_attr('numa_node')
+             props['localcpulist'] = device.get_sysfs_attr('local_cpulist')
+ 
+             props['toolindex'] = props['addr']
+             
+             return props
+
+        def getHalPciDevInfo(self, devIntf):
+             props = devIntf.GetAllProperties()
+             addr_match = re.search('.*?\/([a-zA-Z:0-9\.]+)$', props['linux.sysfs_path'])
+             addr = ''
+             subdevice = ''
+             
+             irq = systeminfo.io.file.readFile(props['linux.sysfs_path'] + '/irq')
+             local_cpus = systeminfo.io.file.readFile(props['linux.sysfs_path'] + '/local_cpus')
+             
+             if addr_match:
+                 addr = addr_match.group(1)
+             
+             # HAL has these numbers in decimal we need to get it in hex
+             # to be able to match against pci ids
+             vendorhex = props['pci.vendor_id']
+             classhex = hex(props['pci.device_class'])
+             subclasshex = hex(props['pci.device_subclass'])
+             subvendhex = hex(props['pci.subsys_vendor_id'])
+             subdevhex = hex(props['pci.subsys_product_id'])
+         
+             vendorhex = string.replace(str(vendorhex), '0x', '')
+             # in pci ids are hex numbers with 2 zeros fill, so we
+             # need to convert our numbers from HAL to same format
+             classhex = "%02x" % int(classhex[2:], 16)
+             subclasshex = "%02x" % int(subclasshex[2:], 16)
+             subvendhex = "%02x" % int(subvendhex[2:], 16)
+             subdevhex = "%02x" % int(subdevhex[2:], 16)
+             subdevid = subvendhex + subdevhex
+         
+             if vendorhex in self.pciids['subdevs'].keys():
+                 if subdevid in self.pciids['subdevs'][vendorhex].keys():
+                     subdevice = self.pciids['subdevs'][vendorhex][subdevid]
+         
+             props['addr'] = addr
+             props['vendor'] = props['pci.vendor']
+             props['device'] = props['pci.product']
+             props['class'] = self.pciids['classes'][classhex]
+             props['subclass'] = self.pciids['subclasses'][classhex][subclasshex]
+             props['subdevice'] = subdevice
+             props['sysfspath'] = props['linux.sysfs_path']
+             props['localcpus'] = local_cpus[0].strip()
+             props['irq'] = irq[0].strip()
+             props['numanode'] = ''
+             props['local_cpulist'] = ''
+     
+             if 'info.linux.driver' in props.keys():
+                props['driver'] = props['info.linux.driver']
+     
+             props['toolindex'] = props['addr']
+             
+             props_unicode = dict([(unicode(x),unicode(y)) for x, y in props.iteritems()])
+             
+             return props_unicode
+ 
