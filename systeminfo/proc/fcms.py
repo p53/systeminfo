@@ -135,7 +135,7 @@ class Fcms(systeminfo.proc.base.Base):
         @rtype: void
         """
 
-        # againg we get all devices, to have compatibility with older HAL
+        # again we get all devices, to have compatibility with older HAL
         system_bus = dbus.SystemBus()
         hal_mgr_obj = system_bus.get_object('org.freedesktop.Hal', '/org/freedesktop/Hal/Manager')
         hal_mgr_iface = dbus.Interface(hal_mgr_obj, 'org.freedesktop.Hal.Manager')
@@ -215,7 +215,7 @@ class Fcms(systeminfo.proc.base.Base):
 
                     props['toolindex'] = props['pcicard']
 
-    props_unicode = dict([(unicode(x), unicode(y)) for x, y in props.iteritems()])
+                    props_unicode = dict([(unicode(x), unicode(y)) for x, y in props.iteritems()])
 
                     self.asset_info.append(props_unicode)
 

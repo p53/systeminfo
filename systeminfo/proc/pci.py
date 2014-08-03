@@ -145,6 +145,7 @@ class Pci(systeminfo.proc.base.Base):
             @param options: passed parameters
             @rtype: void
             """
+            
             # getting info about pci devices, matching against pci ids parsed earlier
             import gudev
             client = gudev.Client(["pci"])
@@ -215,7 +216,7 @@ class Pci(systeminfo.proc.base.Base):
 
                     if subsystem == 'pci':
                         props = interface.GetAllProperties()
-addr_match = re.search('.*?\/([a-zA-Z:0-9\.]+)$', props['linux.sysfs_path'])
+                        addr_match = re.search('.*?\/([a-zA-Z:0-9\.]+)$', props['linux.sysfs_path'])
                         addr = ''
                         subdevice = ''
 
@@ -263,7 +264,7 @@ addr_match = re.search('.*?\/([a-zA-Z:0-9\.]+)$', props['linux.sysfs_path'])
 
                         props['toolindex'] = props['addr']
 
-props_unicode = dict([(unicode(x),unicode(y)) for x, y in props.iteritems()])
+                        props_unicode = dict([(unicode(x),unicode(y)) for x, y in props.iteritems()])
 
                         self.asset_info.append(props_unicode)
 

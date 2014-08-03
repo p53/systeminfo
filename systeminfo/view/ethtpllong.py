@@ -16,13 +16,7 @@
 #
 # -*- coding: utf-8 -*-
 
-def readFile(file):
-    lines = []
-    try:
-        f = open(file, 'r')
-        lines = f.readlines()
-        f.close()
-        return lines
-    except IOError:
-        lines.append("IOError")
-        return lines
+tplh = """
+%(addr|center)s %(intf|center)s %(device|center)s %(vendor|center)s %(mac|center)s %(operstate|center)s %(speed|center)s %(duplex|center)s"""
+tpl = """%(addr|center)s %(intf|center)s %(device|center)s %(vendor|center)s %(mac|center)s %(operstate|center)s %(speed|center)s %(duplex|center)s
+"""

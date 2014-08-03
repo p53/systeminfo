@@ -16,13 +16,19 @@
 #
 # -*- coding: utf-8 -*-
 
-def readFile(file):
-    lines = []
-    try:
-        f = open(file, 'r')
-        lines = f.readlines()
-        f.close()
-        return lines
-    except IOError:
-        lines.append("IOError")
-        return lines
+tplh = ""
+tpl = """%(intf|ljust)s
+%(sysfspath|ljust)s  
+%(device|ljust)s
+%(vendor|ljust)s
+%(driver|ljust)s
+%(mac|ljust)s
+%(operstate|ljust)s
+%(speed|ljust)s
+%(duplex|ljust)s
+%(mtu|ljust)s
+%(localcpus|ljust)s
+%(localcpulist|ljust)s
+%(numanode|ljust)s
+%(irq|ljust)s
+%(addr|ljust)s"""

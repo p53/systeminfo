@@ -56,6 +56,7 @@ from systeminfo.proc.fcms import Fcms
 from systeminfo.proc.disk import Disk
 from systeminfo.proc.system import System
 from systeminfo.proc.tape import Tape
+from systeminfo.proc.eth import Eth
 
 options = {'outlength': 'short', 'get_data_action': 'getData'}
 """
@@ -63,7 +64,7 @@ options = {'outlength': 'short', 'get_data_action': 'getData'}
 @var: this is variable with default values passed to action method
 """
 
-asset_types = ['cpu', 'memory', 'pci', 'fcms', 'disk', 'system', 'tape']
+asset_types = ['cpu', 'memory', 'pci', 'fcms', 'disk', 'system', 'tape', 'eth']
 """
 @type: list
 @var: list of asset types currently supported by tool
@@ -196,7 +197,7 @@ DESCRIPTION
 
 OPTIONS
        asset_type
-               can be one of these types: system, cpu, memory, disk, pci, fcms, tape
+               can be one of these types: system, cpu, memory, disk, pci, fcms, tape, eth
 
        --l, --long
                specifies to display long output
