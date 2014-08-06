@@ -179,9 +179,10 @@ def main():
     # and then invoking action on it, depending on passed options
     # , also passing parameters assigned in previous option checking
     asset_type = asset_param.title()
-    asset = globals()[asset_type]()
-    getattr(asset, 'setConfDir')(systeminfo.misc.config.confDir)
-    getattr(asset, 'setCacheDir')(systeminfo.misc.config.cacheDir)
+    configDir = systeminfo.misc.config.confDir
+    cachingDir = systeminfo.misc.config.cacheDir
+    
+    asset = globals()[asset_type](configDir, cachingDir)
     getattr(asset, action)(options)
 
 def help():

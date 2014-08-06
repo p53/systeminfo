@@ -32,6 +32,7 @@ This class is class for pci asset type
 
 import systeminfo.io.file
 import os
+import os.path
 import re
 import string
 import ConfigParser
@@ -55,14 +56,42 @@ class Pci(systeminfo.proc.base.Base):
         @ivar: holds info about all pci devices
         """
 
-        pciidsFile = '/usr/share/hwdata/pci.ids'
+        pciids_file = '/usr/share/hwdata/pci.ids'
         """
         @type: str
         @ivar: holds location of file with pci ids
         """
         
-        def __init__(self):
-            self.getPciIds()
+        pciids_cache_name = 'pciids'
+        """
+        @type: str
+        @ivar: holds name of cache file for pci ids caching
+        """
+        
+        def __init__(self, configDir, cachingDir):
+            super(Pci, self).__init__(configDir, cachingDir)
+            pciids_cache_file = self.cacheDir + Pci.pciids_cache_name + '.cache'
+            cur_timestamp = 0
+            
+            if os.access(Pci.pciids_file, os.R_OK):
+                cur_timestamp = os.path.getmtime(Pci.pciids_file)
+                
+            cached_pciids = self.getCustomCache(Pci.pciids_cache_name)
+            
+            if len(cached_pciids) > 0:
+                saved_timestamp = cached_pciids.get('timestamp')
+                
+                if cur_timestamp != saved_timestamp:
+                    self.getPciIds()
+                    self.pciids['timestamp'] = cur_timestamp
+                    self.createCustomCache(Pci.pciids_cache_name, self.pciids)
+                else:
+                    self.pciids = cached_pciids
+                    
+            else:       
+                self.getPciIds()
+                self.pciids['timestamp'] = cur_timestamp
+                self.createCustomCache(Pci.pciids_cache_name, self.pciids)
             
         def getPciIds(self):
             """
@@ -96,7 +125,7 @@ class Pci(systeminfo.proc.base.Base):
             currentclass = ''
             currentvend = ''
 
-            f = open(self.pciidsFile, 'r')
+            f = open(self.pciids_file, 'r')
 
             for line in f:
                 vend = re.search('^(\w+)\s*(.*)', line)

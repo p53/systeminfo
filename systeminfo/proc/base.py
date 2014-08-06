@@ -44,7 +44,7 @@ import sys
 import copy
 import cPickle as pickle
 
-class Base:
+class Base(object):
 
         cacheDir = ""
         """
@@ -57,6 +57,10 @@ class Base:
         @type: string
         @ivar: Holds configuration files directory
         """
+        
+        def __init__(self, configDir, cachingDir):
+            self.confDir = configDir
+            self.cacheDir = cachingDir
 
         def getData(self, options):
             """
@@ -81,7 +85,7 @@ class Base:
             @rtype: void
             """
 
-            cache_file = self.cacheDir + self.__class__.__name__.lower() + '.cache'
+            cache_file = Base.cacheDir + self.__class__.__name__.lower() + '.cache'
 
             if os.path.exists(cache_file):
                 if os.access(cache_file, os.R_OK) and os.path.getsize(cache_file) > 0:
@@ -187,7 +191,39 @@ class Base:
             pickle.dump(self.asset_info, cache_file_obj)
 
             cache_file_obj.close()
+        
+        def createCustomCache(self, cacheName, cachedData):
+            if not cacheName:
+                print 'You forgot to supply cache name!'
+                raise Exception('Missing name')
+                
+            cache_file = self.cacheDir + cacheName.lower() + '.cache'
+            cache_file_obj = open(cache_file, 'w')
 
+            # pickling custom data
+            pickle.dump(cachedData, cache_file_obj)
+
+            cache_file_obj.close()
+        
+        def getCustomCache(self, cacheName):
+            """
+            Method: getCustonCache
+
+            This method checks if there is cache file and gets data if possible
+
+            @rtype: dict
+            """
+            cachedData = {}           
+            cache_file = self.cacheDir + cacheName + '.cache'
+
+            if os.path.exists(cache_file):
+                if os.access(cache_file, os.R_OK) and os.path.getsize(cache_file) > 0:
+                    cache_file_obj = open(cache_file, 'r')
+                    cachedData = pickle.load(cache_file_obj)
+                    cache_file_obj.close()
+
+            return cachedData
+                                
         def setCacheDir(self, dir_location):
             """
             Method setCacheDir
