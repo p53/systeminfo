@@ -69,6 +69,18 @@ class Pci(systeminfo.proc.base.Base):
         """
         
         def __init__(self, configDir, cachingDir):
+            """
+            Method: __init__
+            
+            Method initializies Pci object and also gets info about
+            pci ids from cache or from file
+            
+            @type configDir: str
+            @param configDir: directory location of config files
+            @type cachingDir: str
+            @param cachingDir: directory location of caching files
+            @rtype void
+            """
             super(Pci, self).__init__(configDir, cachingDir)
             pciids_cache_file = self.cacheDir + Pci.pciids_cache_name + '.cache'
             cur_timestamp = 0
@@ -234,8 +246,18 @@ class Pci(systeminfo.proc.base.Base):
                 
          
         def getUdevPciDevInfo(self, device):
+             """
+             Method: getUdevPciDevInfo
+             
+             method gathers info from udev for passed pci device and returns as dict
+             
+             @type device: GudevDevice
+             @param device: this is device for which we want to gather info
+             @rtype dict
+             """
              props = {}
 
+             # gathering properties which we will use for identifying device
              vendorhex = device.get_sysfs_attr('vendor')
              devhex = device.get_sysfs_attr('device')
              classhex = device.get_sysfs_attr('class')
@@ -275,6 +297,15 @@ class Pci(systeminfo.proc.base.Base):
              return props
 
         def getHalPciDevInfo(self, devIntf):
+             """
+             Method: getHalPciDevInfo
+             
+             method gathers info from HAL for passed device interface and returns as dict
+             
+             @type devIntf: dbus.Interface
+             @param devIntf: is interface of device for which we want to gather info
+             @rtype dict
+             """
              props = devIntf.GetAllProperties()
              addr_match = re.search('.*?\/([a-zA-Z:0-9\.]+)$', props['linux.sysfs_path'])
              addr = ''

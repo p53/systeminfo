@@ -59,6 +59,13 @@ class Base(object):
         """
         
         def __init__(self, configDir, cachingDir):
+            """
+            Method: __init__
+            
+            method initializies all device objects
+            
+            @rtype void
+            """
             self.confDir = configDir
             self.cacheDir = cachingDir
 
@@ -193,6 +200,17 @@ class Base(object):
             cache_file_obj.close()
         
         def createCustomCache(self, cacheName, cachedData):
+            """
+            Method: createCustomCache
+            
+            method creates cache with specified name and with provided data
+            
+            @type cacheName: str
+            @param cacheName: specifies name from which we will construct cache file name
+            @type cachedData: dict
+            @param cachedData: data which we want to store in cache
+            @rtype void
+            """
             if not cacheName:
                 print 'You forgot to supply cache name!'
                 raise Exception('Missing name')
@@ -211,6 +229,8 @@ class Base(object):
 
             This method checks if there is cache file and gets data if possible
 
+            @type cacheName: str
+            @param cacheName: name of file which should be used for construction of file name of cache
             @rtype: dict
             """
             cachedData = {}           
