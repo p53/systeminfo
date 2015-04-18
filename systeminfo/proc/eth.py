@@ -103,7 +103,7 @@ class Eth(systeminfo.proc.base.Base):
                     parentClassId = classreg.group(1)
                     parentSubClassId = classreg.group(2)
                     
-                    if parentClassId == '02' and parentSubClassId == '00':
+                    if (parentClassId == '02' and (parentSubClassId == '00' or parentSubClassId == '80')):
                         devsysfspath = dev.get_sysfs_path()
                         
                         duplex = systeminfo.io.file.readFile(devsysfspath + '/' + 'duplex')
@@ -154,7 +154,7 @@ class Eth(systeminfo.proc.base.Base):
                     parentclass = parentintf.GetProperty('pci.device_class')
                     parentsubclass = parentintf.GetProperty('pci.device_subclass')            
                     
-                    if parentclass == 2 and parentsubclass == 0:   
+                    if (parentclass == 2 and (parentsubclass == 0 or parentsubclass == 80)):   
                         props = pciinfo.getHalPciDevInfo(parentintf)
                                              
                         devsysfspath = interface.GetProperty('linux.sysfs_path')
