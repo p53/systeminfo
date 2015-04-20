@@ -177,10 +177,14 @@ class Disk(systeminfo.proc.base.Base):
                 category = interface.GetProperty('info.category')
                 if category == 'storage':
                     props = interface.GetAllProperties()
-                    devpat = re.compile('/dev/(sd\w+)')
-                    devname = devpat.search(props['block.device'])
 
-                    if devname:
+                    # IDE drives major number is 3 or 22
+                    # SCSI drives 8
+                    # floppy 2
+                    if props['block.major'] in [3,22,8,2]:
+                        devpat = re.compile('/dev/(\w{2,2}\w+)')
+                        devname = devpat.search(props['block.device'])
+                    
                         # some properties are block properties, some on lun level in HAL
                         # thus we are getting also parent device, for getting address of
                         # HBA we are matching regex, remote ports are gathered from sysfs
@@ -241,14 +245,15 @@ class Disk(systeminfo.proc.base.Base):
         import gudev
         client = gudev.Client(["block"])
         devs = client.query_by_subsystem("block")
-        devpat = re.compile('/dev/(sd\w+)')
+        devpat = re.compile('/dev/(\w{2,2}\w+)')
 
         for dev in devs:
             devicename = dev.get_property('DEVNAME')
             devtype = dev.get_property('DEVTYPE')
             devpath = dev.get_property('DEVPATH')
+            majornum = dev.get_property('MAJOR')
 
-            if devtype == 'disk':
+            if devtype == 'disk' and majornum in ['3','22','8','3']:
                 devicematch = devpat.search(devicename)
                 if devicematch:
                     devname = devicematch.group(1)
