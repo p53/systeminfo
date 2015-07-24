@@ -100,6 +100,7 @@ def main():
                             '--get',
                             '--detail',
                             '--cached',
+                            '--json',
                             '--h',
                             '--l',
                             '--c'
@@ -108,7 +109,7 @@ def main():
     # we are using getopt module although there are more advanced modules
     # because of compatibility with older versions of python
     try:
-        opts, args = getopt.getopt(sys.argv[1:], 'hlpc', ['parsable', 'long', 'help', 'get=', 'detail=', 'cached'])
+        opts, args = getopt.getopt(sys.argv[1:], 'hlpc', ['json', 'parsable', 'long', 'help', 'get=', 'detail=', 'cached'])
     except getopt.GetoptError, e:
         print "Bad required option"
         help()
@@ -143,6 +144,13 @@ def main():
     elif 'p' in opt_curr or '--parsable' in opt_curr:
         options['outlength'] = 'parsable'
 
+    if ('j' in opt_curr or '--json' in opt_curr) and '--get' not in opt_curr:
+        print "Bad option"
+        help()
+        sys.exit(2)
+    elif 'j' in opt_curr or '--json' in opt_curr:
+        options['outlength'] = 'json'
+        
     if ('c' in opt_curr or '--cached' in opt_curr) and '--get' not in opt_curr:
         print "Bad option"
         help()
@@ -170,6 +178,13 @@ def main():
             options['template_header_type'] = 'VoidTemplate'
             options['outlength'] = 'detail'
             options['instance'] = str(processed_options['--detail'])
+            
+        if '--json' in opt_curr:
+            action = 'summary'
+            options['template_body_type'] = 'PropertyTemplateAll'
+            options['template_header_type'] = 'VoidTemplate'
+            options['outlength'] = 'json'
+            
     else:
         print "Bad option"
         help()
@@ -191,7 +206,7 @@ NAME
        %(program)s - utility for displaying hardware information
 
 SYNOPSIS
-       %(program)s --get asset_type [--p|--l|--d identifier] [--c]
+       %(program)s --get asset_type [--p|--l|--j|--d identifier] [--c]
 
 DESCRIPTION
        %(program)s is utility for getting hardware information it aims to be simple and provide output in well formated output
@@ -212,7 +227,10 @@ OPTIONS
                identifier
 
                column which you should use as identifier is marked in column header with asterisk
-
+               
+        --j, --json
+                specifies to display json output
+                
        --c, --cached
                use cache to get data, should be faster, but doesn't generate fresh data
 

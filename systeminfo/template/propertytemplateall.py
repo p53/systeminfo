@@ -17,9 +17,9 @@
 # -*- coding: utf-8 -*-
 
 """
-Module: propertytemplate.py
+Module: propertytemplateall.py
 
-Class: PropertyTemplate
+Class: PropertyTemplateAll
 
 This class processes template string
 It is used for generating string as key value pairs of properties
@@ -33,10 +33,16 @@ It is used for generating string as key value pairs of properties
 
 import string
 
-class PropertyTemplate:
+class PropertyTemplateAll:
 
         _template = ''
-
+        
+        _iteration = 0
+        """
+        @type: int
+        @ivar: holds index for iterating over items
+        """
+        
         _maxInfo = {'propname': 0, 'propval': 0 }
         """
         @type: dict
@@ -65,7 +71,7 @@ class PropertyTemplate:
             """
 
             self._property_names = names
-            self.tableData = tableRows[0]
+            self.tableData = tableRows
             self._template = tplstring
 
         def __str__(self):
@@ -80,27 +86,37 @@ class PropertyTemplate:
             """
 
             length = 0
-            output = "\n"
+            output = "[\n"
+            
+            for index, itemData in enumerate(self.tableData):
+                # if there is no value in data, fill with N/A
+                for key, data in self._property_names.iteritems():
+                        current_key = self._property_names[key]
 
-            # if there is no value in data, fill with N/A
-            for key, data in self._property_names.iteritems():
-                    current_key = self._property_names[key]
+                        if key not in itemData.keys():
+                            itemData[key] = 'N/A'
 
-                    if key not in self.tableData.keys():
-                        self.tableData[key] = 'N/A'
+                        if itemData[key] is None or itemData[key] == '':
+                                itemData[key] = 'N/A'
 
-                    if self.tableData[key] is None or self.tableData[key] == '':
-                            self.tableData[key] = 'N/A'
+                        if self._maxInfo['propname'] < len(current_key):
+                                self._maxInfo['propname'] = len(current_key)
 
-                    if self._maxInfo['propname'] < len(current_key):
-                            self._maxInfo['propname'] = len(current_key)
+                        if self._maxInfo['propval'] < len(itemData[key]):
+                                self._maxInfo['propval'] = len(itemData[key])
 
-                    if self._maxInfo['propval'] < len(self.tableData[key]):
-                            self._maxInfo['propval'] = len(self.tableData[key])
+                if len(itemData.keys()) > 0:
+                     output = output + self._template % self
+                    
+                if self._iteration != (len(self.tableData) - 1) :
+                     output += ",\n"
+                     
+                self._iteration = self._iteration + 1
 
-            if len(self.tableData.keys()) > 0:
-                 output = output + self._template % self + "\n"
-
+            self._iteration = 0
+            
+            output += "]"
+            
             return output
 
         def __getitem__(self, key):
@@ -125,10 +141,10 @@ class PropertyTemplate:
 
             # value column is not formated
             if len(el) == 1:
-                    valformated = self.tableData[key]
+                    valformated = self.tableData[self._iteration][key]
                     keyformated = current_key
-                    return keyformated + ':' + valformated
+                    return '"' + keyformated + '"' + ':' + '"' + valformated + '"'
             else:
-                    valformated = self.tableData[el[0]]
+                    valformated = self.tableData[self._iteration][el[0]]
                     keyformated = getattr(string, el[1])(current_key, self._maxInfo['propname'])
-                    return keyformated + ':' + valformated
+                    return '"' + keyformated + '"' + ':' + '"' + valformated + '"'

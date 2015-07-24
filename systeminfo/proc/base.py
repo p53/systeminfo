@@ -35,6 +35,7 @@ import re
 from string import Template
 from systeminfo.template.tabletemplate import TableTemplate
 from systeminfo.template.propertytemplate import PropertyTemplate
+from systeminfo.template.propertytemplateall import PropertyTemplateAll
 from systeminfo.template.voidtemplate import VoidTemplate
 from systeminfo.template.headertabletemplate import HeaderTableTemplate
 import ConfigParser
