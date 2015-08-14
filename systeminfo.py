@@ -45,6 +45,7 @@ if effective_uid > 0:
     print "To run this utility you need root priveleges!"
     sys.exit(4)
 
+import argparse
 import getopt
 import re
 import systeminfo.misc.config
@@ -86,109 +87,82 @@ def main():
     # Asset type on which we want to perform aciont
     asset_param = ''
 
-    # Dict for storing list of passed options and their values
-    processed_options = {}
+    parser = argparse.ArgumentParser(
+        description="description: Utility for viewing HW information"
+    )
+    
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument(
+        "-l", 
+        "--long", 
+        help="display in long table format",
+        action='store_const', 
+        dest='outlength',
+        const='long'
+    )
+    group.add_argument(
+        "-p", 
+        "--parsable",
+        help="display in parsable format",
+        action='store_const', 
+        dest='outlength',
+        const='parsable'
+    )
+    group.add_argument(
+        "-d",
+        "--detail",
+        help="display detail of hw instance",
+        dest='identifier'
+    )
+    group.add_argument(
+        "-j",
+        "--json",
+        help="display results in json format",
+        action='store_const', 
+        dest='outlength',
+        const='json'
+    )
+    parser.add_argument(
+        "-g", 
+        "--get", 
+        help="specify type of hardware to get info for, required argument",
+        choices=asset_types,
+        required=True
+    )
+    parser.add_argument(
+        "-c", 
+        "--cached",
+        help="display results from cache",
+        action='store_const', 
+        dest='',
+        const='getCache'
+    )
 
-    # List of passed options
-    opt_curr = []
+    results = parser.parse_args()
+    
+    if results.outlength:
+        options['outlength'] = results.outlength
+    
+    action = 'summary'
+    asset_param = results.get
+    options['template_body_type'] = 'TableTemplate'
+    options['template_header_type'] = 'HeaderTableTemplate'
 
-    # List of allowed options
-    opt_possibilities = [
-                            '--parsable',
-                            '--long',
-                            '--help',
-                            '--get',
-                            '--detail',
-                            '--cached',
-                            '--json',
-                            '--h',
-                            '--l',
-                            '--c'
-                        ]
+    if results.get == 'system':
+        options['template_body_type'] = 'PropertyTemplate'
+        options['template_header_type'] = 'VoidTemplate'
 
-    # we are using getopt module although there are more advanced modules
-    # because of compatibility with older versions of python
-    try:
-        opts, args = getopt.getopt(sys.argv[1:], 'hlpc', ['json', 'parsable', 'long', 'help', 'get=', 'detail=', 'cached'])
-    except getopt.GetoptError, e:
-        print "Bad required option"
-        help()
-        sys.exit(3)
+    if results.identifier:
+        action = 'detail'
+        options['template_body_type'] = 'PropertyTemplate'
+        options['template_header_type'] = 'VoidTemplate'
+        options['outlength'] = 'detail'
+        options['instance'] = results.identifier
 
-    # checking if passed options are among possible ones,
-    # if yes insert into dict option - value
-    for o, a in opts:
-        if o not in opt_possibilities:
-            print "Bad option"
-            help()
-            sys.exit(2)
-
-        processed_options[o] = a
-
-    # extracting passed options to list
-    opt_curr = processed_options.keys()
-
-    # checking if several conditions are met and assigning values to parameters
-    # passed later to invoked action method
-    if ('l' in opt_curr or '--long' in opt_curr) and '--get' not in opt_curr:
-        print "Bad option"
-        help()
-        sys.exit(2)
-    elif 'l' in opt_curr or '--long' in opt_curr:
-        options['outlength'] = 'long'
-
-    if ('p' in opt_curr or '--parsable' in opt_curr) and '--get' not in opt_curr:
-        print "Bad option"
-        help()
-        sys.exit(2)
-    elif 'p' in opt_curr or '--parsable' in opt_curr:
-        options['outlength'] = 'parsable'
-
-    if ('j' in opt_curr or '--json' in opt_curr) and '--get' not in opt_curr:
-        print "Bad option"
-        help()
-        sys.exit(2)
-    elif 'j' in opt_curr or '--json' in opt_curr:
-        options['outlength'] = 'json'
-        
-    if ('c' in opt_curr or '--cached' in opt_curr) and '--get' not in opt_curr:
-        print "Bad option"
-        help()
-        sys.exit(2)
-    elif 'c' in opt_curr or '--cached' in opt_curr:
-        options['get_data_action'] = 'getCache'
-
-    if 'h' in opt_curr or '--help' in opt_curr:
-        help()
-        sys.exit()
-
-    if '--get' in opt_curr and processed_options['--get'] in asset_types:
+    if results.outlength == 'json':
         action = 'summary'
-        asset_param = processed_options['--get']
-        options['template_body_type'] = 'TableTemplate'
-        options['template_header_type'] = 'HeaderTableTemplate'
-
-        if processed_options['--get'] == 'system':
-            options['template_body_type'] = 'PropertyTemplate'
-            options['template_header_type'] = 'VoidTemplate'
-
-        if '--detail' in opt_curr:
-            action = 'detail'
-            options['template_body_type'] = 'PropertyTemplate'
-            options['template_header_type'] = 'VoidTemplate'
-            options['outlength'] = 'detail'
-            options['instance'] = str(processed_options['--detail'])
-            
-        if '--json' in opt_curr:
-            action = 'summary'
-            options['template_body_type'] = 'PropertyTemplateAll'
-            options['template_header_type'] = 'VoidTemplate'
-            options['outlength'] = 'json'
-            
-    else:
-        print "Bad option"
-        help()
-        sys.exit(2)
+        options['template_body_type'] = 'PropertyTemplateAll'
+        options['template_header_type'] = 'VoidTemplate'
 
     # instantiating object, his class is asset type
     # and then invoking action on it, depending on passed options
@@ -196,92 +170,8 @@ def main():
     asset_type = asset_param.title()
     configDir = systeminfo.misc.config.confDir
     cachingDir = systeminfo.misc.config.cacheDir
-    
+
     asset = globals()[asset_type](configDir, cachingDir)
     getattr(asset, action)(options)
-
-def help():
-    """
-NAME
-       %(program)s - utility for displaying hardware information
-
-SYNOPSIS
-       %(program)s --get asset_type [--p|--l|--j|--d identifier] [--c]
-
-DESCRIPTION
-       %(program)s is utility for getting hardware information it aims to be simple and provide output in well formated output
-
-OPTIONS
-       asset_type
-               can be one of these types: system, cpu, memory, disk, pci, fcms, tape, eth
-
-       --l, --long
-               specifies to display long output
-
-       --p, --parsable
-               specifies to display parsable output
-
-       --d, --detail identifier
-               specifies to display detail, requires identifier
-
-               identifier
-
-               column which you should use as identifier is marked in column header with asterisk
-               
-        --j, --json
-                specifies to display json output
-                
-       --c, --cached
-               use cache to get data, should be faster, but doesn't generate fresh data
-
-EXAMPLES
-       This gets information about system in short format:
-
-           %(program)s --get system
-
-       This gets information about disks in long format:
-
-           %(program)s --get disk --l
-           or
-           %(program)s --get disk --long
-
-       This gets information about fcms HBA's in parsable format:
-
-           %(program)s --get fcms --p
-
-       This get detail about disk device:
-
-           %(program)s --get disk --detail 24:0:2:0
-
-       This refreshes cache info about disks:
-
-           %(program)s --get disk
-           %(program)s --get disk --l
-           %(program)s --get disk --p
-
-       This doesn't refresh cache:
-
-           (gets fresh data but doesn't update cache)
-           %(program)s --get disk --detail 24:0:2:0
-           or (these two examples get data from cache)
-           %(program)s --get disk --detail 24:0:2:0 --c
-           or
-           %(program)s --get disk --c
-           or
-           %(program)s --get disk --l --c
-
-NOTES
-       This utility should be run with root priveleges
-
-AUTHOR
-       Pavol Ipoth
-
-COPYRIGHT AND LICENSE
-       Copyright 2013, 2014 Pavol Ipoth
-
-       GPLv3
-"""
-
-    print help.__doc__ % {'program': os.path.split(sys.argv[0])[1]}
 
 main()
