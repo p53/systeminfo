@@ -30,7 +30,12 @@
       <th>&nbsp;&nbsp;&nbsp;<a
         href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
 
-      <th class="navbar" width="100%"></th>
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="https://github.com/p53">systeminfo</a></th>
+          </tr></table></th>
   </tr>
 </table>
 <table width="100%" cellpadding="0" cellspacing="0">
@@ -57,75 +62,95 @@
 </table>
 <h1 class="epydoc">Source Code for <a href="systeminfo.proc.memory-module.html">Module systeminfo.proc.memory</a></h1>
 <pre class="py-src">
-<a name="L1"></a><tt class="py-lineno"> 1</tt>  <tt class="py-line"><tt class="py-docstring">"""</tt> </tt>
-<a name="L2"></a><tt class="py-lineno"> 2</tt>  <tt class="py-line"><tt class="py-docstring">Module: memory.py</tt> </tt>
-<a name="L3"></a><tt class="py-lineno"> 3</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
-<a name="L4"></a><tt class="py-lineno"> 4</tt>  <tt class="py-line"><tt class="py-docstring">Class: Memory</tt> </tt>
-<a name="L5"></a><tt class="py-lineno"> 5</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
-<a name="L6"></a><tt class="py-lineno"> 6</tt>  <tt class="py-line"><tt class="py-docstring">This class is class for memory asset type</tt> </tt>
-<a name="L7"></a><tt class="py-lineno"> 7</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
-<a name="L8"></a><tt class="py-lineno"> 8</tt>  <tt class="py-line"><tt class="py-docstring">@author: Pavol Ipoth</tt> </tt>
-<a name="L9"></a><tt class="py-lineno"> 9</tt>  <tt class="py-line"><tt class="py-docstring">@license: GPL</tt> </tt>
-<a name="L10"></a><tt class="py-lineno">10</tt>  <tt class="py-line"><tt class="py-docstring">@copyright: Copyright 2013 Pavol Ipoth</tt> </tt>
-<a name="L11"></a><tt class="py-lineno">11</tt>  <tt class="py-line"><tt class="py-docstring">@contact: pavol.ipoth@gmail.com</tt> </tt>
-<a name="L12"></a><tt class="py-lineno">12</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
-<a name="L13"></a><tt class="py-lineno">13</tt>  <tt class="py-line"><tt class="py-docstring">"""</tt> </tt>
-<a name="L14"></a><tt class="py-lineno">14</tt>  <tt class="py-line"> </tt>
-<a name="L15"></a><tt class="py-lineno">15</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">dmidecode</tt> </tt>
-<a name="L16"></a><tt class="py-lineno">16</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">ConfigParser</tt> </tt>
-<a name="L17"></a><tt class="py-lineno">17</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">re</tt> </tt>
-<a name="L18"></a><tt class="py-lineno">18</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">sys</tt> </tt>
-<a name="L19"></a><tt class="py-lineno">19</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">os</tt> </tt>
-<a name="L20"></a><tt class="py-lineno">20</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt id="link-0" class="py-name" targets="Package systeminfo=systeminfo-module.html"><a title="systeminfo" class="py-name" href="#" onclick="return doclink('link-0', 'systeminfo', 'link-0');">systeminfo</a></tt><tt class="py-op">.</tt><tt id="link-1" class="py-name" targets="Package systeminfo.proc=systeminfo.proc-module.html"><a title="systeminfo.proc" class="py-name" href="#" onclick="return doclink('link-1', 'proc', 'link-1');">proc</a></tt><tt class="py-op">.</tt><tt id="link-2" class="py-name" targets="Module systeminfo.proc.base=systeminfo.proc.base-module.html"><a title="systeminfo.proc.base" class="py-name" href="#" onclick="return doclink('link-2', 'base', 'link-2');">base</a></tt> </tt>
-<a name="L21"></a><tt class="py-lineno">21</tt>  <tt class="py-line"> </tt>
-<a name="Memory"></a><div id="Memory-def"><a name="L22"></a><tt class="py-lineno">22</tt> <a class="py-toggle" href="#" id="Memory-toggle" onclick="return toggle('Memory');">-</a><tt class="py-line"><tt class="py-keyword">class</tt> <a class="py-def-name" href="systeminfo.proc.memory.Memory-class.html">Memory</a><tt class="py-op">(</tt><tt class="py-base-class">systeminfo</tt><tt class="py-op">.</tt><tt class="py-base-class">proc</tt><tt class="py-op">.</tt><tt class="py-base-class">base</tt><tt class="py-op">.</tt><tt class="py-base-class">Base</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
-</div><div id="Memory-collapsed" style="display:none;" pad="++" indent="++++"></div><div id="Memory-expanded"><a name="L23"></a><tt class="py-lineno">23</tt>  <tt class="py-line">     </tt>
-<a name="L24"></a><tt class="py-lineno">24</tt>  <tt class="py-line">    <tt id="link-3" class="py-name" targets="Variable systeminfo.proc.cpu.Cpu.asset_info=systeminfo.proc.cpu.Cpu-class.html#asset_info,Variable systeminfo.proc.disk.Disk.asset_info=systeminfo.proc.disk.Disk-class.html#asset_info,Variable systeminfo.proc.fcms.Fcms.asset_info=systeminfo.proc.fcms.Fcms-class.html#asset_info,Variable systeminfo.proc.memory.Memory.asset_info=systeminfo.proc.memory.Memory-class.html#asset_info,Variable systeminfo.proc.pci.Pci.asset_info=systeminfo.proc.pci.Pci-class.html#asset_info,Variable systeminfo.proc.system.System.asset_info=systeminfo.proc.system.System-class.html#asset_info,Variable systeminfo.proc.tape.Tape.asset_info=systeminfo.proc.tape.Tape-class.html#asset_info"><a title="systeminfo.proc.cpu.Cpu.asset_info
+<a name="L1"></a><tt class="py-lineno"> 1</tt>  <tt class="py-line"><tt class="py-comment"># Systeminfo - Simple utility for gathering hardware summary information</tt> </tt>
+<a name="L2"></a><tt class="py-lineno"> 2</tt>  <tt class="py-line"><tt class="py-comment"># Copyright (C) 2013, 2014  Pavol Ipoth  &lt;pavol.ipoth@gmail.com&gt;</tt> </tt>
+<a name="L3"></a><tt class="py-lineno"> 3</tt>  <tt class="py-line"><tt class="py-comment">#</tt> </tt>
+<a name="L4"></a><tt class="py-lineno"> 4</tt>  <tt class="py-line"><tt class="py-comment"># This program is free software: you can redistribute it and/or modify</tt> </tt>
+<a name="L5"></a><tt class="py-lineno"> 5</tt>  <tt class="py-line"><tt class="py-comment"># it under the terms of the GNU General Public License as published by</tt> </tt>
+<a name="L6"></a><tt class="py-lineno"> 6</tt>  <tt class="py-line"><tt class="py-comment"># the Free Software Foundation, either version 3 of the License, or</tt> </tt>
+<a name="L7"></a><tt class="py-lineno"> 7</tt>  <tt class="py-line"><tt class="py-comment"># (at your option) any later version.</tt> </tt>
+<a name="L8"></a><tt class="py-lineno"> 8</tt>  <tt class="py-line"><tt class="py-comment">#</tt> </tt>
+<a name="L9"></a><tt class="py-lineno"> 9</tt>  <tt class="py-line"><tt class="py-comment"># This program is distributed in the hope that it will be useful,</tt> </tt>
+<a name="L10"></a><tt class="py-lineno">10</tt>  <tt class="py-line"><tt class="py-comment"># but WITHOUT ANY WARRANTY; without even the implied warranty of</tt> </tt>
+<a name="L11"></a><tt class="py-lineno">11</tt>  <tt class="py-line"><tt class="py-comment"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the</tt> </tt>
+<a name="L12"></a><tt class="py-lineno">12</tt>  <tt class="py-line"><tt class="py-comment"># GNU General Public License for more details.</tt> </tt>
+<a name="L13"></a><tt class="py-lineno">13</tt>  <tt class="py-line"><tt class="py-comment">#</tt> </tt>
+<a name="L14"></a><tt class="py-lineno">14</tt>  <tt class="py-line"><tt class="py-comment"># You should have received a copy of the GNU General Public License</tt> </tt>
+<a name="L15"></a><tt class="py-lineno">15</tt>  <tt class="py-line"><tt class="py-comment"># along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.</tt> </tt>
+<a name="L16"></a><tt class="py-lineno">16</tt>  <tt class="py-line"><tt class="py-comment">#</tt> </tt>
+<a name="L17"></a><tt class="py-lineno">17</tt>  <tt class="py-line"><tt class="py-comment"># -*- coding: utf-8 -*-</tt> </tt>
+<a name="L18"></a><tt class="py-lineno">18</tt>  <tt class="py-line"> </tt>
+<a name="L19"></a><tt class="py-lineno">19</tt>  <tt class="py-line"><tt class="py-docstring">"""</tt> </tt>
+<a name="L20"></a><tt class="py-lineno">20</tt>  <tt class="py-line"><tt class="py-docstring">Module: memory.py</tt> </tt>
+<a name="L21"></a><tt class="py-lineno">21</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L22"></a><tt class="py-lineno">22</tt>  <tt class="py-line"><tt class="py-docstring">Class: Memory</tt> </tt>
+<a name="L23"></a><tt class="py-lineno">23</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L24"></a><tt class="py-lineno">24</tt>  <tt class="py-line"><tt class="py-docstring">This class is class for memory asset type</tt> </tt>
+<a name="L25"></a><tt class="py-lineno">25</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L26"></a><tt class="py-lineno">26</tt>  <tt class="py-line"><tt class="py-docstring">@author: Pavol Ipoth</tt> </tt>
+<a name="L27"></a><tt class="py-lineno">27</tt>  <tt class="py-line"><tt class="py-docstring">@license: GPLv3+</tt> </tt>
+<a name="L28"></a><tt class="py-lineno">28</tt>  <tt class="py-line"><tt class="py-docstring">@copyright: Copyright 2013 Pavol Ipoth</tt> </tt>
+<a name="L29"></a><tt class="py-lineno">29</tt>  <tt class="py-line"><tt class="py-docstring">@contact: pavol.ipoth@gmail.com</tt> </tt>
+<a name="L30"></a><tt class="py-lineno">30</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L31"></a><tt class="py-lineno">31</tt>  <tt class="py-line"><tt class="py-docstring">"""</tt> </tt>
+<a name="L32"></a><tt class="py-lineno">32</tt>  <tt class="py-line"> </tt>
+<a name="L33"></a><tt class="py-lineno">33</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">dmidecode</tt> </tt>
+<a name="L34"></a><tt class="py-lineno">34</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">ConfigParser</tt> </tt>
+<a name="L35"></a><tt class="py-lineno">35</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">re</tt> </tt>
+<a name="L36"></a><tt class="py-lineno">36</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">sys</tt> </tt>
+<a name="L37"></a><tt class="py-lineno">37</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">os</tt> </tt>
+<a name="L38"></a><tt class="py-lineno">38</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt id="link-0" class="py-name" targets="Package systeminfo=systeminfo-module.html"><a title="systeminfo" class="py-name" href="#" onclick="return doclink('link-0', 'systeminfo', 'link-0');">systeminfo</a></tt><tt class="py-op">.</tt><tt id="link-1" class="py-name" targets="Package systeminfo.proc=systeminfo.proc-module.html"><a title="systeminfo.proc" class="py-name" href="#" onclick="return doclink('link-1', 'proc', 'link-1');">proc</a></tt><tt class="py-op">.</tt><tt id="link-2" class="py-name" targets="Module systeminfo.proc.base=systeminfo.proc.base-module.html"><a title="systeminfo.proc.base" class="py-name" href="#" onclick="return doclink('link-2', 'base', 'link-2');">base</a></tt> </tt>
+<a name="L39"></a><tt class="py-lineno">39</tt>  <tt class="py-line"> </tt>
+<a name="Memory"></a><div id="Memory-def"><a name="L40"></a><tt class="py-lineno">40</tt> <a class="py-toggle" href="#" id="Memory-toggle" onclick="return toggle('Memory');">-</a><tt class="py-line"><tt class="py-keyword">class</tt> <a class="py-def-name" href="systeminfo.proc.memory.Memory-class.html">Memory</a><tt class="py-op">(</tt><tt class="py-base-class">systeminfo</tt><tt class="py-op">.</tt><tt class="py-base-class">proc</tt><tt class="py-op">.</tt><tt class="py-base-class">base</tt><tt class="py-op">.</tt><tt class="py-base-class">Base</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="Memory-collapsed" style="display:none;" pad="++" indent="++++"></div><div id="Memory-expanded"><a name="L41"></a><tt class="py-lineno">41</tt>  <tt class="py-line"> </tt>
+<a name="L42"></a><tt class="py-lineno">42</tt>  <tt class="py-line">    <tt id="link-3" class="py-name" targets="Variable systeminfo.proc.cpu.Cpu.asset_info=systeminfo.proc.cpu.Cpu-class.html#asset_info,Variable systeminfo.proc.disk.Disk.asset_info=systeminfo.proc.disk.Disk-class.html#asset_info,Variable systeminfo.proc.eth.Eth.asset_info=systeminfo.proc.eth.Eth-class.html#asset_info,Variable systeminfo.proc.fcms.Fcms.asset_info=systeminfo.proc.fcms.Fcms-class.html#asset_info,Variable systeminfo.proc.memory.Memory.asset_info=systeminfo.proc.memory.Memory-class.html#asset_info,Variable systeminfo.proc.pci.Pci.asset_info=systeminfo.proc.pci.Pci-class.html#asset_info,Variable systeminfo.proc.system.System.asset_info=systeminfo.proc.system.System-class.html#asset_info,Variable systeminfo.proc.tape.Tape.asset_info=systeminfo.proc.tape.Tape-class.html#asset_info"><a title="systeminfo.proc.cpu.Cpu.asset_info
 systeminfo.proc.disk.Disk.asset_info
+systeminfo.proc.eth.Eth.asset_info
 systeminfo.proc.fcms.Fcms.asset_info
 systeminfo.proc.memory.Memory.asset_info
 systeminfo.proc.pci.Pci.asset_info
 systeminfo.proc.system.System.asset_info
 systeminfo.proc.tape.Tape.asset_info" class="py-name" href="#" onclick="return doclink('link-3', 'asset_info', 'link-3');">asset_info</a></tt> <tt class="py-op">=</tt> <tt class="py-op">[</tt><tt class="py-op">]</tt> </tt>
-<a name="L25"></a><tt class="py-lineno">25</tt>  <tt class="py-line">    <tt class="py-string">"""</tt> </tt>
-<a name="L26"></a><tt class="py-lineno">26</tt>  <tt class="py-line"><tt class="py-string">    @type: list</tt> </tt>
-<a name="L27"></a><tt class="py-lineno">27</tt>  <tt class="py-line"><tt class="py-string">    @ivar: holds info about all memories</tt> </tt>
-<a name="L28"></a><tt class="py-lineno">28</tt>  <tt class="py-line"><tt class="py-string">    """</tt> </tt>
-<a name="L29"></a><tt class="py-lineno">29</tt>  <tt class="py-line">     </tt>
-<a name="Memory.getData"></a><div id="Memory.getData-def"><a name="L30"></a><tt class="py-lineno">30</tt> <a class="py-toggle" href="#" id="Memory.getData-toggle" onclick="return toggle('Memory.getData');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="systeminfo.proc.memory.Memory-class.html#getData">getData</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt> <tt class="py-param">options</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
-</div><div id="Memory.getData-collapsed" style="display:none;" pad="++" indent="++++++++"></div><div id="Memory.getData-expanded"><a name="L31"></a><tt class="py-lineno">31</tt>  <tt class="py-line">        <tt class="py-docstring">"""</tt> </tt>
-<a name="L32"></a><tt class="py-lineno">32</tt>  <tt class="py-line"><tt class="py-docstring">        Method: getData</tt> </tt>
-<a name="L33"></a><tt class="py-lineno">33</tt>  <tt class="py-line"><tt class="py-docstring">        </tt> </tt>
-<a name="L34"></a><tt class="py-lineno">34</tt>  <tt class="py-line"><tt class="py-docstring">        Gets all information about all memory items</tt> </tt>
-<a name="L35"></a><tt class="py-lineno">35</tt>  <tt class="py-line"><tt class="py-docstring">        </tt> </tt>
-<a name="L36"></a><tt class="py-lineno">36</tt>  <tt class="py-line"><tt class="py-docstring">        @type options: dict</tt> </tt>
-<a name="L37"></a><tt class="py-lineno">37</tt>  <tt class="py-line"><tt class="py-docstring">        @param options: passed options</tt> </tt>
-<a name="L38"></a><tt class="py-lineno">38</tt>  <tt class="py-line"><tt class="py-docstring">        @rtype void</tt> </tt>
-<a name="L39"></a><tt class="py-lineno">39</tt>  <tt class="py-line"><tt class="py-docstring">        @see dmidecode</tt> </tt>
-<a name="L40"></a><tt class="py-lineno">40</tt>  <tt class="py-line"><tt class="py-docstring">        """</tt> </tt>
-<a name="L41"></a><tt class="py-lineno">41</tt>  <tt class="py-line">         </tt>
-<a name="L42"></a><tt class="py-lineno">42</tt>  <tt class="py-line">        <tt class="py-comment"># we are getting info from dmidecode module (some info which i see in dmidecode</tt> </tt>
-<a name="L43"></a><tt class="py-lineno">43</tt>  <tt class="py-line">        <tt class="py-comment"># are not present in dict...), and filter out results for memory type (17)</tt> </tt>
-<a name="L44"></a><tt class="py-lineno">44</tt>  <tt class="py-line">        <tt class="py-comment"># assign in key - value pair</tt> </tt>
-<a name="L45"></a><tt class="py-lineno">45</tt>  <tt class="py-line">        <tt class="py-keyword">for</tt> <tt class="py-name">hwinfo</tt> <tt class="py-keyword">in</tt> <tt class="py-name">dmidecode</tt><tt class="py-op">.</tt><tt id="link-4" class="py-name" targets="Module systeminfo.proc.memory=systeminfo.proc.memory-module.html"><a title="systeminfo.proc.memory" class="py-name" href="#" onclick="return doclink('link-4', 'memory', 'link-4');">memory</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">.</tt><tt class="py-name">iteritems</tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
-<a name="L46"></a><tt class="py-lineno">46</tt>  <tt class="py-line">            <tt class="py-keyword">if</tt> <tt class="py-name">hwinfo</tt><tt class="py-op">[</tt><tt class="py-number">1</tt><tt class="py-op">]</tt><tt class="py-op">[</tt><tt class="py-string">'dmi_type'</tt><tt class="py-op">]</tt> <tt class="py-op">==</tt> <tt class="py-number">17</tt> <tt class="py-keyword">and</tt> <tt class="py-name">type</tt><tt class="py-op">(</tt><tt class="py-name">hwinfo</tt><tt class="py-op">[</tt><tt class="py-number">1</tt><tt class="py-op">]</tt><tt class="py-op">[</tt><tt class="py-string">'data'</tt><tt class="py-op">]</tt><tt class="py-op">)</tt> <tt class="py-op">==</tt> <tt class="py-name">dict</tt><tt class="py-op">:</tt> </tt>
-<a name="L47"></a><tt class="py-lineno">47</tt>  <tt class="py-line">                <tt class="py-name">tmpinfo</tt> <tt class="py-op">=</tt> <tt class="py-op">{</tt><tt class="py-op">}</tt> </tt>
-<a name="L48"></a><tt class="py-lineno">48</tt>  <tt class="py-line">                <tt class="py-keyword">for</tt> <tt class="py-name">iteminfo</tt> <tt class="py-keyword">in</tt> <tt class="py-name">hwinfo</tt><tt class="py-op">[</tt><tt class="py-number">1</tt><tt class="py-op">]</tt><tt class="py-op">[</tt><tt class="py-string">'data'</tt><tt class="py-op">]</tt><tt class="py-op">.</tt><tt class="py-name">iteritems</tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
-<a name="L49"></a><tt class="py-lineno">49</tt>  <tt class="py-line">                    <tt class="py-name">p</tt> <tt class="py-op">=</tt> <tt class="py-name">re</tt><tt class="py-op">.</tt><tt class="py-name">compile</tt><tt class="py-op">(</tt><tt class="py-string">'\s+'</tt><tt class="py-op">)</tt> </tt>
-<a name="L50"></a><tt class="py-lineno">50</tt>  <tt class="py-line">                    <tt class="py-name">key</tt> <tt class="py-op">=</tt> <tt class="py-name">p</tt><tt class="py-op">.</tt><tt class="py-name">sub</tt><tt class="py-op">(</tt><tt class="py-string">''</tt><tt class="py-op">,</tt> <tt class="py-name">iteminfo</tt><tt class="py-op">[</tt><tt class="py-number">0</tt><tt class="py-op">]</tt><tt class="py-op">)</tt> </tt>
-<a name="L51"></a><tt class="py-lineno">51</tt>  <tt class="py-line">                    <tt class="py-name">tmpinfo</tt><tt class="py-op">[</tt><tt class="py-name">key</tt><tt class="py-op">]</tt> <tt class="py-op">=</tt> <tt class="py-name">str</tt><tt class="py-op">(</tt><tt class="py-name">iteminfo</tt><tt class="py-op">[</tt><tt class="py-number">1</tt><tt class="py-op">]</tt><tt class="py-op">)</tt> </tt>
-<a name="L52"></a><tt class="py-lineno">52</tt>  <tt class="py-line">                 </tt>
-<a name="L53"></a><tt class="py-lineno">53</tt>  <tt class="py-line">                <tt class="py-name">tmpinfo</tt><tt class="py-op">[</tt><tt class="py-string">'toolindex'</tt><tt class="py-op">]</tt> <tt class="py-op">=</tt> <tt class="py-name">hwinfo</tt><tt class="py-op">[</tt><tt class="py-number">0</tt><tt class="py-op">]</tt> </tt>
-<a name="L54"></a><tt class="py-lineno">54</tt>  <tt class="py-line">                <tt class="py-name">tmpinfo</tt><tt class="py-op">[</tt><tt class="py-string">'handle'</tt><tt class="py-op">]</tt> <tt class="py-op">=</tt> <tt class="py-name">hwinfo</tt><tt class="py-op">[</tt><tt class="py-number">0</tt><tt class="py-op">]</tt> </tt>
-<a name="L55"></a><tt class="py-lineno">55</tt>  <tt class="py-line">                 </tt>
-<a name="L56"></a><tt class="py-lineno">56</tt>  <tt class="py-line">                <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-5" class="py-name"><a title="systeminfo.proc.cpu.Cpu.asset_info
+<a name="L43"></a><tt class="py-lineno">43</tt>  <tt class="py-line">    <tt class="py-string">"""</tt> </tt>
+<a name="L44"></a><tt class="py-lineno">44</tt>  <tt class="py-line"><tt class="py-string">    @type: list</tt> </tt>
+<a name="L45"></a><tt class="py-lineno">45</tt>  <tt class="py-line"><tt class="py-string">    @ivar: holds info about all memories</tt> </tt>
+<a name="L46"></a><tt class="py-lineno">46</tt>  <tt class="py-line"><tt class="py-string">    """</tt> </tt>
+<a name="L47"></a><tt class="py-lineno">47</tt>  <tt class="py-line"> </tt>
+<a name="Memory.getData"></a><div id="Memory.getData-def"><a name="L48"></a><tt class="py-lineno">48</tt> <a class="py-toggle" href="#" id="Memory.getData-toggle" onclick="return toggle('Memory.getData');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="systeminfo.proc.memory.Memory-class.html#getData">getData</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt> <tt class="py-param">options</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="Memory.getData-collapsed" style="display:none;" pad="++" indent="++++++++"></div><div id="Memory.getData-expanded"><a name="L49"></a><tt class="py-lineno">49</tt>  <tt class="py-line">        <tt class="py-docstring">"""</tt> </tt>
+<a name="L50"></a><tt class="py-lineno">50</tt>  <tt class="py-line"><tt class="py-docstring">        Method: getData</tt> </tt>
+<a name="L51"></a><tt class="py-lineno">51</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L52"></a><tt class="py-lineno">52</tt>  <tt class="py-line"><tt class="py-docstring">        Gets all information about all memory items</tt> </tt>
+<a name="L53"></a><tt class="py-lineno">53</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L54"></a><tt class="py-lineno">54</tt>  <tt class="py-line"><tt class="py-docstring">        @type options: dict</tt> </tt>
+<a name="L55"></a><tt class="py-lineno">55</tt>  <tt class="py-line"><tt class="py-docstring">        @param options: passed options</tt> </tt>
+<a name="L56"></a><tt class="py-lineno">56</tt>  <tt class="py-line"><tt class="py-docstring">        @rtype void</tt> </tt>
+<a name="L57"></a><tt class="py-lineno">57</tt>  <tt class="py-line"><tt class="py-docstring">        @see dmidecode</tt> </tt>
+<a name="L58"></a><tt class="py-lineno">58</tt>  <tt class="py-line"><tt class="py-docstring">        """</tt> </tt>
+<a name="L59"></a><tt class="py-lineno">59</tt>  <tt class="py-line"> </tt>
+<a name="L60"></a><tt class="py-lineno">60</tt>  <tt class="py-line">        <tt class="py-comment"># we are getting info from dmidecode module (some info which i see in dmidecode</tt> </tt>
+<a name="L61"></a><tt class="py-lineno">61</tt>  <tt class="py-line">        <tt class="py-comment"># are not present in dict...), and filter out results for memory type (17)</tt> </tt>
+<a name="L62"></a><tt class="py-lineno">62</tt>  <tt class="py-line">        <tt class="py-comment"># assign in key - value pair</tt> </tt>
+<a name="L63"></a><tt class="py-lineno">63</tt>  <tt class="py-line">        <tt class="py-keyword">for</tt> <tt class="py-name">hwinfo</tt> <tt class="py-keyword">in</tt> <tt class="py-name">dmidecode</tt><tt class="py-op">.</tt><tt id="link-4" class="py-name" targets="Module systeminfo.proc.memory=systeminfo.proc.memory-module.html"><a title="systeminfo.proc.memory" class="py-name" href="#" onclick="return doclink('link-4', 'memory', 'link-4');">memory</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">.</tt><tt class="py-name">iteritems</tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L64"></a><tt class="py-lineno">64</tt>  <tt class="py-line">            <tt class="py-keyword">if</tt> <tt class="py-name">hwinfo</tt><tt class="py-op">[</tt><tt class="py-number">1</tt><tt class="py-op">]</tt><tt class="py-op">[</tt><tt class="py-string">'dmi_type'</tt><tt class="py-op">]</tt> <tt class="py-op">==</tt> <tt class="py-number">17</tt> <tt class="py-keyword">and</tt> <tt class="py-name">type</tt><tt class="py-op">(</tt><tt class="py-name">hwinfo</tt><tt class="py-op">[</tt><tt class="py-number">1</tt><tt class="py-op">]</tt><tt class="py-op">[</tt><tt class="py-string">'data'</tt><tt class="py-op">]</tt><tt class="py-op">)</tt> <tt class="py-op">==</tt> <tt class="py-name">dict</tt><tt class="py-op">:</tt> </tt>
+<a name="L65"></a><tt class="py-lineno">65</tt>  <tt class="py-line">                <tt class="py-name">tmpinfo</tt> <tt class="py-op">=</tt> <tt class="py-op">{</tt><tt class="py-op">}</tt> </tt>
+<a name="L66"></a><tt class="py-lineno">66</tt>  <tt class="py-line">                <tt class="py-keyword">for</tt> <tt class="py-name">iteminfo</tt> <tt class="py-keyword">in</tt> <tt class="py-name">hwinfo</tt><tt class="py-op">[</tt><tt class="py-number">1</tt><tt class="py-op">]</tt><tt class="py-op">[</tt><tt class="py-string">'data'</tt><tt class="py-op">]</tt><tt class="py-op">.</tt><tt class="py-name">iteritems</tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L67"></a><tt class="py-lineno">67</tt>  <tt class="py-line">                    <tt class="py-name">p</tt> <tt class="py-op">=</tt> <tt class="py-name">re</tt><tt class="py-op">.</tt><tt class="py-name">compile</tt><tt class="py-op">(</tt><tt class="py-string">'\s+'</tt><tt class="py-op">)</tt> </tt>
+<a name="L68"></a><tt class="py-lineno">68</tt>  <tt class="py-line">                    <tt class="py-name">key</tt> <tt class="py-op">=</tt> <tt class="py-name">p</tt><tt class="py-op">.</tt><tt class="py-name">sub</tt><tt class="py-op">(</tt><tt class="py-string">''</tt><tt class="py-op">,</tt> <tt class="py-name">iteminfo</tt><tt class="py-op">[</tt><tt class="py-number">0</tt><tt class="py-op">]</tt><tt class="py-op">)</tt> </tt>
+<a name="L69"></a><tt class="py-lineno">69</tt>  <tt class="py-line">                    <tt class="py-name">tmpinfo</tt><tt class="py-op">[</tt><tt class="py-name">key</tt><tt class="py-op">]</tt> <tt class="py-op">=</tt> <tt class="py-name">str</tt><tt class="py-op">(</tt><tt class="py-name">iteminfo</tt><tt class="py-op">[</tt><tt class="py-number">1</tt><tt class="py-op">]</tt><tt class="py-op">)</tt> </tt>
+<a name="L70"></a><tt class="py-lineno">70</tt>  <tt class="py-line"> </tt>
+<a name="L71"></a><tt class="py-lineno">71</tt>  <tt class="py-line">                <tt class="py-name">tmpinfo</tt><tt class="py-op">[</tt><tt class="py-string">'toolindex'</tt><tt class="py-op">]</tt> <tt class="py-op">=</tt> <tt class="py-name">hwinfo</tt><tt class="py-op">[</tt><tt class="py-number">0</tt><tt class="py-op">]</tt> </tt>
+<a name="L72"></a><tt class="py-lineno">72</tt>  <tt class="py-line">                <tt class="py-name">tmpinfo</tt><tt class="py-op">[</tt><tt class="py-string">'handle'</tt><tt class="py-op">]</tt> <tt class="py-op">=</tt> <tt class="py-name">hwinfo</tt><tt class="py-op">[</tt><tt class="py-number">0</tt><tt class="py-op">]</tt> </tt>
+<a name="L73"></a><tt class="py-lineno">73</tt>  <tt class="py-line"> </tt>
+<a name="L74"></a><tt class="py-lineno">74</tt>  <tt class="py-line">                <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-5" class="py-name"><a title="systeminfo.proc.cpu.Cpu.asset_info
 systeminfo.proc.disk.Disk.asset_info
+systeminfo.proc.eth.Eth.asset_info
 systeminfo.proc.fcms.Fcms.asset_info
 systeminfo.proc.memory.Memory.asset_info
 systeminfo.proc.pci.Pci.asset_info
 systeminfo.proc.system.System.asset_info
 systeminfo.proc.tape.Tape.asset_info" class="py-name" href="#" onclick="return doclink('link-5', 'asset_info', 'link-3');">asset_info</a></tt><tt class="py-op">.</tt><tt class="py-name">append</tt><tt class="py-op">(</tt><tt class="py-name">tmpinfo</tt><tt class="py-op">)</tt> </tt>
-</div></div><a name="L57"></a><tt class="py-lineno">57</tt>  <tt class="py-line"> </tt><script type="text/javascript">
+</div></div><a name="L75"></a><tt class="py-lineno">75</tt>  <tt class="py-line"> </tt><script type="text/javascript">
 <!--
 expandto(location.href);
 // -->
@@ -152,13 +177,18 @@ expandto(location.href);
       <th>&nbsp;&nbsp;&nbsp;<a
         href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
 
-      <th class="navbar" width="100%"></th>
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="https://github.com/p53">systeminfo</a></th>
+          </tr></table></th>
   </tr>
 </table>
 <table border="0" cellpadding="0" cellspacing="0" width="100%%">
   <tr>
     <td align="left" class="footer">
-    Generated by Epydoc 3.0.1 on Sat Jan 25 18:42:51 2014
+    Generated by Epydoc 3.0.1 on Sun Oct  4 17:19:50 2015
     </td>
     <td align="right" class="footer">
       <a target="mainFrame" href="http://epydoc.sourceforge.net"

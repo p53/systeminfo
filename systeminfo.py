@@ -28,9 +28,9 @@ tool where you can have good and quick overview of properties of different hardw
 
 @author: Pavol Ipoth
 @license: GPLv3+
-@copyright: Copyright 2013 Pavol Ipoth
+@copyright: Copyright 2015 Pavol Ipoth
 @contact: pavol.ipoth@gmail.com
-@version: 1.2.1
+@version: 1.5.0
 
 """
 

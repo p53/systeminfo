@@ -4,7 +4,7 @@ systeminfo - utility for displaying hardware information
 
 =head1 SYNOPSIS
 
-systeminfo --get asset_type [--p|--l|--d identifier] [--c]
+systeminfo --get asset_type [--p|--l|--j|--d identifier] [--c]
 
 =head1 DESCRIPTION
 
@@ -18,7 +18,7 @@ output
 
 =item B<asset_type>
 
-can be one of these types: system, cpu, memory, disk, pci, fcms, tape
+can be one of these types: system, cpu, memory, disk, pci, fcms, tape, eth
 
 =item B<--l, --long>
 
@@ -27,6 +27,10 @@ specifies to display long output
 =item B<--p, --parsable>
 
 specifies to display parsable output
+
+=item B<--j, --json>
+
+specifies to display output in json
 
 =item B<--d, --detail I<identifier> >
 
@@ -59,6 +63,10 @@ This gets information about fcms HBA's in parsable format:
 
     systeminfo --get fcms --p
 
+This gets information about memory in json format:
+
+    systeminfo --get memory --j
+
 This get detail about disk device:
 
     systeminfo --get disk --detail 24:0:2:0
@@ -90,7 +98,7 @@ Pavol Ipoth
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2013, 2014 Pavol Ipoth
+Copyright 2013, 2014, 2015 Pavol Ipoth
 
 GPLv3
 

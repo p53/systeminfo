@@ -3,7 +3,7 @@
 from distutils.core import setup
 
 setup(name='systeminfo',
-      version='1.2',
+      version='1.5',
       description='Python Utilities for getting HW info on Linux',
       author='Pavol Ipoth',
       author_email='pavol.ipoth@gmail.com',

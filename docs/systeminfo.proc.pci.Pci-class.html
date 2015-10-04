@@ -30,7 +30,12 @@
       <th>&nbsp;&nbsp;&nbsp;<a
         href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
 
-      <th class="navbar" width="100%"></th>
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="https://github.com/p53">systeminfo</a></th>
+          </tr></table></th>
   </tr>
 </table>
 <table width="100%" cellpadding="0" cellspacing="0">
@@ -59,9 +64,11 @@
 <!-- ==================== CLASS DESCRIPTION ==================== -->
 <h1 class="epydoc">Class Pci</h1><p class="nomargin-top"><span class="codelink"><a href="systeminfo.proc.pci-pysrc.html#Pci">source&nbsp;code</a></span></p>
 <pre class="base-tree">
-<a href="systeminfo.proc.base.Base-class.html">base.Base</a> --+
-            |
-           <strong class="uidshort">Pci</strong>
+object --+    
+         |    
+ <a href="systeminfo.proc.base.Base-class.html">base.Base</a> --+
+             |
+            <strong class="uidshort">Pci</strong>
 </pre>
 
 <hr />
@@ -82,6 +89,42 @@
     </table>
   </td>
 </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="systeminfo.proc.pci.Pci-class.html#__init__" class="summary-sig-name">__init__</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">configDir</span>,
+        <span class="summary-sig-arg">cachingDir</span>)</span><br />
+      Method: __init__</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="systeminfo.proc.pci-pysrc.html#Pci.__init__">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="systeminfo.proc.pci.Pci-class.html#getPciIds" class="summary-sig-name">getPciIds</a>(<span class="summary-sig-arg">self</span>)</span><br />
+      Method: getPciIds</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="systeminfo.proc.pci-pysrc.html#Pci.getPciIds">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
 <tr>
     <td width="15%" align="right" valign="top" class="summary">
       <span class="summary-type">void</span>
@@ -136,16 +179,68 @@
       
     </td>
   </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="systeminfo.proc.pci.Pci-class.html#getUdevPciDevInfo" class="summary-sig-name">getUdevPciDevInfo</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">device</span>)</span><br />
+      Method: getUdevPciDevInfo</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="systeminfo.proc.pci-pysrc.html#Pci.getUdevPciDevInfo">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="systeminfo.proc.pci.Pci-class.html#getHalPciDevInfo" class="summary-sig-name">getHalPciDevInfo</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">devIntf</span>)</span><br />
+      Method: getHalPciDevInfo</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="systeminfo.proc.pci-pysrc.html#Pci.getHalPciDevInfo">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
   <tr>
     <td colspan="2" class="summary">
     <p class="indent-wrapped-lines"><b>Inherited from <code><a href="systeminfo.proc.base.Base-class.html">base.Base</a></code></b>:
       <code><a href="systeminfo.proc.base.Base-class.html#createCache">createCache</a></code>,
+      <code><a href="systeminfo.proc.base.Base-class.html#createCustomCache">createCustomCache</a></code>,
       <code><a href="systeminfo.proc.base.Base-class.html#detail">detail</a></code>,
       <code><a href="systeminfo.proc.base.Base-class.html#getCache">getCache</a></code>,
+      <code><a href="systeminfo.proc.base.Base-class.html#getCustomCache">getCustomCache</a></code>,
       <code><a href="systeminfo.proc.base.Base-class.html#setCacheDir">setCacheDir</a></code>,
       <code><a href="systeminfo.proc.base.Base-class.html#setConfDir">setConfDir</a></code>,
       <code><a href="systeminfo.proc.base.Base-class.html#summary">summary</a></code>,
       <code><a href="systeminfo.proc.base.Base-class.html#view">view</a></code>
+      </p>
+    <p class="indent-wrapped-lines"><b>Inherited from <code>object</code></b>:
+      <code>__delattr__</code>,
+      <code>__format__</code>,
+      <code>__getattribute__</code>,
+      <code>__hash__</code>,
+      <code>__new__</code>,
+      <code>__reduce__</code>,
+      <code>__reduce_ex__</code>,
+      <code>__repr__</code>,
+      <code>__setattr__</code>,
+      <code>__sizeof__</code>,
+      <code>__str__</code>,
+      <code>__subclasshook__</code>
       </p>
     </td>
   </tr>
@@ -188,11 +283,52 @@
       holds info about all pci devices
     </td>
   </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">str</span>
+    </td><td class="summary">
+        <a name="pciids_file"></a><span class="summary-name">pciids_file</span> = <code title="'/usr/share/hwdata/pci.ids'"><code class="variable-quote">'</code><code class="variable-string">/usr/share/hwdata/pci.ids</code><code class="variable-quote">'</code></code><br />
+      holds location of file with pci ids
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">str</span>
+    </td><td class="summary">
+        <a name="pciids_cache_name"></a><span class="summary-name">pciids_cache_name</span> = <code title="'pciids'"><code class="variable-quote">'</code><code class="variable-string">pciids</code><code class="variable-quote">'</code></code><br />
+      holds name of cache file for pci ids caching
+    </td>
+  </tr>
   <tr>
     <td colspan="2" class="summary">
     <p class="indent-wrapped-lines"><b>Inherited from <code><a href="systeminfo.proc.base.Base-class.html">base.Base</a></code></b>:
       <code><a href="systeminfo.proc.base.Base-class.html#cacheDir">cacheDir</a></code>,
       <code><a href="systeminfo.proc.base.Base-class.html#confDir">confDir</a></code>
+      </p>
+    </td>
+  </tr>
+</table>
+<!-- ==================== PROPERTIES ==================== -->
+<a name="section-Properties"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Properties</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-Properties"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+  <tr>
+    <td colspan="2" class="summary">
+    <p class="indent-wrapped-lines"><b>Inherited from <code>object</code></b>:
+      <code>__class__</code>
       </p>
     </td>
   </tr>
@@ -215,6 +351,84 @@
   </td>
 </tr>
 </table>
+<a name="__init__"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">__init__</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">configDir</span>,
+        <span class="sig-arg">cachingDir</span>)</span>
+    <br /><em class="fname">(Constructor)</em>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="systeminfo.proc.pci-pysrc.html#Pci.__init__">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Method: __init__</p>
+  <p>Method initializies Pci object and also gets info about pci ids from 
+  cache or from file</p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>configDir</code></strong> (str) - directory location of config files</li>
+        <li><strong class="pname"><code>cachingDir</code></strong> (str) - directory location of caching files @rtype void</li>
+    </ul></dd>
+    <dt>Overrides:
+        object.__init__
+    </dt>
+  </dl>
+</td></tr></table>
+</div>
+<a name="getPciIds"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">getPciIds</span>(<span class="sig-arg">self</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="systeminfo.proc.pci-pysrc.html#Pci.getPciIds">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+
+Method: getPciIds
+
+Method gets all info about pci items, parses /usr/share/hwdata/pci.ids file
+for information about pci devices, this file has fixed format
+
+we are creating this structure from parsing:
+
+    pciids = {
+                'vendors': { '1002': 'AMD', '9092': 'HP'},
+                'classes': {'02': 'Network Controller', '03': 'Display Controller'},
+                'subclasses': {'03': { '00': 'VGA controller'}, '02': {'00': 'Ethernet Controller}},
+                'devices': {'1002': {'4147': 'R300 GL', '4136': 'RS100', '4150': 'RV350'}}
+                'subdevs': {'1002': {'10020002': 'R9600 Pro primary (Asus OEM for HP)'}}
+            }
+
+    pciids = {
+                'vendors': {'vendorhex': 'Vendor', ...},
+                'classes': {'classhex': 'Class name', ...},
+                'subclasses: {'classhex': { 'subclasshex': 'Subclass name', ...}, ...},
+                'devices: {'vendorhex': {'devicehex': 'Device name', ...}, ...},
+                'subdevs: {'vendorhex': {'subdevhex': 'Subdev name', ...}, ...}
+            }
+
+@rtype: void
+
+</pre>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
 <a name="getData"></a>
 <div>
 <table class="details" border="1" cellpadding="3"
@@ -231,26 +445,7 @@
   </tr></table>
   
   <p>Method: getData</p>
-  <p>Method gets all info about pci items, parses /usr/share/hwdata/pci.ids
-  file for information about pci devices, this file has fixed format</p>
-  <p>we are creating this structure from parsing: :</p>
-<pre class="literalblock">
-   pciids = {
-               'vendors': { '1002': 'AMD', '9092': 'HP'},
-               'classes': {'02': 'Network Controller', '03': 'Display Controller'},
-               'subclasses': {'03': { '00': 'VGA controller'}, '02': {'00': 'Ethernet Controller}},
-               'devices': {'1002': {'4147': 'R300 GL', '4136': 'RS100', '4150': 'RV350'}}
-               'subdevs': {'1002': {'10020002': 'R9600 Pro primary (Asus OEM for HP)'}}
-           }
-           
-   pciids = {
-               'vendors': {'vendorhex': 'Vendor', ...},
-               'classes': {'classhex': 'Class name', ...},
-               'subclasses: {'classhex': { 'subclasshex': 'Subclass name', ...}, ...},
-               'devices: {'vendorhex': {'devicehex': 'Device name', ...}, ...},
-               'subdevs: {'vendorhex': {'subdevhex': 'Subdev name', ...}, ...}
-           }
-</pre>
+  <p>Method gets info about PCI devices on the host</p>
   <dl class="fields">
     <dt>Parameters:</dt>
     <dd><ul class="nomargin-top">
@@ -312,6 +507,59 @@
         <li><strong class="pname"><code>options</code></strong> (dict) - passed parameters</li>
     </ul></dd>
     <dt>Returns: void</dt>
+  </dl>
+</td></tr></table>
+</div>
+<a name="getUdevPciDevInfo"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">getUdevPciDevInfo</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">device</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="systeminfo.proc.pci-pysrc.html#Pci.getUdevPciDevInfo">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Method: getUdevPciDevInfo</p>
+  <p>method gathers info from udev for passed pci device and returns as 
+  dict</p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>device</code></strong> (GudevDevice) - this is device for which we want to gather info @rtype dict</li>
+    </ul></dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="getHalPciDevInfo"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">getHalPciDevInfo</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">devIntf</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="systeminfo.proc.pci-pysrc.html#Pci.getHalPciDevInfo">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Method: getHalPciDevInfo</p>
+  <p>method gathers info from HAL for passed device interface and returns 
+  as dict</p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>devIntf</code></strong> (dbus.Interface) - is interface of device for which we want to gather info @rtype 
+          dict</li>
+    </ul></dd>
   </dl>
 </td></tr></table>
 </div>
@@ -379,13 +627,18 @@
       <th>&nbsp;&nbsp;&nbsp;<a
         href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
 
-      <th class="navbar" width="100%"></th>
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="https://github.com/p53">systeminfo</a></th>
+          </tr></table></th>
   </tr>
 </table>
 <table border="0" cellpadding="0" cellspacing="0" width="100%%">
   <tr>
     <td align="left" class="footer">
-    Generated by Epydoc 3.0.1 on Sat Jan 25 18:42:50 2014
+    Generated by Epydoc 3.0.1 on Sun Oct  4 17:19:49 2015
     </td>
     <td align="right" class="footer">
       <a target="mainFrame" href="http://epydoc.sourceforge.net"
