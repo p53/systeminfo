@@ -193,7 +193,7 @@ class Base(object):
             """
 
             cache_file = self.cacheDir + self.__class__.__name__.lower() + '.cache'
-            cache_file_obj = open(cache_file, 'w')
+            cache_file_obj = open(cache_file, 'w+')
 
             # pickling asset data
             pickle.dump(self.asset_info, cache_file_obj)
