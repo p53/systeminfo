@@ -1,0 +1,25 @@
+{%- set fields = [
+                    'vendor',
+                    'sysfspath',                    
+                    'nodename',
+                    'portname',
+                    'portstate',
+                    'porttype',                    
+                    'speed',
+                    'fabricname',
+                    'portid',
+                    'symbolicname',
+                    'supportedclasses',
+                    'supportedspeeds',
+                    'addr',
+                    'driver',
+                    'maxnpivvports',
+                    'npivvportsinuse',
+                    'localcpus',
+                    'localcpulist',
+                    'numanode',
+                    'irq'
+                ] 
+-%}
+
+{% include 'general/detail.j2' %}

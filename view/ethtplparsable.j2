@@ -1,0 +1,16 @@
+{%- set fields = [
+                    'addr',
+                    'intf',
+                    'sysfspath',
+                    'device',
+                    'vendor',
+                    'mac',
+                    'operstate',
+                    'speed',
+                    'duplex',
+                    'mtu',
+                    'driver'
+                ] 
+-%}
+
+{% include 'general/parsable.j2' %}

@@ -1,0 +1,25 @@
+[
+{%- for info in data -%}
+    {% if True %}{% endif %}
+    {
+        {% if True %}{% endif %}
+    {%- for key in fields -%}
+        {%- set line = [] -%}
+        {%- if line.append('"' + properties[key] + '"') -%}
+        {%- endif -%}
+        {%- if line.append('"' + info[key] + '"') -%}
+        {%- endif -%}
+        {{ line|join(":") }}
+        {%- if not loop.last-%}
+        ,
+        {%- endif -%}
+        {% if True %}{% endif %}
+        {% if True %}{% endif %}
+    {%- endfor -%}
+    }
+    {%- if not loop.last-%}
+    ,
+    {%- endif -%}
+{%- endfor -%}
+{% if True %}{% endif %}
+]

@@ -1,0 +1,10 @@
+{%- for info in data -%}
+    {%- set line = [] -%}
+    {%- for key in fields -%}
+        {%- if line.append(info[key].center(maxInfo[key+'Max'])) -%}{%- endif -%}
+    {%- endfor -%}
+    {% if True %}{% endif %}
+{{ line|join(" ") }}
+{%- endfor -%}
+{% if True %}{% endif %}
+

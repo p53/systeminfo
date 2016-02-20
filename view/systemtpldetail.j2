@@ -1,0 +1,29 @@
+{%- set fields = [
+                    'SystemManufacturer',
+                    'SystemSerialNumber',
+                    'SystemProductName',
+                    'SystemUUID',
+                    'ChassisManufacturer',
+                    'ChassisSerialNumber',
+                    'load',
+                    'machinetype',
+                    'nodename',
+                    'osrelease',
+                    'osname',
+                    'distname',
+                    'distver',
+                    'distid',
+                    'OSCoreCount',
+                    'OSCoreEnabled',
+                    'OSThreadCount',
+                    'OSPhyscpuCount',
+                    'MemoryMemTotal',
+                    'MemoryMemFree',
+                    'MemorySwapTotal',
+                    'MemorySwapFree',
+                    'MemoryShmem',
+                    'MemoryHardwareCorrupted'
+                ] 
+-%}
+
+{% include 'general/detail.j2' %}

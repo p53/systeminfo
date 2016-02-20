@@ -1,0 +1,16 @@
+{%- set fields = [
+                    'processor',
+                    'physicalid',
+                    'coreid',
+                    'cpucores',
+                    'modelname',
+                    'cpuMHz',
+                    'model',
+                    'vendor_id',
+                    'cpufamily',
+                    'cachesize',
+                    'flags'
+                ] 
+-%}
+
+{% include 'general/json.j2' %}

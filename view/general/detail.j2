@@ -1,0 +1,15 @@
+{%- for info in data -%}
+
+    {%- for key in fields -%}
+        {%- set line = [] -%}
+        {%- if line.append(properties[key].ljust(maxInfo['propname'])) -%}
+        {%- endif -%}
+        {%- if line.append(info[key]) -%}
+        {%- endif -%}
+        {% if True %}{% endif %}
+{{ line|join(":") }}
+    {%- endfor -%}
+
+{%- endfor -%}
+{% if True %}{% endif %}
+

@@ -1,0 +1,24 @@
+{%- set fields = [
+                    'device',
+                    'id',
+                    'major',
+                    'minor',
+                    'hwpath',
+                    'size',
+                    'vendor',
+                    'model',
+                    'srcport',
+                    'targetport',
+                    'rportstate',
+                    'firmware',
+                    'iodone_count',
+                    'ioerror_count',
+                    'iorequest_count',
+                    'queue_depth',
+                    'scsi_level',
+                    'state',
+                    'timeout'
+                ] 
+-%}
+
+{% include 'general/detail.j2' %}

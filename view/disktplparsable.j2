@@ -1,0 +1,24 @@
+{%- set fields = [
+                    'hwpath',
+                    'device',
+                    'srcport',
+                    'targetport',
+                    'rportstate',
+                    'id',
+                    'model',
+                    'vendor',
+                    'size',
+                    'major',
+                    'minor',
+                    'firmware',
+                    'iodone_count',
+                    'ioerror_count',
+                    'iorequest_count',
+                    'queue_depth',
+                    'scsi_level',
+                    'state',
+                    'timeout'
+                ] 
+-%}
+
+{% include 'general/parsable.j2' %}

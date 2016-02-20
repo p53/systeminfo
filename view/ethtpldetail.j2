@@ -1,0 +1,20 @@
+{%- set fields = [
+                    'intf',
+                    'sysfspath',
+                    'device',
+                    'vendor',
+                    'driver',
+                    'mac',
+                    'operstate',
+                    'speed',
+                    'duplex',
+                    'mtu',
+                    'localcpus',
+                    'localcpulist',
+                    'numanode',
+                    'irq',
+                    'addr'
+                ] 
+-%}
+
+{% include 'general/detail.j2' %}
