@@ -33,7 +33,6 @@ This class is class for fcms asset type
 import systeminfo.io.file
 import os
 import re
-import string
 import ConfigParser
 import dbus
 import systeminfo.proc.pci

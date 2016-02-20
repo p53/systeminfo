@@ -33,11 +33,11 @@ This class is class for net asset type
 import systeminfo.io.file
 import os
 import re
-import string
 import ConfigParser
 import dbus
 import systeminfo.proc.pci
 import sys
+import string
 import systeminfo.proc.base
 
 class Eth(systeminfo.proc.base.Base):

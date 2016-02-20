@@ -34,7 +34,6 @@ import re
 import os
 import dbus
 import ConfigParser
-import string
 import glob
 import sys
 import systeminfo.io

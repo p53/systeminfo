@@ -31,8 +31,5 @@ module is automatically added to the path
 
 """
 
-import os
-import sys
-
 cacheDir = '/var/cache/systeminfo/'
 confDir = '/etc/systeminfo/'

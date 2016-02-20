@@ -33,7 +33,6 @@ Class for getting data for cpus
 import systeminfo.io.file
 import re
 import ConfigParser
-import string
 import os
 import sys
 import systeminfo.proc.base

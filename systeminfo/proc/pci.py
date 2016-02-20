@@ -34,9 +34,9 @@ import systeminfo.io.file
 import os
 import os.path
 import re
-import string
 import ConfigParser
 import sys
+import string
 import systeminfo.proc.base
 import platform
 import csv

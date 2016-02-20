@@ -46,18 +46,7 @@ if effective_uid > 0:
     sys.exit(4)
 
 import argparse
-import getopt
-import re
 import systeminfo.misc.config
-from string import Template
-from systeminfo.proc.cpu import Cpu
-from systeminfo.proc.memory import Memory
-from systeminfo.proc.pci import Pci
-from systeminfo.proc.fcms import Fcms
-from systeminfo.proc.disk import Disk
-from systeminfo.proc.system import System
-from systeminfo.proc.tape import Tape
-from systeminfo.proc.eth import Eth
 
 options = {'outlength': 'short', 'get_data_action': 'getData'}
 """
@@ -146,23 +135,16 @@ def main():
     action = 'summary'
     asset_param = results.get
     options['template_body_type'] = 'TableTemplate'
-    options['template_header_type'] = 'HeaderTableTemplate'
-
-    if results.get == 'system':
-        options['template_body_type'] = 'PropertyTemplate'
-        options['template_header_type'] = 'VoidTemplate'
 
     if results.identifier:
         action = 'detail'
-        options['template_body_type'] = 'PropertyTemplate'
-        options['template_header_type'] = 'VoidTemplate'
+        options['template_body_type'] = 'PropertyTemplateAll'
         options['outlength'] = 'detail'
         options['instance'] = results.identifier
 
     if results.outlength == 'json':
         action = 'summary'
         options['template_body_type'] = 'PropertyTemplateAll'
-        options['template_header_type'] = 'VoidTemplate'
 
     # instantiating object, his class is asset type
     # and then invoking action on it, depending on passed options
@@ -171,7 +153,11 @@ def main():
     configDir = systeminfo.misc.config.confDir
     cachingDir = systeminfo.misc.config.cacheDir
 
-    asset = globals()[asset_type](configDir, cachingDir)
+    mod = __import__('systeminfo.proc.' + asset_param, globals(), locals(), [asset_type], -1)
+    asset_python_class = getattr(mod, asset_type)
+    asset = asset_python_class(configDir, cachingDir)
+
     getattr(asset, action)(options)
 
-main()
+if __name__ == '__main__':
+    main()

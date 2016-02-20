@@ -31,15 +31,9 @@ This class is base class for all types of assets
 """
 
 import systeminfo.io.file
-import re
-from string import Template
 from systeminfo.template.tabletemplate import TableTemplate
-from systeminfo.template.propertytemplate import PropertyTemplate
 from systeminfo.template.propertytemplateall import PropertyTemplateAll
-from systeminfo.template.voidtemplate import VoidTemplate
-from systeminfo.template.headertabletemplate import HeaderTableTemplate
 import ConfigParser
-import string
 import os
 import sys
 import copy
@@ -163,25 +157,17 @@ class Base(object):
             config.read([abspath])
             names = dict(config.items(self.__class__.__name__))
 
-            origheader = copy.copy(self.asset_info)
             origbody = copy.copy(self.asset_info)
 
             # creating name of view which will be used, then importing variables with
             # template from view
-            templ_module = self.__class__.__name__.lower() + 'tpl' + options['outlength']
-            templ_vars = __import__('systeminfo.view.' + templ_module, globals(), locals(),['tpl'])
+            templ_name = self.__class__.__name__.lower() + 'tpl' + options['outlength'] + '.j2'
 
-            # this will need to be reworked
-            # creating template objects for header, body, processing assigned variables
-            templ_header = globals()[options['template_header_type']](origheader, names, templ_vars.tplh)
-            templ_body = globals()[options['template_body_type']](origbody, names, templ_vars.tpl)
+            templ_path = os.path.abspath(self.confDir + '../view')
+            templ_object = globals()[options['template_body_type']](origbody, names)
 
-            # printing processed templates
-            if len(templ_vars.tplh) > 0:
-                print templ_header
-
-            if len(templ_vars.tpl) > 0:
-                print templ_body
+            cached_path = self.cacheDir + 'view/compiled'
+            templ_object.render(templ_path, templ_name, cached_path)
 
         def createCache(self):
             """
