@@ -3,6 +3,89 @@ Systeminfo
 
 Simple utility for gathering hardware summary information
 
+NAME
+       systeminfo - utility for displaying hardware information
+
+SYNOPSIS
+       systeminfo --get asset_type [--p|--l|--j|--d identifier] [--c]
+
+DESCRIPTION
+       systeminfo is utility for getting hardware information it aims to be simple and provide output in well formatted output
+
+OPTIONS
+       asset_type
+               can be one of these types: system, cpu, memory, disk, pci, fcms, tape, eth
+
+       --l, --long
+               specifies to display long output
+
+       --p, --parsable
+               specifies to display parsable output
+
+       --j, --json
+               specifies to display output in json
+
+       --d, --detail identifier
+               specifies to display detail, requires identifier
+
+               identifier
+
+               column which you should use as identifier is marked in column header with asterisk
+
+       --c, --cached
+               use cache to get data, should be faster, but doesn't generate fresh data
+
+EXAMPLES
+       This gets information about system in short format:
+
+           systeminfo --get system
+
+       This gets information about disks in long format:
+
+           systeminfo --get disk --l
+           or
+           systeminfo --get disk --long
+
+       This gets information about fcms HBA's in parsable format:
+
+           systeminfo --get fcms --p
+
+       This gets information about memory in json format:
+
+           systeminfo --get memory --j
+
+       This get detail about disk device:
+
+           systeminfo --get disk --detail 24:0:2:0
+
+       This refreshes cache info about disks:
+
+           systeminfo --get disk
+           systeminfo --get disk --l
+           systeminfo --get disk --p
+
+       This doesn't refresh cache:
+
+           (gets fresh data but doesn't update cache)
+           systeminfo --get disk --detail 24:0:2:0
+           or (these two examples get data from cache)
+           systeminfo --get disk --detail 24:0:2:0 --c
+           or
+           systeminfo --get disk --c
+           or
+           systeminfo --get disk --l --c
+
+NOTES
+       This utility should be run with root priveleges
+
+AUTHOR
+       Pavol Ipoth
+
+COPYRIGHT AND LICENSE
+       Copyright 2013, 2014, 2015 Pavol Ipoth
+
+       GPLv3
+
 
 License and Copyright
 =====================
