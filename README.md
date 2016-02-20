@@ -3,27 +3,35 @@ Systeminfo
 
 Simple utility for gathering hardware summary information
 
-NAME
+##### NAME
+
        systeminfo - utility for displaying hardware information
 
-SYNOPSIS
+##### SYNOPSIS
+     
        systeminfo --get asset_type [--p|--l|--j|--d identifier] [--c]
 
-DESCRIPTION
+##### DESCRIPTION
+
        systeminfo is utility for getting hardware information it aims to be simple and provide output in well formatted output
 
-OPTIONS
+##### OPTIONS
+
        asset_type
                can be one of these types: system, cpu, memory, disk, pci, fcms, tape, eth
+
 
        --l, --long
                specifies to display long output
 
+
        --p, --parsable
                specifies to display parsable output
 
+
        --j, --json
                specifies to display output in json
+
 
        --d, --detail identifier
                specifies to display detail, requires identifier
@@ -32,10 +40,12 @@ OPTIONS
 
                column which you should use as identifier is marked in column header with asterisk
 
+
        --c, --cached
                use cache to get data, should be faster, but doesn't generate fresh data
 
-EXAMPLES
+##### EXAMPLES
+
        This gets information about system in short format:
 
            systeminfo --get system
