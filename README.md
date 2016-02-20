@@ -13,7 +13,8 @@ Simple utility for gathering hardware summary information
 
 ##### DESCRIPTION
 
-       systeminfo is utility for getting hardware information it aims to be simple and provide output in well formatted output
+       systeminfo is utility for getting hardware information it aims 
+       to be simple and provide output in well formatted output
 
 ##### OPTIONS
 
@@ -87,15 +88,6 @@ Simple utility for gathering hardware summary information
 
 NOTES
        This utility should be run with root priveleges
-
-AUTHOR
-       Pavol Ipoth
-
-COPYRIGHT AND LICENSE
-       Copyright 2013, 2014, 2015 Pavol Ipoth
-
-       GPLv3
-
 
 License and Copyright
 =====================
