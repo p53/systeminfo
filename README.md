@@ -86,7 +86,7 @@ Simple utility for gathering hardware summary information
            or
            systeminfo --get disk --l --c
 
-NOTES
+##### NOTES
        This utility should be run with root priveleges
 
 License and Copyright
