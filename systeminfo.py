@@ -73,7 +73,7 @@ def main():
     # Action which we want to perform on asset_types
     action = ''
 
-    # Asset type on which we want to perform aciont
+    # Asset type on which we want to perform action
     asset_param = ''
 
     parser = argparse.ArgumentParser(
@@ -116,7 +116,7 @@ def main():
         "--get", 
         help="specify type of hardware to get info for, required argument",
         choices=asset_types,
-        required=True
+        default='system'
     )
     parser.add_argument(
         "-c", 
