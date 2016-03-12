@@ -88,6 +88,7 @@ Simple utility for gathering hardware summary information
 
 ##### NOTES
        This utility should be run with root priveleges
+       Utility works with python 2.7<, doesn't work with python3 yet
 
 License and Copyright
 =====================
