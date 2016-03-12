@@ -86,7 +86,7 @@ class Eth(systeminfo.proc.base.Base):
         devs = client.query_by_subsystem("net")
         
         # getting information all pci cards, and from those we will select our HBAs
-        pciinfo = systeminfo.proc.pci.Pci(self.confDir, self.cacheDir)
+        pciinfo = systeminfo.proc.pci.Pci(self.confDir, self.cacheDir, self.viewDir)
         
         for dev in devs:
             props = {}
@@ -136,7 +136,7 @@ class Eth(systeminfo.proc.base.Base):
         hal_mgr_obj = system_bus.get_object('org.freedesktop.Hal', '/org/freedesktop/Hal/Manager')
         hal_mgr_iface = dbus.Interface(hal_mgr_obj, 'org.freedesktop.Hal.Manager')
         devs = hal_mgr_iface.GetAllDevices()
-        pciinfo = systeminfo.proc.pci.Pci(self.confDir, self.cacheDir)
+        pciinfo = systeminfo.proc.pci.Pci(self.confDir, self.cacheDir, self.viewDir)
         
         for i in devs:
             dev = system_bus.get_object('org.freedesktop.Hal', i)
