@@ -68,7 +68,7 @@ class Pci(systeminfo.proc.base.Base):
         @ivar: holds name of cache file for pci ids caching
         """
         
-        def __init__(self, configDir, cachingDir):
+        def __init__(self, configDir, cachingDir, viewDir):
             """
             Method: __init__
             
@@ -81,7 +81,7 @@ class Pci(systeminfo.proc.base.Base):
             @param cachingDir: directory location of caching files
             @rtype void
             """
-            super(Pci, self).__init__(configDir, cachingDir)
+            super(Pci, self).__init__(configDir, cachingDir, viewDir)
             pciids_cache_file = self.cacheDir + Pci.pciids_cache_name + '.cache'
             cur_timestamp = 0
             
