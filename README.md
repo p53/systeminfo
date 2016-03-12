@@ -1,16 +1,17 @@
 Installation from source (example):
 ==========
 
-git clone https://github.com/p53/systeminfo.git
-cd systeminfo
+       git clone https://github.com/p53/systeminfo.git
+       cd systeminfo
+       
 our installation folder will be: /opt/systeminfo
 
 edit config module: systeminfo/misc/config.py
 set variables in that file:
 
-cacheDir = '/var/cache/systeminfo/'
-confDir = '/opt/systeminfo/etc/'
-viewDir = '/opt/systeminfo/view/'
+       cacheDir = '/var/cache/systeminfo/'
+       confDir = '/opt/systeminfo/etc/'
+       viewDir = '/opt/systeminfo/view/'
 
 Install dependencies:
        python modules:
@@ -23,32 +24,32 @@ Install dependencies:
 
 and then you can run this step by step or as a script:
 
-PROGRAM="systeminfo"
-DEST_DIR=/opt/{$PROGRAM}
-DEST_BIN=/usr/bin/${PROGRAM}
-DEST_ETC=$DEST_DIR/etc
-DEST_MAN=/usr/share/man/man8
-DEST_CACHE=/var/cache/${PROGRAM}
-DEST_DOCS=$DEST_DIR/doc/${PROGRAM}
-DEST_VIEW=$DEST_DIR/view
-
-python setup.py build
-rm -rf $DEST_BIN $DEST_ETC $DEST_MAN $DEST_CACHE $DEST_DOCS
-install -d $DEST_DIR
-install -d $DEST_ETC
-install -d $DEST_CACHE
-install -d $DEST_MAN
-install -d $DEST_DOCS
-
-python setup.py install
-cp -pR settings/* $DEST_ETC
-cp -pR view/* $DEST_VIEW
-install -pm 0755 ${PROGRAM}.py $DEST_DIR/${PROGRAM}
-install -pm 0644 man/${PROGRAM}.8 $DEST_MAN
-install -pm 0644 LICENSE $DEST_DOCS
-install -pm 0644 README.md $DEST_DOCS
-
-ln -s $DEST_DIR/${PROGRAM} $DEST_BIN
+       PROGRAM="systeminfo"
+       DEST_DIR=/opt/{$PROGRAM}
+       DEST_BIN=/usr/bin/${PROGRAM}
+       DEST_ETC=$DEST_DIR/etc
+       DEST_MAN=/usr/share/man/man8
+       DEST_CACHE=/var/cache/${PROGRAM}
+       DEST_DOCS=$DEST_DIR/doc/${PROGRAM}
+       DEST_VIEW=$DEST_DIR/view
+       
+       python setup.py build
+       rm -rf $DEST_BIN $DEST_ETC $DEST_MAN $DEST_CACHE $DEST_DOCS
+       install -d $DEST_DIR
+       install -d $DEST_ETC
+       install -d $DEST_CACHE
+       install -d $DEST_MAN
+       install -d $DEST_DOCS
+       
+       python setup.py install
+       cp -pR settings/* $DEST_ETC
+       cp -pR view/* $DEST_VIEW
+       install -pm 0755 ${PROGRAM}.py $DEST_DIR/${PROGRAM}
+       install -pm 0644 man/${PROGRAM}.8 $DEST_MAN
+       install -pm 0644 LICENSE $DEST_DOCS
+       install -pm 0644 README.md $DEST_DOCS
+       
+       ln -s $DEST_DIR/${PROGRAM} $DEST_BIN
 
 Usage
 ==========
