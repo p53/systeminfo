@@ -1,4 +1,4 @@
-# Systeminfo - Simple utility for gathering hardware summary information
+    # Systeminfo - Simple utility for gathering hardware summary information
 # Copyright (C) 2013, 2014  Pavol Ipoth  <pavol.ipoth@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify

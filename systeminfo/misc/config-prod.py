@@ -33,3 +33,4 @@ module is automatically added to the path
 
 cacheDir = '/var/cache/systeminfo/'
 confDir = '/etc/systeminfo/'
+viewDir = '/usr/share/systeminfo/view/'

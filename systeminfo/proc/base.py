@@ -53,7 +53,7 @@ class Base(object):
         @ivar: Holds configuration files directory
         """
         
-        def __init__(self, configDir, cachingDir):
+        def __init__(self, configDir, cachingDir, viewDir):
             """
             Method: __init__
             
@@ -63,7 +63,8 @@ class Base(object):
             """
             self.confDir = configDir
             self.cacheDir = cachingDir
-
+            self.viewDir = viewDir
+            
         def getData(self, options):
             """
             Method: getData
@@ -163,7 +164,7 @@ class Base(object):
             # template from view
             templ_name = self.__class__.__name__.lower() + 'tpl' + options['outlength'] + '.j2'
 
-            templ_path = os.path.abspath(self.confDir + '../view')
+            templ_path = os.path.abspath(self.viewDir)
             templ_object = globals()[options['template_body_type']](origbody, names)
 
             cached_path = self.cacheDir + 'view/compiled'

@@ -34,3 +34,4 @@ import sys
 
 cacheDir = os.path.dirname(sys.argv[0]) + '/cache/'
 confDir = os.path.dirname(sys.argv[0]) + '/settings/'
+viewDir = os.path.dirname(sys.argv[0]) + '/view/'

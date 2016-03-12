@@ -152,10 +152,11 @@ def main():
     asset_type = asset_param.title()
     configDir = systeminfo.misc.config.confDir
     cachingDir = systeminfo.misc.config.cacheDir
-
+    viewDir = systeminfo.misc.config.viewDir
+    
     mod = __import__('systeminfo.proc.' + asset_param, globals(), locals(), [asset_type], -1)
     asset_python_class = getattr(mod, asset_type)
-    asset = asset_python_class(configDir, cachingDir)
+    asset = asset_python_class(configDir, cachingDir, viewDir)
 
     getattr(asset, action)(options)
 
