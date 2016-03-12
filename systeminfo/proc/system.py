@@ -98,7 +98,7 @@ class System(systeminfo.proc.base.Base):
         # we need this part in case dmidecode doesn't provide information
         # for cores and threads
         if thread_count == 0 or core_count == 0:
-            cpuObj = systeminfo.proc.cpu.Cpu(self.confDir, self.cacheDir)
+            cpuObj = systeminfo.proc.cpu.Cpu(self.confDir, self.cacheDir, self.viewDir)
             cpuObj.getData({})
             logic_count = len(cpuObj.asset_info)
             phys_to_cores = {}
