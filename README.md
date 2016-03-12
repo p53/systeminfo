@@ -19,13 +19,14 @@ Install dependencies:
               argparse
               gudev
               dbus
+              jinja2
        other:
               hwdata
 
 and then you can run this step by step or as a script:
 
        PROGRAM="systeminfo"
-       DEST_DIR=/opt/{$PROGRAM}
+       DEST_DIR=/opt/${PROGRAM}
        DEST_BIN=/usr/bin/${PROGRAM}
        DEST_ETC=$DEST_DIR/etc
        DEST_MAN=/usr/share/man/man8
@@ -40,6 +41,7 @@ and then you can run this step by step or as a script:
        install -d $DEST_CACHE
        install -d $DEST_MAN
        install -d $DEST_DOCS
+       install -d $DEST_VIEW
        
        python setup.py install
        cp -pR settings/* $DEST_ETC
