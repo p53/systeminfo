@@ -74,7 +74,7 @@ class Template():
                     zip=None
                 )
                 
-                template = JINJA_ENVIRONMENT.get_template(templ_name)
+                template = JINJA_COMPILE_ENVIRONMENT.get_template(templ_name)
 
             template_values = {
                 'data': self.tableData,
