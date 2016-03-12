@@ -1,3 +1,24 @@
+Installation from package:
+=========
+
+Download package from here:
+
+[Download] (https://github.com/p53/systeminfo/releases)
+
+#### Ubuntu
+
+       dpkg -i systeminfo_1.5.3-0ubuntu0.trusty_all.deb
+       
+       or from launchpad repo:
+       
+       add-apt-repository ppa:pavol-ipoth/systeminfo
+       apt-get update
+       apt-get install systeminfo
+       
+#### RedHat/CentOS
+
+       rpm -ivh systeminfo-1.5-2.el7.centos.noarch.rpm
+       
 Installation from source (example):
 ==========
 
@@ -143,7 +164,7 @@ Simple utility for gathering hardware summary information
 
 ##### NOTES
        This utility should be run with root priveleges
-       Utility works with python 2.7<, doesn't work with python3 yet
+       Utility works with python 2.7=<, doesn't work with python3 yet
 
 License and Copyright
 =====================
