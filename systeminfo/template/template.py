@@ -21,8 +21,7 @@ Module: template.py
 
 Class: Template
 
-This class processes template string
-It is used for generating body of table output
+Basic class for templating
 
 @author: Pavol Ipoth
 @license: GPLv3+

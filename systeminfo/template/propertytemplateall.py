@@ -21,8 +21,9 @@ Module: propertytemplateall.py
 
 Class: PropertyTemplateAll
 
-This class processes template string
-It is used for generating string as key value pairs of properties
+This class generates output for several types
+of output formats, which are based on key:value principle
+uses jinja2 templates
 
 @author: Pavol Ipoth
 @license: GPLv3+
@@ -63,8 +64,6 @@ class PropertyTemplateAll(Template):
             @param tableRows: this is array of data
             @type names: list
             @param names: this is array of properties
-            @type tplstring: str
-            @param tplstring: this is template string
             @rtype: void
             """
 

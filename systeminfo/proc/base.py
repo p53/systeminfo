@@ -61,6 +61,7 @@ class Base(object):
             
             @rtype void
             """
+            
             self.confDir = configDir
             self.cacheDir = cachingDir
             self.viewDir = viewDir

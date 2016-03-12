@@ -21,8 +21,8 @@ Module: tabletemplate.py
 
 Class: TableTemplate
 
-This class processes template string
-It is used for generating body of table output
+This class generates table
+output using jinja2 templates
 
 @author: Pavol Ipoth
 @license: GPLv3+
@@ -62,8 +62,6 @@ class TableTemplate(Template):
             @param tableRows: this is list of asset items
             @type names: list
             @param names: this is list of column names
-            @type tplstring: str
-            @param tplstring: this is template string
             @rtype: void
             """
 
