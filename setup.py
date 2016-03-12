@@ -11,7 +11,6 @@ setup(name='systeminfo',
 'systeminfo.io',
 'systeminfo.misc',
 'systeminfo.proc',
-'systeminfo.template',
-'systeminfo.view'
+'systeminfo.template'
 ],
      )
