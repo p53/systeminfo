@@ -7,19 +7,19 @@ Download package from here:
 
 #### Ubuntu
 
-       this will fail because if dependencies are missing:
+    this will fail because if dependencies are missing:
        
        dpkg -i systeminfo_1.5.3-0ubuntu0.trusty_all.deb
        
-       then run, this will install dependencies:
+    then run, this will install dependencies:
        
        apt-get install -f
        
-       and then again:
+    and then again:
        
        dpkg -i systeminfo_1.5.3-0ubuntu0.trusty_all.deb
        
-       or from launchpad repo:
+    or from launchpad repo:
        
        add-apt-repository ppa:pavol-ipoth/systeminfo
        apt-get update
@@ -27,7 +27,7 @@ Download package from here:
        
 #### RedHat/CentOS
 
-       this will install package and it's dependencies:
+    this will install package and it's dependencies:
        
        yum install systeminfo-1.5-2.el7.centos.noarch.rpm
        
