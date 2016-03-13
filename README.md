@@ -7,7 +7,7 @@ Download package from here:
 
 #### Ubuntu
 
-    this will fail because if dependencies are missing:
+    this will fail if dependencies are missing:
        
        dpkg -i systeminfo_1.5.3-0ubuntu0.trusty_all.deb
        
