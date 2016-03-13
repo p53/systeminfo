@@ -35,6 +35,7 @@ set variables in that file:
        viewDir = '/opt/systeminfo/view/'
 
 Install dependencies:
+
        * python modules:
               * dmidecode
               * argparse
