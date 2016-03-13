@@ -35,14 +35,14 @@ set variables in that file:
        viewDir = '/opt/systeminfo/view/'
 
 Install dependencies:
-       python modules:
-              dmidecode
-              argparse
-              gudev
-              dbus
-              jinja2
-       other:
-              hwdata
+       * python modules:
+              * dmidecode
+              * argparse
+              * gudev
+              * dbus
+              * jinja2
+       * other:
+              * hwdata
 
 and then you can run this step by step or as a script:
 
