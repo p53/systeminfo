@@ -7,6 +7,16 @@ Download package from here:
 
 #### Ubuntu
 
+       this will fail because if dependencies are missing:
+       
+       dpkg -i systeminfo_1.5.3-0ubuntu0.trusty_all.deb
+       
+       then run, this will install dependencies:
+       
+       apt-get install -f
+       
+       and then again:
+       
        dpkg -i systeminfo_1.5.3-0ubuntu0.trusty_all.deb
        
        or from launchpad repo:
@@ -17,7 +27,9 @@ Download package from here:
        
 #### RedHat/CentOS
 
-       rpm -ivh systeminfo-1.5-2.el7.centos.noarch.rpm
+       this will install package and it's dependencies:
+       
+       yum install systeminfo-1.5-2.el7.centos.noarch.rpm
        
 Installation from source (example):
 ==========
